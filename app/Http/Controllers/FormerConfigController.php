@@ -23,24 +23,11 @@ class FormerConfigController extends Controller
 
     }
 
-    public function show()
+    public function show($form_crop)
     {
-        phpinfo();
-//        DB::collection('users')->insert([
-//        'name'=>'wjb',
-//        'age'=>22
-//        ]);
-//        $res = DB::collection('users')->get();//查询所有数据    
-//
-//        dd($res);
+//      Info[0] form || Info[1] crop
+        $formInfo = explode('_', $form_crop);
 
+        return view('Form_Show.moniter.moniter_config', $formInfo);
     }
-//        DB::collection('users')               //选择使用users集合
-//        ->insert([                          //插入数据
-//            'name'  =>  'tom',
-//            'age'     =>   18
-//        ]);
-//        $res = DB::collection('User_Former')->all();  //查询所有数据
-//        dd($res);                                            //打印数据
-//    }
 }

@@ -13,9 +13,9 @@ class CreateWaterValue extends Migration
      */
     public function up()
     {
-        Schema::create('water_value', function (Blueprint $table) {
+        Schema::create('Water_Recy', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('come_form');
+            $table->string('former');
             $table->string('sensor');
             $table->double('value');
             $table->dateTime('send_time');

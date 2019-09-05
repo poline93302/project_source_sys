@@ -1,7 +1,7 @@
 :root {
     --main-color: #1D5458;
     --hexagon-width-min: 4rem;
-    --hexagon-left: 1.57rem;
+    --hexagon-left: 2.05rem;
 }
 
 * {
@@ -9,7 +9,7 @@
     font-family: 'cwTeXYen', sans-serif;
     margin: 0;
     padding: 0;
-    font-size: 24px;
+    font-size: 22px;
     color: white;
 }
 
@@ -83,44 +83,55 @@ footer > pre {
     z-index: 100;
 }
 
-.monitor-item-close {
-    display: none;
-}
-
-.monitor-item-open {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    height: auto;
-}
-
-.monitor-item-open > div {
-    background-color: white;
-    font-size: 18px;
-    color: black;
-}
-
-.monitor-status {
-    width: 6.25rem;
-    height: 6.25rem;
-
-}
-
 .info-btn-group {
     background-color: white;
 }
 
-/*新畫面*/
-.config-part {
-    display: none;
+.monitor-item-name {
+    float: right;
+    z-index: 10;
+}
+
+.item-big-status {
+    width: 9rem;
+    height: 9rem;
+    background-color: white;
+}
+
+.item-status {
+    width: 8rem;
+    height: 8rem;
+    background-color: white;
 }
 
 /*Ｘ 的 設定值*/
 .fa-style {
     background-color: white;
     color: black;
+}
+
+.flex-total-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-total-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.flex-total-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.blk {
+    margin-right: 1px;
+    width: 1rem;
+    height: 1rem;
 }
 
 @media (max-width: 1200px) {
@@ -139,7 +150,7 @@ footer > pre {
     }
 
     :root {
-        --hexagon-left: 0rem !important;;
+        --hexagon-left: 2.9rem !important;;
     }
 }
 
@@ -147,10 +158,18 @@ footer > pre {
     * {
         font-size: 12px !important;
     }
+
+    :root {
+        --hexagon-left: 1rem !important;;
+    }
 }
 
 @media (max-width: 375px) {
     * {
-        font-size: 10px !important;;
+        font-size: 5px !important;;
+    }
+
+    :root {
+        --hexagon-left: -0.5rem !important;;
     }
 }

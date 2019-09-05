@@ -24,12 +24,20 @@ class FormerPlaceController extends Controller
 
     public function show(Request $req)
     {
-        /*      input : form & former & form_crop
-                output : this form's monitor(water,air,sun,weather)
+        /*      input : form(def null) & former & form_crop(def null)
+                output : this form's monitor(water,air,sun,weather,name,crop)
         */
-        $data = [
-            $moniter_value['water_level'] = '',
+//        $data = [
+//            $moniter_value['water_level'] = '',
+//        ];
+        $Recy_data = [
+            'form' => 'jojogg',
+            'crop' => '巧克力田',
+            'water' => 83,
+            'light' => 13,
+            'air' => 58,
+            'weather' => 90,
         ];
-        return view('Form_Show.moniter.moniter_show', $data);
+        return view('Form_Show.moniter.moniter_show', ['data' => $Recy_data]);
     }
 }

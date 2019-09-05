@@ -13,9 +13,9 @@ class CreateAirValue extends Migration
      */
     public function up()
     {
-        Schema::create('air_value', function (Blueprint $table) {
+        Schema::create('Air_Recy', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('come_form');
+            $table->string('former');
             $table->string('sensor');
             $table->double('value');
             $table->dateTime('send_time');
