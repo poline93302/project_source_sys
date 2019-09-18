@@ -26,8 +26,8 @@ class FormerConfigController extends Controller
     public function show($form_crop)
     {
 //      Info[0] form || Info[1] crop
-        $formInfo = explode('_', $form_crop);
-
-        return view('Form_Show.moniter.moniter_config', $formInfo);
+        $form_crop = explode('_', $form_crop);
+        $form_target = [83, 13, 58, 90];
+        return view('Form_Show.moniter.moniter_config', ['data' => $form_target, 'form' => $form_crop[0], 'crop' => $form_crop[1]]);
     }
 }

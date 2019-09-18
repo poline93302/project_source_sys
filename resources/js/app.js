@@ -23,6 +23,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('conitor-exponent', require('./components/ConitorExponent.vue').default);
 Vue.component('config-place', require('./components/ConfigPlace.vue').default);
 Vue.component('prog-items', require('./components/progItems.vue').default);
+Vue.component('monitor-items-show', require('./components/MonitorItemsShow.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

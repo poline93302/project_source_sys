@@ -31,12 +31,30 @@ class FormerPlaceController extends Controller
 //            $moniter_value['water_level'] = '',
 //        ];
         $Recy_data = [
-            'form' => 'jojogg',
-            'crop' => '巧克力田',
-            'water' => 83,
-            'light' => 13,
-            'air' => 58,
-            'weather' => 90,
+            [
+                'form' => 'jojogg',
+                'crop' => '巧克力田',
+                'water' => 83,
+                'light' => 13,
+                'air' => 58,
+                'weather' => 95,
+            ],
+//            [
+//                'form'    => 'jojogg',
+//                'crop'    => '可田',
+//                'water'   => 83,
+//                'light'   => 13,
+//                'air'     => 58,
+//                'weather' => 90,
+//            ],
+//            [
+//                'form'    => 'jojo32',
+//                'crop'    => '利田',
+//                'water'   => 83,
+//                'light'   => 13,
+//                'air'     => 58,
+//                'weather' => 90,
+//            ]
         ];
         return view('Form_Show.moniter.moniter_show', ['data' => $Recy_data]);
     }

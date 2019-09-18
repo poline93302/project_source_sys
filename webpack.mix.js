@@ -11,6 +11,7 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js(['resources/js/app.js'
+mix.js(['resources/js/app.js',
+    'resources/js/Active/Sketchpad.js'
 ], 'public/js/bundle/index.bundle.js')
     .sass('resources/sass/app.scss', 'public/css/bundle/index.bundle.css');

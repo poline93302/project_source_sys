@@ -24,6 +24,11 @@ body {
 }
 
 footer > pre {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 5rem;
+    align-items: center;
     font-size: 0.5rem;
     color: white;
 }
@@ -87,11 +92,6 @@ footer > pre {
     background-color: white;
 }
 
-.monitor-item-name {
-    float: right;
-    z-index: 10;
-}
-
 .item-big-status {
     width: 9rem;
     height: 9rem;
@@ -104,6 +104,18 @@ footer > pre {
     background-color: white;
 }
 
+.monitor-item {
+    min-height: 15rem;
+}
+
+.monitor-item-list {
+    min-height: 3rem;
+}
+
+.monitor-item-name {
+    float: right;
+
+}
 /*Ｘ 的 設定值*/
 .fa-style {
     background-color: white;
@@ -132,6 +144,10 @@ footer > pre {
     margin-right: 1px;
     width: 1rem;
     height: 1rem;
+}
+
+.color-identification {
+    height: 1rem !important;
 }
 
 @media (max-width: 1200px) {
