@@ -1887,22 +1887,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "conitor-exponent",
   props: {
-    value_group: Object,
+    form_crop: String,
     config_number: 0
   },
   methods: {
     count_off: function count_off(id) {
       return this.monitor_id[id] + '-' + this.config_number;
+    },
+    getValue: function getValue() {
+      // hex_values
+      console.log('getvalue'); // axios.get();
     }
   },
   computed: {
     urlPath: function urlPath() {
-      return this.url_path + this.value_group.form + '_' + this.value_group.crop;
+      return this.url_path + this.form_crop;
     }
   },
   data: function data() {
     return {
-      hex_values: [this.value_group.water, this.value_group.light, this.value_group.air, this.value_group.weather],
+      hex_values: [],
       url_path: 'monitor/',
       //六角形ID
       monitor_id: ['monitor-water', 'monitor-light', 'monitor-air', 'monitor-weather'],
@@ -1914,6 +1918,10 @@ __webpack_require__.r(__webpack_exports__);
       this.hex_draw[i] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](this.monitor_id[i] + '-' + this.config_number, this.hex_values[i], 100, 0);
       Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Make_Circle"])(this.hex_draw[i]);
     }
+  },
+  created: function created() {
+    this.getValue();
+    setTimeout(this.getValue(), 3600);
   }
 });
 
@@ -1947,6 +1955,147 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FormerInfoConfig.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "FormerInfoConfig",
+  props: {
+    formername: String,
+    formcrop: Array,
+    formaddress: Array
+  },
+  methods: {
+    addForm: function addForm() {
+      this.formName.push('');
+    },
+    deleteForm: function deleteForm(id) {
+      this.formName.splice(id, 1);
+    },
+    addCrop: function addCrop() {
+      this.cropName.push([], []);
+    },
+    deleteCrop: function deleteCrop(id) {
+      this.cropName.splice(id, 1);
+    },
+    cutFormCrop: function cutFormCrop() {
+      var self = this;
+      var form = [];
+      var formStatus = '';
+
+      _.forEach(this.formcrop, function (value, index) {
+        form[index] = value.split('_');
+        self.cropName.push(form[index]);
+
+        if (formStatus !== form[index][0]) {
+          self.formName.push(form[index][0]);
+          formStatus = form[index][0];
+        }
+      });
+    },
+    resetAny: function resetAny() {}
+  },
+  data: function data() {
+    return {
+      //重複者刪除
+      formName: [],
+      //所有數值進行增加
+      cropName: []
+    };
+  },
+  created: function created() {
+    this.cutFormCrop();
   }
 });
 
@@ -6605,7 +6754,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.go-monitor[data-v-6bd9bef8] {\n    position: absolute;\n    top: 0;\n    right: 0;\n    border-color: transparent #00FF00 transparent transparent;\n    border-style: solid solid solid solid;\n    border-width: 1.5rem 1.5rem 0 0;\n    height: 0;\n    width: 0;\n    background-color: var(--main-color);\n}\n", ""]);
+exports.push([module.i, "\n.go-monitor[data-v-6bd9bef8] {\n    position: absolute;\n    top: 0;\n    right: 0;\n    border-color: transparent #e5c72f transparent transparent;\n    border-style: solid solid solid solid;\n    border-width: 1.5rem 1.5rem 0 0;\n    height: 0;\n    width: 0;\n}\n", ""]);
 
 // exports
 
@@ -67575,18 +67724,16 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "container sensor-part border border-light rounded mb-3" },
+    {
+      staticClass:
+        "container sensor-part border border-light rounded my-5 shadow"
+    },
     [
       _c("div", { staticClass: "row my-3 no-gutters text-center" }, [
         _c("div", { staticClass: "col-12 mb-3 form-header" }, [
           _c("div", { staticClass: "row " }, [
             _c("div", { staticClass: "col-3 form-title text-left" }, [
-              _vm._v(
-                " " +
-                  _vm._s(_vm.value_group.form) +
-                  " __ " +
-                  _vm._s(_vm.value_group.crop)
-              )
+              _vm._v(" " + _vm._s(_vm.form_crop))
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-6" }),
@@ -67685,6 +67832,344 @@ var staticRenderFns = [
           ])
         ])
       ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade",
+      attrs: {
+        id: "FormerInfoModal",
+        tabindex: "-1",
+        role: "dialog",
+        "aria-labelledby": "FormerInfoModalLabel",
+        "aria-hidden": "true"
+      }
+    },
+    [
+      _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
+        _c("div", { staticClass: "modal-content" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-body" }, [
+            _c("div", { staticClass: "container" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-12" }, [
+                  _c("label", { attrs: { for: "formerInfoName" } }, [
+                    _vm._v("名稱：")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    attrs: { type: "text", id: "formerInfoName" },
+                    domProps: { value: _vm.formername }
+                  })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col-12 my-3" },
+                  _vm._l(_vm.formName, function(Name, index) {
+                    return _c("div", { staticClass: "row no-gutters my-2" }, [
+                      _c("div", { staticClass: "col-2" }, [
+                        _c(
+                          "span",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: index === 0,
+                                expression: "index===0"
+                              }
+                            ]
+                          },
+                          [
+                            _vm._v(
+                              "\n                                        農場\n                                        "
+                            ),
+                            _c("i", {
+                              staticClass: "fa fa-plus",
+                              attrs: { "aria-hidden": "true" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.addForm()
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-9" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.formName[index],
+                              expression: "formName[index]"
+                            }
+                          ],
+                          staticClass: "w-100",
+                          attrs: { type: "text" },
+                          domProps: { value: _vm.formName[index] },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.formName, index, $event.target.value)
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-1 flex-total-center" }, [
+                        _c("i", {
+                          staticClass: "fa fa-minus text-danger",
+                          attrs: { "aria-hidden": "true" },
+                          on: {
+                            click: function($event) {
+                              return _vm.deleteForm(index)
+                            }
+                          }
+                        })
+                      ])
+                    ])
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col-12" },
+                  _vm._l(_vm.cropName, function(Crop, index) {
+                    return _c("div", { staticClass: "row no-gutters my-2" }, [
+                      _c("div", { staticClass: "col-2" }, [
+                        _c(
+                          "span",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: index === 0,
+                                expression: "index===0"
+                              }
+                            ]
+                          },
+                          [
+                            _vm._v(
+                              "\n                                        農田\n                                        "
+                            ),
+                            _c("i", {
+                              staticClass: "fa fa-plus",
+                              attrs: { "aria-hidden": "true" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.addCrop()
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-9" }, [
+                        _c("div", { staticClass: "row no-gutters" }, [
+                          _c("div", { staticClass: "col-4" }, [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: Crop[0],
+                                    expression: "Crop[0]"
+                                  }
+                                ],
+                                staticClass: "w-100 h-100",
+                                attrs: { name: "", id: "" },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      Crop,
+                                      0,
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.formName, function(form) {
+                                return _c("option", [
+                                  _vm._v(
+                                    "\n                                                    " +
+                                      _vm._s(form) +
+                                      "\n                                                "
+                                  )
+                                ])
+                              }),
+                              0
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-4" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: Crop[1],
+                                  expression: "Crop[1]"
+                                }
+                              ],
+                              staticClass: "w-100",
+                              attrs: { type: "text" },
+                              domProps: { value: Crop[1] },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(Crop, 1, $event.target.value)
+                                }
+                              }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-4" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formaddress[index],
+                                  expression: "formaddress[index]"
+                                }
+                              ],
+                              staticClass: "w-100",
+                              attrs: { type: "text" },
+                              domProps: { value: _vm.formaddress[index] },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.formaddress,
+                                    index,
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-1 flex-total-center" }, [
+                        _c("i", {
+                          staticClass: "fa fa-minus text-danger",
+                          attrs: { "aria-hidden": "true" },
+                          on: {
+                            click: function($event) {
+                              return _vm.deleteCrop(index)
+                            }
+                          }
+                        })
+                      ])
+                    ])
+                  }),
+                  0
+                )
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-footer" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-secondary",
+                attrs: { type: "button", "data-dismiss": "modal" },
+                on: {
+                  click: function($event) {
+                    return _vm.resetAny()
+                  }
+                }
+              },
+              [_vm._v("關閉")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              { staticClass: "btn btn-primary", attrs: { type: "button" } },
+              [_vm._v("更新")]
+            )
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("農夫農場資訊")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
     ])
   }
 ]
@@ -80136,6 +80621,7 @@ Vue.component('conitor-exponent', __webpack_require__(/*! ./components/ConitorEx
 Vue.component('config-place', __webpack_require__(/*! ./components/ConfigPlace.vue */ "./resources/js/components/ConfigPlace.vue")["default"]);
 Vue.component('prog-items', __webpack_require__(/*! ./components/progItems.vue */ "./resources/js/components/progItems.vue")["default"]);
 Vue.component('monitor-items-show', __webpack_require__(/*! ./components/MonitorItemsShow.vue */ "./resources/js/components/MonitorItemsShow.vue")["default"]);
+Vue.component('former-info-config', __webpack_require__(/*! ./components/FormerInfoConfig.vue */ "./resources/js/components/FormerInfoConfig.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -80444,6 +80930,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/FormerInfoConfig.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/components/FormerInfoConfig.vue ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _FormerInfoConfig_vue_vue_type_template_id_6e49e268_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true& */ "./resources/js/components/FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true&");
+/* harmony import */ var _FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormerInfoConfig.vue?vue&type=script&lang=js& */ "./resources/js/components/FormerInfoConfig.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _FormerInfoConfig_vue_vue_type_template_id_6e49e268_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _FormerInfoConfig_vue_vue_type_template_id_6e49e268_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "6e49e268",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/FormerInfoConfig.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/FormerInfoConfig.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/FormerInfoConfig.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./FormerInfoConfig.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/components/FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true& ***!
+  \*************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_template_id_6e49e268_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_template_id_6e49e268_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_template_id_6e49e268_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

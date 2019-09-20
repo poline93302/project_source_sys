@@ -19,6 +19,8 @@ Route::get('/', function () {
 Route::group(['prefix' => 'monitor'], function () {
 //  基本監控畫面
     Route::get('/', 'FormerPlaceController@show')->name('monitor_homepage');
+//  查詢監控畫面
+//    Route::get('/{form}', 'FormerPlaceController@show')->name('monitor_homepage');
 //  點選id轉化到監控畫面
     Route::get('/{form_crop}', 'FormerConfigController@show')->name('monitor_former_config');
 });
@@ -28,6 +30,7 @@ Route::group(['prefix' => 'monitor'], function () {
 Route::group(['prefix' => 'user'], function () {
     Route::get('/', 'FormerInfoController@index')->name('former_homepage');
     Route::post('/', 'FormerInfoController@login')->name('former_login');
+    Route::post('/logout', 'FormerInfoController@logout')->name('former_logout');
     Route::post('/register', 'FormerInfoController@register')->name('former_register');
 });
 

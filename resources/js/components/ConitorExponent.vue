@@ -1,9 +1,9 @@
 <template>
-    <div class="container sensor-part border border-light rounded mb-3">
+    <div class="container sensor-part border border-light rounded my-5 shadow">
         <div class="row my-3 no-gutters text-center">
             <div class="col-12 mb-3 form-header">
                 <div class="row ">
-                    <div class="col-3 form-title text-left"> {{ value_group.form }} __ {{ value_group.crop}}</div>
+                    <div class="col-3 form-title text-left"> {{ form_crop }}</div>
                     <div class="col-6"></div>
                     <div class="col-3 place-tools text-right">
                         <i class="fa fa-question" aria-hidden="true"></i>
@@ -36,23 +36,27 @@
     export default {
         name: "conitor-exponent",
         props: {
-            value_group: Object,
+            form_crop: String,
             config_number: 0,
         },
         methods: {
             count_off(id) {
                 return this.monitor_id[id] + '-' + this.config_number;
+            },
+            getValue() {
+                // hex_values
+                console.log('getvalue');
+                // axios.get();
             }
         },
         computed: {
             urlPath() {
-                return this.url_path + this.value_group.form + '_' + this.value_group.crop;
+                return this.url_path + this.form_crop;
             },
         },
         data() {
             return {
-                hex_values: [this.value_group.water, this.value_group.light,
-                    this.value_group.air, this.value_group.weather],
+                hex_values: [],
                 url_path: 'monitor/',
                 //六角形ID
                 monitor_id: ['monitor-water', 'monitor-light', 'monitor-air', 'monitor-weather'],
@@ -65,6 +69,10 @@
                 Make_Circle(this.hex_draw[i])
             }
         },
+        created() {
+            this.getValue();
+            setTimeout(this.getValue(), 3600);
+        }
     }
 </script>
 
@@ -73,11 +81,10 @@
         position: absolute;
         top: 0;
         right: 0;
-        border-color: transparent #00FF00 transparent transparent;
+        border-color: transparent #e5c72f transparent transparent;
         border-style: solid solid solid solid;
         border-width: 1.5rem 1.5rem 0 0;
         height: 0;
         width: 0;
-        background-color: var(--main-color);
     }
 </style>

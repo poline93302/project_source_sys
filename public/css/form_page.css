@@ -9,28 +9,18 @@
     font-family: 'cwTeXYen', sans-serif;
     margin: 0;
     padding: 0;
-    font-size: 22px;
-    color: white;
+    font-size: 20px;
+    color: black;
 }
 
-
-html {
-    height: 100%;
-}
-
-body {
-    background-color: var(--main-color) !important;
-    height: 100%;
+.info-item {
+    text-decoration: none;
 }
 
 footer > pre {
-    position: absolute;
-    bottom: 0;
-    right: 0;
     margin-right: 5rem;
-    align-items: center;
+    text-align: right;
     font-size: 0.5rem;
-    color: white;
 }
 
 .text-font {

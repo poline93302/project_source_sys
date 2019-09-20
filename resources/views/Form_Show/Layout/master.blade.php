@@ -27,7 +27,8 @@
     </footer>
 </div>
 </body>
-<script src="{{asset('js/bundle/index.bundle.js')}}"></script>
+<script src="{{ asset('js/bundle/index.bundle.js') }}"></script>
+<script src="{{ asset('js/bundle/checkinfo.bundle.js') }}"></script>
 </html>
 
 

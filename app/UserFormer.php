@@ -11,7 +11,7 @@ class UserFormer extends Authenticatable
     protected $table = 'User_former';
     //
     protected $fillable = [
-        'name', 'email',
+        'name', 'username', 'email', 'password',
     ];
     protected $hidden = [
         'password',

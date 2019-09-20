@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+use App\FormerInfo;
 
 class FormerPlaceController extends Controller
 {
+
     //農夫新增農場
     public function create()
     {
@@ -17,45 +21,29 @@ class FormerPlaceController extends Controller
 
     }
 
-    public function update()
+    public function select(Request $req)
     {
 
     }
 
-    public function show(Request $req)
+    public function show()
     {
         /*      input : form(def null) & former & form_crop(def null)
                 output : this form's monitor(water,air,sun,weather,name,crop)
         */
-//        $data = [
-//            $moniter_value['water_level'] = '',
-//        ];
-        $Recy_data = [
-            [
-                'form' => 'jojogg',
-                'crop' => '巧克力田',
-                'water' => 83,
-                'light' => 13,
-                'air' => 58,
-                'weather' => 95,
-            ],
-//            [
-//                'form'    => 'jojogg',
-//                'crop'    => '可田',
-//                'water'   => 83,
-//                'light'   => 13,
-//                'air'     => 58,
-//                'weather' => 90,
-//            ],
-//            [
-//                'form'    => 'jojo32',
-//                'crop'    => '利田',
-//                'water'   => 83,
-//                'light'   => 13,
-//                'air'     => 58,
-//                'weather' => 90,
-//            ]
-        ];
-        return view('Form_Show.moniter.moniter_show', ['data' => $Recy_data]);
+//      抓取當下農夫
+        $former = Auth::user()['name'];
+//      抓取該農夫的所有田
+        $selectFormer = FormerInfo::where('former', $former)->orderBy('form', 'DESC')->get();
+//      form_crop
+        $formList = [];
+        $formAddress = [];
+//      進行拆解
+        foreach ($selectFormer as $i => $item) {
+//          組合農場與農地 #array#
+            $formList[$i] = $item['form'] . '_' . $item['form_plant'];
+            $formAddress[$i] = $item['address'];
+        }
+        return view('Form_Show.moniter.moniter_show', ['formList' => $formList, 'former' => $former, 'formerAddress' => $formAddress]);
     }
 }
