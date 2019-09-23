@@ -2,26 +2,28 @@
 
 @section('show')
     <header class="my-3">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <div class="container my-3">
             <div class="row text-center bg-white shadow rounded-top">
-                <div class="col-7 col-lg-8 my-3">
-                    <img src="http://placeimg.com/1500/550/any/1" class="img-fluid" alt="">
+                <div class="col-7 col-lg-7 my-3">
+                    <img src="http://placeimg.com/1500/600/any/1" class="img-fluid" alt="">
                 </div>
-                <div class="col-5 col-lg-4 my-3 ">
+                <div class="col-5 col-lg-5 my-3 ">
                     <div class="row mt-3">
                         <div class="col-12 mb-3">
                             <span class="text-dark">歡迎 {{ $former }} 抵達本站</span>
                         </div>
-                        <div class="col-12">
-                            <div class="form-group">
+                        <form method="POST" action="{{route('monitor_homepage_select')}}" class="col-12 mb-3">
+                            @csrf
+                            <div class="form-group mb-1">
                                 <label for="former"></label>
-                                <select class="form-control-sm w-75  text-dark" id="selectForm"
+                                <select class="form-control-sm w-98" id="selectForm" name="selectForm"
                                         onchange="linkSelectChange({{ json_encode($formList) }})">
-                                    <option>請選擇農場</option>
+                                    <option value="all">請選擇農場</option>
                                     {{ $listStatus = "" }}
                                     @foreach( ($formList) as $List)
-                                        $pos計算_的所在長度 ; $formTitle文字切割
-                                        {{ $pos = strpos($List, '_') , $formTitle = substr($List,0,$pos)}}
+                                        {{--                                        $pos計算_的所在長度 ; $formTitle文字切割--}}
+                                        {{ $pos = strpos($List[0], '_') , $formTitle = substr($List[0],0,$pos)}}
                                         @if($listStatus !== $formTitle)
                                             <option>{{ ($formTitle) }}</option>
                                         @endif
@@ -29,26 +31,36 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
+                            <div class="form-group mb-1">
                                 <label for="former-crop"></label>
-                                <select class="form-control-sm w-75 text-dark" id="selectCrop">
-                                    <option>請選擇農田</option>
+                                <select class="form-control-sm w-98" id="selectCrop" name="selectCrop">
+                                    <option value="all">請選擇農田</option>
                                 </select>
                             </div>
-                        </div>
+                            <button type="submit" class="btn btn-warning  btn-sm btn-block">查詢</button>
+                        </form>
+
                         <div class="col-12 row no-gutters">
-                            <div class="col-7">
-                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                            <div class="col">
+                                <button type="button" class="btn btn-primary w-98 btn-sm" data-toggle="modal"
                                         data-target="#FormerInfoModal">
                                     農夫資訊
                                 </button>
                             </div>
-                            <div class="col-5">
-                                <button type="button" class="btn btn-primary">
-                                    登出
-                                </button>
+                            <div class="col">
+                                <a href="{{ route('monitor_homepage') }}">
+                                    <button type="button" class="btn btn-primary w-98 btn-sm">
+                                        顯示全部
+                                    </button>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <form method="POST" action="{{ route('former_logout') }}" id="loginForm">
+                                    @csrf
+                                    <button type="button" class="btn btn-primary w-98 btn-sm" onclick="alertLogin()">
+                                        登出
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -61,13 +73,21 @@
         @if(is_null($formList))
             <div class="no-create w-100 flex-total-center">請新增農場與農田</div>
         @else
-            @foreach($formList as $key=>$d)
-                <Conitor-Exponent :form_crop={{ json_encode($d) }} :config_number={{$key}} ></Conitor-Exponent>
+            @foreach($resList as $key=>$d)
+                <Conitor-Exponent
+                        :form_crop="{{ json_encode($d[0]) }}"
+                        :config_number="{{$key}}"
+                        :url_path="{{json_encode(route('monitor_former_config',['form_crop'=>$d[0]]))}}">
+                </Conitor-Exponent>
             @endforeach
         @endif
     </div>
 
     {{-- 農夫資訊的Modal--}}
-    <former-info-config :formername=" {{ json_encode($former) }} " :formcrop="{{ json_encode($formList) }}"
-                        :formaddress="{{json_encode($formerAddress)}}"></former-info-config>
+    <former-info-config :formername=" {{ json_encode($former) }} "
+                        :formcrop="{{ json_encode($resList) }}"
+                        :formeremail="{{ json_encode($formerEmail) }}"
+                        :route="{{ json_encode(route('monitor_former_update'))}}"
+    >
+    </former-info-config>
 @endsection

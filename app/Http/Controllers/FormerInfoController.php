@@ -19,18 +19,17 @@ class FormerInfoController extends Controller
 
     public function username()
     {
-        return 'name';
+        return 'username';
     }
 
     public function index(Request $req)
     {
         return view('Form_Show.User.UserHomepage', ['name' => null, 'pass' => null]);
-//        dd('homepage');
     }
 
     public function login(Request $req)
     {
-        if (Auth::attempt(['name' => $req['login_username'], 'password' => $req['login_password']])) {
+        if (Auth::attempt(['username' => $req['login_username'], 'password' => $req['login_password']])) {
             return redirect()->to(route('monitor_homepage'));
         } else {
             return $message = '請輸入正確帳號密碼';
@@ -40,7 +39,8 @@ class FormerInfoController extends Controller
 
     public function logout()
     {
-        dd('123');
+        Auth::logout();
+        return redirect()->to(route('former_homepage'));
     }
 
     public function register(Request $req)
@@ -52,6 +52,5 @@ class FormerInfoController extends Controller
             'password' => Hash::make($req['register_password']),
         ]);
         return view('Form_Show.User.UserHomepage', ['name' => $req['register_username'], 'pass' => $req['register_password']]);
-//        return redirect()->to(route('former_homepage'));
     }
 }

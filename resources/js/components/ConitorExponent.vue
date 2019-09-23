@@ -6,7 +6,20 @@
                     <div class="col-3 form-title text-left"> {{ form_crop }}</div>
                     <div class="col-6"></div>
                     <div class="col-3 place-tools text-right">
-                        <i class="fa fa-question" aria-hidden="true"></i>
+                        <a data-toggle="collapse" :href='"#replyCollapse"+config_number' role="button"
+                           aria-expanded="false" aria-controls="collapseExample">
+                            <i class="fa fa-question" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <div class="col-12">
+                        <div class="collapse" :id='"replyCollapse"+config_number'>
+                            <div class="card card-body">
+                                水健康指數:
+                                光健康指數:
+                                空氣健康指數:
+                                氣候健康指數:
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row no-gutters">
@@ -19,7 +32,7 @@
                     </div>
                     <div class="col-12 h-75">&nbsp;</div>
                     <div class="col-12  text-right">
-                        <a :href="urlPath">
+                        <a :href="url_path">
                             <div class="go-monitor"></div>
                         </a>
                     </div>
@@ -44,30 +57,26 @@
                 return this.monitor_id[id] + '-' + this.config_number;
             },
             getValue() {
-                // hex_values
+                // hex_value
                 console.log('getvalue');
                 // axios.get();
             }
         },
-        computed: {
-            urlPath() {
-                return this.url_path + this.form_crop;
-            },
-        },
         data() {
             return {
                 hex_values: [],
-                url_path: 'monitor/',
+                url_path: '',
                 //六角形ID
                 monitor_id: ['monitor-water', 'monitor-light', 'monitor-air', 'monitor-weather'],
-                hex_draw: [],
+                //hex_draw 得到數值
+                hex_draw: {},
             }
         },
         mounted() {
-            for (let i = 0; i < 4; i++) {
-                this.hex_draw[i] = new Draw_Info(this.monitor_id[i] + '-' + this.config_number, this.hex_values[i], 100, 0);
-                Make_Circle(this.hex_draw[i])
-            }
+            // for (let i = 0; i < 4; i++) {
+            //     this.hex_draw[i] = new Draw_Info(this.monitor_id[i] + '-' + this.config_number, this.hex_values[i], 100, 0);
+            //     Make_Circle(this.hex_draw[i])
+            // }
         },
         created() {
             this.getValue();

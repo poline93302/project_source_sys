@@ -6,6 +6,7 @@
 
 * {
     font-family: "Open Sans", sans-serif;
+''
     font-family: 'cwTeXYen', sans-serif;
     margin: 0;
     padding: 0;
@@ -178,4 +179,10 @@ footer > pre {
     :root {
         --hexagon-left: -0.5rem !important;;
     }
+}
+
+
+/*bootstrap re code*/
+.w-98 {
+    width: 98% !important;
 }

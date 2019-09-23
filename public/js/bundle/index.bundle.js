@@ -1882,6 +1882,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -1895,29 +1908,24 @@ __webpack_require__.r(__webpack_exports__);
       return this.monitor_id[id] + '-' + this.config_number;
     },
     getValue: function getValue() {
-      // hex_values
+      // hex_value
       console.log('getvalue'); // axios.get();
-    }
-  },
-  computed: {
-    urlPath: function urlPath() {
-      return this.url_path + this.form_crop;
     }
   },
   data: function data() {
     return {
       hex_values: [],
-      url_path: 'monitor/',
+      url_path: '',
       //六角形ID
       monitor_id: ['monitor-water', 'monitor-light', 'monitor-air', 'monitor-weather'],
-      hex_draw: []
+      //hex_draw 得到數值
+      hex_draw: {}
     };
   },
-  mounted: function mounted() {
-    for (var i = 0; i < 4; i++) {
-      this.hex_draw[i] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](this.monitor_id[i] + '-' + this.config_number, this.hex_values[i], 100, 0);
-      Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Make_Circle"])(this.hex_draw[i]);
-    }
+  mounted: function mounted() {// for (let i = 0; i < 4; i++) {
+    //     this.hex_draw[i] = new Draw_Info(this.monitor_id[i] + '-' + this.config_number, this.hex_values[i], 100, 0);
+    //     Make_Circle(this.hex_draw[i])
+    // }
   },
   created: function created() {
     this.getValue();
@@ -2049,49 +2057,130 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "FormerInfoConfig",
   props: {
     formername: String,
+    formeremail: String,
     formcrop: Array,
-    formaddress: Array
+    route: String
   },
   methods: {
     addForm: function addForm() {
-      this.formName.push('');
+      this.sortOutData[0].push(['', '']);
     },
+    //id 為 DOM ID
     deleteForm: function deleteForm(id) {
-      this.formName.splice(id, 1);
+      var deleteValue = document.getElementById('update-FormName-' + id);
+
+      if (window.confirm('確定刪除嗎？若確認的話會將相關農地“刪除”')) {
+        this.sortOutData[0].splice(id, 1); //
+
+        this.stepToInter.push('delete_Form_' + deleteValue.value + "_");
+      }
     },
     addCrop: function addCrop() {
-      this.cropName.push([], []);
+      this.sortOutData[1].push('');
     },
-    deleteCrop: function deleteCrop(id) {
-      this.cropName.splice(id, 1);
+    deleteCrop: function deleteCrop(id, fontId) {
+      this.stepToInter.push('delete_Crop_' + id + "_");
+      this.sortOutData[1].splice(fontId, 1);
+    },
+    reFormCrop: function reFormCrop(id, sqlId) {
+      var formName = document.getElementById('select-FormData-' + id);
+      var cropName = document.getElementById('select-CropData-' + id);
+      this.$set(this.sortOutData[1], id, formName.value + '|' + cropName.value + '|' + sqlId);
+      this.stepToInter.push('Crop_Form_' + id + '_' + sqlId);
     },
     cutFormCrop: function cutFormCrop() {
       var self = this;
-      var form = [];
+      var formCrop = [];
       var formStatus = '';
 
       _.forEach(this.formcrop, function (value, index) {
-        form[index] = value.split('_');
-        self.cropName.push(form[index]);
+        //value[0]農作物 value[1]農場地址
+        formCrop[index] = value[0].split('_');
+        self.cropName.push(formCrop[index]);
 
-        if (formStatus !== form[index][0]) {
-          self.formName.push(form[index][0]);
-          formStatus = form[index][0];
+        if (formStatus !== formCrop[index][0]) {
+          self.formName[0].push(formCrop[index][0]);
+          self.formName[1].push(value[1]);
+          formStatus = formCrop[index][0];
         }
       });
+
+      this.createFlash();
     },
-    resetAny: function resetAny() {}
+    resetAny: function resetAny() {
+      this.sortOutData = [[], []];
+      this.createFlash();
+    },
+    createFlash: function createFlash() {
+      var self = this;
+      this.formerName = this.formername;
+      this.formerEmail = this.formeremail;
+
+      for (var i = 0; i < this.formName[0].length; i++) {
+        self.sortOutData[0].push([this.formName[0][i], this.formName[1][i]]);
+      }
+
+      for (var _i = 0; _i < this.cropName.length; _i++) {
+        self.sortOutData[1].push(this.cropName[_i][0] + '|' + this.cropName[_i][1] + "|" + this.formcrop[_i][2]);
+      }
+    },
+    //查詢更改部分 id 為更改數值的DOM_ID original原本要被更改的數值
+    searchUpdate: function searchUpdate(id, original, way) {
+      this.stepToInter.push(way + "_" + original + "_" + id);
+    },
+    lostCheck: function lostCheck() {
+      var updateFormerInfo = document.getElementById('updateFormerInfo');
+      this.repeat = Array.from(new Set(this.stepToInter));
+      updateFormerInfo.elements.temporary.value = this.repeat; // console.log();
+      // if (confirm('確定送出')) {
+
+      updateFormerInfo.submit(); // }
+    }
   },
   data: function data() {
     return {
-      //重複者刪除
-      formName: [],
+      //重複者刪除 [0]名稱[1]地址
+      formName: [[], []],
       //所有數值進行增加
-      cropName: []
+      cropName: [],
+      //記下前端步驟
+      stepToInter: [],
+      //最後結果送出
+      repeat: [],
+      //進行運算[0][0]formName [0][1]Address [1]cropName
+      sortOutData: [[], []],
+      //農夫名稱
+      formerName: '',
+      formerEmail: '',
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
   },
   created: function created() {
@@ -67738,7 +67827,43 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "col-6" }),
             _vm._v(" "),
-            _vm._m(0)
+            _c("div", { staticClass: "col-3 place-tools text-right" }, [
+              _c(
+                "a",
+                {
+                  attrs: {
+                    "data-toggle": "collapse",
+                    href: "#replyCollapse" + _vm.config_number,
+                    role: "button",
+                    "aria-expanded": "false",
+                    "aria-controls": "collapseExample"
+                  }
+                },
+                [
+                  _c("i", {
+                    staticClass: "fa fa-question",
+                    attrs: { "aria-hidden": "true" }
+                  })
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-12" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "collapse",
+                  attrs: { id: "replyCollapse" + _vm.config_number }
+                },
+                [
+                  _c("div", { staticClass: "card card-body" }, [
+                    _vm._v(
+                      "\n                            水健康指數:\n                            光健康指數:\n                            空氣健康指數:\n                            氣候健康指數:\n                        "
+                    )
+                  ])
+                ]
+              )
+            ])
           ]),
           _vm._v(" "),
           _c(
@@ -67763,7 +67888,7 @@ var render = function() {
               _c("div", { staticClass: "col-12 h-75" }, [_vm._v(" ")]),
               _vm._v(" "),
               _c("div", { staticClass: "col-12  text-right" }, [
-                _c("a", { attrs: { href: _vm.urlPath } }, [
+                _c("a", { attrs: { href: _vm.url_path } }, [
                   _c("div", { staticClass: "go-monitor" })
                 ])
               ])
@@ -67775,19 +67900,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-3 place-tools text-right" }, [
-      _c("i", {
-        staticClass: "fa fa-question",
-        attrs: { "aria-hidden": "true" }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -67873,274 +67986,462 @@ var render = function() {
         _c("div", { staticClass: "modal-content" }, [
           _vm._m(0),
           _vm._v(" "),
-          _c("div", { staticClass: "modal-body" }, [
-            _c("div", { staticClass: "container" }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-12" }, [
-                  _c("label", { attrs: { for: "formerInfoName" } }, [
-                    _vm._v("名稱：")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    attrs: { type: "text", id: "formerInfoName" },
-                    domProps: { value: _vm.formername }
-                  })
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "col-12 my-3" },
-                  _vm._l(_vm.formName, function(Name, index) {
-                    return _c("div", { staticClass: "row no-gutters my-2" }, [
-                      _c("div", { staticClass: "col-2" }, [
-                        _c(
-                          "span",
+          _c(
+            "form",
+            {
+              attrs: {
+                method: "post",
+                action: _vm.route,
+                id: "updateFormerInfo"
+              }
+            },
+            [
+              _c("input", {
+                attrs: { type: "hidden", name: "_token" },
+                domProps: { value: _vm.csrf }
+              }),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.repeat,
+                    expression: "repeat"
+                  }
+                ],
+                attrs: { type: "hidden", name: "temporary" },
+                domProps: { value: _vm.repeat },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.repeat = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("div", { staticClass: "container" }, [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-6" }, [
+                      _c("label", { attrs: { for: "formerInfoName" } }, [
+                        _vm._v("名稱：")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
                           {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value: index === 0,
-                                expression: "index===0"
-                              }
-                            ]
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.formerName,
+                            expression: "formerName"
+                          }
+                        ],
+                        attrs: {
+                          type: "text",
+                          id: "formerInfoName",
+                          name: "updateFormerName"
+                        },
+                        domProps: { value: _vm.formerName },
+                        on: {
+                          change: function($event) {
+                            return _vm.searchUpdate(
+                              "updateFormerName",
+                              _vm.formername,
+                              "Info"
+                            )
                           },
-                          [
-                            _vm._v(
-                              "\n                                        農場\n                                        "
-                            ),
-                            _c("i", {
-                              staticClass: "fa fa-plus",
-                              attrs: { "aria-hidden": "true" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.addForm()
-                                }
-                              }
-                            })
-                          ]
-                        )
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.formerName = $event.target.value
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-6" }, [
+                      _c("label", { attrs: { for: "formerInfoEmail" } }, [
+                        _vm._v("信箱：")
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-9" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.formName[index],
-                              expression: "formName[index]"
-                            }
-                          ],
-                          staticClass: "w-100",
-                          attrs: { type: "text" },
-                          domProps: { value: _vm.formName[index] },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(_vm.formName, index, $event.target.value)
-                            }
-                          }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-1 flex-total-center" }, [
-                        _c("i", {
-                          staticClass: "fa fa-minus text-danger",
-                          attrs: { "aria-hidden": "true" },
-                          on: {
-                            click: function($event) {
-                              return _vm.deleteForm(index)
-                            }
-                          }
-                        })
-                      ])
-                    ])
-                  }),
-                  0
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "col-12" },
-                  _vm._l(_vm.cropName, function(Crop, index) {
-                    return _c("div", { staticClass: "row no-gutters my-2" }, [
-                      _c("div", { staticClass: "col-2" }, [
-                        _c(
-                          "span",
+                      _c("input", {
+                        directives: [
                           {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value: index === 0,
-                                expression: "index===0"
-                              }
-                            ]
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.formerEmail,
+                            expression: "formerEmail"
+                          }
+                        ],
+                        attrs: {
+                          type: "text",
+                          id: "formerInfoEmail",
+                          name: "updateFormerEmail"
+                        },
+                        domProps: { value: _vm.formerEmail },
+                        on: {
+                          change: function($event) {
+                            return _vm.searchUpdate(
+                              "updateFormerEmail",
+                              _vm.formeremail,
+                              "Info"
+                            )
                           },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.formerEmail = $event.target.value
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col-12 my-3" },
+                      _vm._l(_vm.sortOutData[0], function(thisFormName, index) {
+                        return _c(
+                          "div",
+                          { staticClass: "row no-gutters my-2" },
                           [
-                            _vm._v(
-                              "\n                                        農田\n                                        "
-                            ),
-                            _c("i", {
-                              staticClass: "fa fa-plus",
-                              attrs: { "aria-hidden": "true" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.addCrop()
-                                }
-                              }
-                            })
-                          ]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-9" }, [
-                        _c("div", { staticClass: "row no-gutters" }, [
-                          _c("div", { staticClass: "col-4" }, [
-                            _c(
-                              "select",
-                              {
+                            _c("div", { staticClass: "col-2" }, [
+                              _c(
+                                "span",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: index === 0,
+                                      expression: "index===0"
+                                    }
+                                  ]
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                        農場\n                                        "
+                                  ),
+                                  _c("i", {
+                                    staticClass: "fa fa-plus",
+                                    attrs: { "aria-hidden": "true" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.addForm(
+                                          "update-FormName-" +
+                                            _vm.sortOutData[0].length,
+                                          "update-FormEmail-" +
+                                            _vm.sortOutData[0].length
+                                        )
+                                      }
+                                    }
+                                  })
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-9 row no-gutters" }, [
+                              _c("input", {
                                 directives: [
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: Crop[0],
-                                    expression: "Crop[0]"
+                                    value: thisFormName[0],
+                                    expression: "thisFormName[0]"
                                   }
                                 ],
-                                staticClass: "w-100 h-100",
-                                attrs: { name: "", id: "" },
+                                staticClass: "col-6 w-100",
+                                attrs: {
+                                  type: "text",
+                                  placeholder: "請輸入農場名稱",
+                                  name: "update-FormName-" + index,
+                                  id: "update-FormName-" + index
+                                },
+                                domProps: { value: thisFormName[0] },
                                 on: {
                                   change: function($event) {
-                                    var $$selectedVal = Array.prototype.filter
-                                      .call($event.target.options, function(o) {
-                                        return o.selected
-                                      })
-                                      .map(function(o) {
-                                        var val =
-                                          "_value" in o ? o._value : o.value
-                                        return val
-                                      })
+                                    return _vm.searchUpdate(
+                                      "update-FormName-" + index,
+                                      _vm.formName[0][index],
+                                      "Form"
+                                    )
+                                  },
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
                                     _vm.$set(
-                                      Crop,
+                                      thisFormName,
                                       0,
-                                      $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
+                                      $event.target.value
                                     )
                                   }
                                 }
-                              },
-                              _vm._l(_vm.formName, function(form) {
-                                return _c("option", [
-                                  _vm._v(
-                                    "\n                                                    " +
-                                      _vm._s(form) +
-                                      "\n                                                "
-                                  )
-                                ])
                               }),
-                              0
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: thisFormName[1],
+                                    expression: "thisFormName[1]"
+                                  }
+                                ],
+                                staticClass: "col-6 w-100",
+                                attrs: {
+                                  type: "text",
+                                  placeholder: "請輸入農場地址",
+                                  name: "update-FormAddress-" + index
+                                },
+                                domProps: { value: thisFormName[1] },
+                                on: {
+                                  change: function($event) {
+                                    return _vm.searchUpdate(
+                                      "update-FormAddress-" + index,
+                                      thisFormName[0],
+                                      "Form"
+                                    )
+                                  },
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      thisFormName,
+                                      1,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "col-1 flex-total-center" },
+                              [
+                                _c("i", {
+                                  staticClass: "fa fa-minus text-danger",
+                                  attrs: { "aria-hidden": "true" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteForm(index)
+                                    }
+                                  }
+                                })
+                              ]
                             )
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col-4" }, [
-                            _c("input", {
-                              directives: [
+                          ]
+                        )
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col-12" },
+                      _vm._l(_vm.sortOutData[1], function(Crop, index) {
+                        return _c(
+                          "div",
+                          { staticClass: "row no-gutters my-2" },
+                          [
+                            _c("div", { staticClass: "col-2" }, [
+                              _c(
+                                "span",
                                 {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: Crop[1],
-                                  expression: "Crop[1]"
-                                }
-                              ],
-                              staticClass: "w-100",
-                              attrs: { type: "text" },
-                              domProps: { value: Crop[1] },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(Crop, 1, $event.target.value)
-                                }
-                              }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col-4" }, [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.formaddress[index],
-                                  expression: "formaddress[index]"
-                                }
-                              ],
-                              staticClass: "w-100",
-                              attrs: { type: "text" },
-                              domProps: { value: _vm.formaddress[index] },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.formaddress,
-                                    index,
-                                    $event.target.value
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: index === 0,
+                                      expression: "index===0"
+                                    }
+                                  ]
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                        農田\n                                        "
+                                  ),
+                                  _c("i", {
+                                    staticClass: "fa fa-plus",
+                                    attrs: { "aria-hidden": "true" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.addCrop()
+                                      }
+                                    }
+                                  })
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-9" }, [
+                              _c("div", { staticClass: "row no-gutters" }, [
+                                _c("div", { staticClass: "col-6" }, [
+                                  _c(
+                                    "select",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: Crop.split("|")[0],
+                                          expression: "(Crop.split('|'))[0]"
+                                        }
+                                      ],
+                                      staticClass: "w-100 h-100",
+                                      attrs: {
+                                        name: "selectFormData" + index,
+                                        id: "select-FormData-" + index
+                                      },
+                                      on: {
+                                        change: [
+                                          function($event) {
+                                            var $$selectedVal = Array.prototype.filter
+                                              .call(
+                                                $event.target.options,
+                                                function(o) {
+                                                  return o.selected
+                                                }
+                                              )
+                                              .map(function(o) {
+                                                var val =
+                                                  "_value" in o
+                                                    ? o._value
+                                                    : o.value
+                                                return val
+                                              })
+                                            _vm.$set(
+                                              Crop.split("|"),
+                                              0,
+                                              $event.target.multiple
+                                                ? $$selectedVal
+                                                : $$selectedVal[0]
+                                            )
+                                          },
+                                          function($event) {
+                                            _vm.reFormCrop(
+                                              index,
+                                              Crop.split("|")[2]
+                                            )
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    _vm._l(_vm.sortOutData[0], function(form) {
+                                      return _c("option", [
+                                        _vm._v(
+                                          "\n                                                        " +
+                                            _vm._s(form[0]) +
+                                            "\n                                                    "
+                                        )
+                                      ])
+                                    }),
+                                    0
                                   )
-                                }
-                              }
-                            })
-                          ])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-1 flex-total-center" }, [
-                        _c("i", {
-                          staticClass: "fa fa-minus text-danger",
-                          attrs: { "aria-hidden": "true" },
-                          on: {
-                            click: function($event) {
-                              return _vm.deleteCrop(index)
-                            }
-                          }
-                        })
-                      ])
-                    ])
-                  }),
-                  0
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "col-6" }, [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: Crop.split("|")[1],
+                                        expression: "(Crop.split('|'))[1]"
+                                      }
+                                    ],
+                                    staticClass: "w-100",
+                                    attrs: {
+                                      type: "text",
+                                      id: "select-CropData-" + index,
+                                      placeholder: "請輸入農作物",
+                                      name: "selectCropData" + index
+                                    },
+                                    domProps: { value: Crop.split("|")[1] },
+                                    on: {
+                                      change: function($event) {
+                                        _vm.reFormCrop(
+                                          index,
+                                          Crop.split("|")[2]
+                                        )
+                                      },
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          Crop.split("|"),
+                                          1,
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  })
+                                ])
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "col-1 flex-total-center" },
+                              [
+                                _c("i", {
+                                  staticClass: "fa fa-minus text-danger",
+                                  attrs: { "aria-hidden": "true" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deleteCrop(Crop.split("|")[2], index)
+                                    }
+                                  }
+                                })
+                              ]
+                            )
+                          ]
+                        )
+                      }),
+                      0
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" },
+                    on: {
+                      click: function($event) {
+                        return _vm.resetAny()
+                      }
+                    }
+                  },
+                  [_vm._v("關閉\n                    ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.lostCheck()
+                      }
+                    }
+                  },
+                  [_vm._v("更新")]
                 )
               ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "modal-footer" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-secondary",
-                attrs: { type: "button", "data-dismiss": "modal" },
-                on: {
-                  click: function($event) {
-                    return _vm.resetAny()
-                  }
-                }
-              },
-              [_vm._v("關閉")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              { staticClass: "btn btn-primary", attrs: { type: "button" } },
-              [_vm._v("更新")]
-            )
-          ])
+            ]
+          )
         ])
       ])
     ]

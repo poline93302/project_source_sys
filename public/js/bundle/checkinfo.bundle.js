@@ -34,15 +34,24 @@ function linkSelectChange(arr) {
     let selectForm = document.getElementById('selectForm');
     let selectFormTwo = document.getElementById('selectCrop');
 
-    let optionValue = '<option>請選擇農田</option>';
+    let optionValue = '<option value="all">請選擇農田</option>';
     let res = "";
+    let resOption = "";
     _.forEach(arr, function (optain) {
         res = _.split(optain, '_');
+        resOption = _.split(res[1], ',');
+        console.log(res);
         if (res[0] === selectForm.value) {
-            optionValue += `<option>${res[1]}</option>`
+            optionValue += `<option>${resOption[0]}</option>`
         }
     });
 
     selectFormTwo.innerHTML = optionValue;
+}
 
+function alertLogin() {
+    let loginForm = document.getElementById('loginForm');
+    if (confirm('確定要登出嗎？')) {
+        loginForm.submit()
+    }
 }
