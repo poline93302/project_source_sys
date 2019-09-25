@@ -33,7 +33,7 @@ class FormerPlaceController extends Controller
         FormerInfo::create([
             'former' => Auth::user()['username'],
             'form' => $form,
-            'form_plant' => $crop,
+            'crop' => $crop,
             'address' => $cropInfo['address'],
             'create_time' => Carbon::now(),
         ]);
@@ -50,7 +50,7 @@ class FormerPlaceController extends Controller
     {
         FormerInfo::where(['id' => $sqlID])->update([
             'form' => $form,
-            'form_plant' => $crop,
+            'crop' => $crop,
         ]);
     }
 
@@ -161,7 +161,6 @@ class FormerPlaceController extends Controller
         /*      input : form(def null) & former & form_crop(def null) req->form(為url抓取職) req->crop(為url抓取職)
                 output : this form's monitor(water,air,sun,weather,name,crop)
         */
-
 //      抓取當下農夫
         $former = Auth::user()['username'];
         $formerName = Auth::user()['name'];
@@ -191,7 +190,7 @@ class FormerPlaceController extends Controller
             //      進行拆解
             foreach ($resList as $i => $item) {
                 // 組合農場與農地 #array#
-                $formList[$i][0] = $item['form'] . '_' . $item['form_plant'];
+                $formList[$i][0] = $item['form'] . '_' . $item['crop'];
                 $formList[$i][1] = $item['address'];
                 $formList[$i][2] = $item['id'];
             }
@@ -199,7 +198,7 @@ class FormerPlaceController extends Controller
             foreach ($resList as $item) {
                 // 組合農場與農地 #array#
                 if ($item['form'] === $formIndicator) {
-                    $formList[$count][0] = $item['form'] . '_' . $item['form_plant'];
+                    $formList[$count][0] = $item['form'] . '_' . $item['crop'];
                     $formList[$count][1] = $item['address'];
                     $formList[$count][2] = $item['id'];
                     $count++;
@@ -208,8 +207,8 @@ class FormerPlaceController extends Controller
         } else {
             foreach ($resList as $item) {
                 // 組合農場與農地 #array#
-                if ($item['form'] === $formIndicator && $item['form_plant'] === $cropIndicator) {
-                    $formList[$count][0] = $item['form'] . '_' . $item['form_plant'];
+                if ($item['form'] === $formIndicator && $item['crop'] === $cropIndicator) {
+                    $formList[$count][0] = $item['form'] . '_' . $item['crop'];
                     $formList[$count][1] = $item['address'];
                     $formList[$count][2] = $item['id'];
                     $count++;

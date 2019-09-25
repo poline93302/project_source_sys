@@ -106,7 +106,6 @@ export function Make_Circle(info) {
     //畫兩個六角形 一個 圓形
     circle_text = svg.append('g');
 
-
     circle_text.append('circle')
         .attr("cx", cx)
         .attr("cy", cy)

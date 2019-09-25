@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -30,6 +31,7 @@ class FormerInfoController extends Controller
     public function login(Request $req)
     {
         if (Auth::attempt(['username' => $req['login_username'], 'password' => $req['login_password']])) {
+            Session(['username' => Auth::user()['username']]);
             return redirect()->to(route('monitor_homepage'));
         } else {
             return $message = '請輸入正確帳號密碼';

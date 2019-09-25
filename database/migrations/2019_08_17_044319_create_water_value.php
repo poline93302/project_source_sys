@@ -13,9 +13,11 @@ class CreateWaterValue extends Migration
      */
     public function up()
     {
-        Schema::create('Water_Recy', function (Blueprint $table) {
+//      farmland 農地個數
+        Schema::create('waterRecy', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('former');
+            $table->integer('farmland');
             $table->string('sensor');
             $table->double('value');
             $table->dateTime('send_time');
@@ -29,6 +31,6 @@ class CreateWaterValue extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('water_value');
+        Schema::dropIfExists('waterRecy');
     }
 }

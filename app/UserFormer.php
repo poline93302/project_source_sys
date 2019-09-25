@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class UserFormer extends Authenticatable
 {
     use Notifiable;
-    protected $table = 'User_former';
+    protected $table = 'userFormer';
     //
     protected $fillable = [
         'name', 'username', 'email', 'password',

@@ -1,10 +1,16 @@
 <template>
-    <div class="border w-100 p-2">
-        <div v-for="(item_info,index) in item_infos.classes" :class=" item_infos.classes[index]"
-             class="row border no-gutters my-3 monitor-item">
+    <div class="border w-100 p-2 my-2 shadow">
+        <div v-for="(item_info,index) in item_infos.classes"
+             :class="[monitor_value[index]<=30 ? 'border-danger' : monitor_value[index]>60? 'border-success': 'border-warning',item_infos.classes[index]]"
+             class="row border no-gutters m-3 monitor-item">
+
+            <!--            item_infos.classes[index]-->
             <div class="col-10 monitor-item-show row flex-total-center ">
                 <div class="col-12 flex-total-center">{{item_infos.names[index]}}</div>
-                <div v-for="item in item_infos.items[index]" class="col" :id="item"></div>
+                <div v-for="item in item_infos.items[index]" class="col">
+                    <div class="text-center">{{item}}</div>
+                    <div :id="item" class="text-center"></div>
+                </div>
             </div>
             <div class="col-2">
                 <div class="row no-gutters bg-white rounded my-3">
@@ -52,7 +58,6 @@
         methods: {
             get_value() {
                 console.log('Time_Out');
-                // axios.get()
             },
         },
         data: function () {

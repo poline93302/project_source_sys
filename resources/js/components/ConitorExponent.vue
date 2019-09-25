@@ -13,21 +13,18 @@
                     </div>
                     <div class="col-12">
                         <div class="collapse" :id='"replyCollapse"+config_number'>
-                            <div class="card card-body">
-                                水健康指數:
-                                光健康指數:
-                                空氣健康指數:
-                                氣候健康指數:
+                            <div class="card card-body collapse-item">
+                                <span class="">權重對應表 </span>
+                                <div>{{ innerHTML = textWeights() }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row no-gutters">
-                    <div v-for="(hex_value,index) in hex_values"
+                    <div v-for="(hex_value,item,key) in hex_values[1]"
                          class="col-3 mt-3 h-100 d-flex justify-content-center  align-items-center">
-                        <div class="monitor-items">
-                            <!--                            class="hexagon"-->
-                            <div :id=count_off(index)></div>
+                        <div class="monitor-items" :id="count_off(key)">
+                            <div>{{ item_id[key] }}</div>
                         </div>
                     </div>
                     <div class="col-12 h-75">&nbsp;</div>
@@ -45,43 +42,73 @@
 <script>
     import {Draw_Info, Make_Hex, Make_Circle} from "../Active/Sketchpad";
     import _ from 'lodash';
+    import axios from 'axios';
 
     export default {
         name: "conitor-exponent",
         props: {
             form_crop: String,
             config_number: 0,
+            url_api_target: '',
+            url_path: '',
+            name: '',
         },
         methods: {
             count_off(id) {
+                console.log(this.monitor_id[id]);
                 return this.monitor_id[id] + '-' + this.config_number;
             },
             getValue() {
                 // hex_value
-                console.log('getvalue');
-                // axios.get();
+                let info = [];
+                let self = this;
+                info = this.form_crop.split('_');
+                console.log();
+                axios.post(this.url_api_target, {
+                    'name': this.name,
+                    'farmland': this.config_number,
+                }).then(function (res) {
+                    //weights =>[0] 權重 [1]大權重
+                    self.hex_values = [res.data.weights, res.data.target];
+                }).catch(function (err) {
+                    console.log('ERROR' + err);
+                }).finally(function () {
+                    for (let i = 0; i < 4; i++) {
+                        self.hex_draw[i] = new Draw_Info(self.monitor_id[i] + '-' + self.config_number, self.hex_values[1][self.en_item_id[i]], 100, 0);
+                        Make_Circle(self.hex_draw[i]);
+                    }
+                });
+
+            },
+            textWeights() {
+                let pCollapse = '';
+                if (this.hex_values[0]) {
+                    pCollapse =
+                        `
+                        ${this.item_id[0]} :  水量 : ${this.hex_values[0].water_level} 水酸鹼值 : ${this.hex_values[0].water_ph} 土壤濕度 : ${this.hex_values[0].water_soil}
+                        ${this.item_id[1]}  :  亮度 : ${this.hex_values[0].water_level}
+                        ${this.item_id[2]} : 一氧化碳 : ${this.hex_values[0].air_cp} 溫度 : ${this.hex_values[0].air_hun} 甲烷 : ${this.hex_values[0].air_ph4} 濕度 : ${this.hex_values[0].air_tem}
+                        ${this.item_id[3]} : 累積雨量 : ${this.hex_values[0].weather_rainAccumulation} 風速 : ${this.hex_values[0].weather_windSpeed} 風向 : ${this.hex_values[0].weather_windWay}
+                        `;
+                    return pCollapse;
+                }
             }
         },
         data() {
             return {
                 hex_values: [],
-                url_path: '',
                 //六角形ID
                 monitor_id: ['monitor-water', 'monitor-light', 'monitor-air', 'monitor-weather'],
+                item_id: ['水健康指數', '光健康指數', '空氣健康指數', '氣候健康指數'],
+                en_item_id: ['water', 'light', 'air', 'weather'],
                 //hex_draw 得到數值
                 hex_draw: {},
+                register: true,
             }
         },
         mounted() {
-            // for (let i = 0; i < 4; i++) {
-            //     this.hex_draw[i] = new Draw_Info(this.monitor_id[i] + '-' + this.config_number, this.hex_values[i], 100, 0);
-            //     Make_Circle(this.hex_draw[i])
-            // }
-        },
-        created() {
-            this.getValue();
             setTimeout(this.getValue(), 3600);
-        }
+        },
     }
 </script>
 

@@ -1851,6 +1851,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Active/Sketchpad */ "./resources/js/Active/Sketchpad.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
+        /* harmony import */
+        var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+        /* harmony import */
+        var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
 //
 //
 //
@@ -1892,43 +1896,66 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "conitor-exponent",
   props: {
     form_crop: String,
-    config_number: 0
+      config_number: 0,
+      url_api_target: '',
+      url_path: '',
+      name: ''
   },
   methods: {
     count_off: function count_off(id) {
+        console.log(this.monitor_id[id]);
       return this.monitor_id[id] + '-' + this.config_number;
     },
     getValue: function getValue() {
       // hex_value
-      console.log('getvalue'); // axios.get();
+        var info = [];
+        var self = this;
+        info = this.form_crop.split('_');
+        console.log();
+        axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api_target, {
+            'name': this.name,
+            'farmland': this.config_number
+        }).then(function (res) {
+            //weights =>[0] 權重 [1]大權重
+            self.hex_values = [res.data.weights, res.data.target];
+        })["catch"](function (err) {
+            console.log('ERROR' + err);
+        })["finally"](function () {
+            for (var i = 0; i < 4; i++) {
+                self.hex_draw[i] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](self.monitor_id[i] + '-' + self.config_number, self.hex_values[1][self.en_item_id[i]], 100, 0);
+                Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Make_Circle"])(self.hex_draw[i]);
+            }
+        });
+    },
+      textWeights: function textWeights() {
+          var pCollapse = '';
+
+          if (this.hex_values[0]) {
+              pCollapse = "\n                    ".concat(this.item_id[0], " :  \u6C34\u91CF : ").concat(this.hex_values[0].water_level, " \u6C34\u9178\u9E7C\u503C : ").concat(this.hex_values[0].water_ph, " \u571F\u58E4\u6FD5\u5EA6 : ").concat(this.hex_values[0].water_soil, "\n                    ").concat(this.item_id[1], "  :  \u4EAE\u5EA6 : ").concat(this.hex_values[0].water_level, "\n                    ").concat(this.item_id[2], " : \u4E00\u6C27\u5316\u78B3 : ").concat(this.hex_values[0].air_cp, " \u6EAB\u5EA6 : ").concat(this.hex_values[0].air_hun, " \u7532\u70F7 : ").concat(this.hex_values[0].air_ph4, " \u6FD5\u5EA6 : ").concat(this.hex_values[0].air_tem, "\n                    ").concat(this.item_id[3], " : \u7D2F\u7A4D\u96E8\u91CF : ").concat(this.hex_values[0].weather_rainAccumulation, " \u98A8\u901F : ").concat(this.hex_values[0].weather_windSpeed, " \u98A8\u5411 : ").concat(this.hex_values[0].weather_windWay, "\n                    ");
+              return pCollapse;
+          }
     }
   },
   data: function data() {
     return {
       hex_values: [],
-      url_path: '',
       //六角形ID
       monitor_id: ['monitor-water', 'monitor-light', 'monitor-air', 'monitor-weather'],
+        item_id: ['水健康指數', '光健康指數', '空氣健康指數', '氣候健康指數'],
+        en_item_id: ['water', 'light', 'air', 'weather'],
       //hex_draw 得到數值
-      hex_draw: {}
+        hex_draw: {},
+        register: true
     };
   },
-  mounted: function mounted() {// for (let i = 0; i < 4; i++) {
-    //     this.hex_draw[i] = new Draw_Info(this.monitor_id[i] + '-' + this.config_number, this.hex_values[i], 100, 0);
-    //     Make_Circle(this.hex_draw[i])
-    // }
-  },
-  created: function created() {
-    this.getValue();
+            mounted: function mounted() {
     setTimeout(this.getValue(), 3600);
   }
 });
@@ -2245,6 +2272,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2255,7 +2288,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     get_value: function get_value() {
-      console.log('Time_Out'); // axios.get()
+        console.log('Time_Out');
     }
   },
   data: function data() {
@@ -67856,10 +67889,12 @@ var render = function() {
                   attrs: { id: "replyCollapse" + _vm.config_number }
                 },
                 [
-                  _c("div", { staticClass: "card card-body" }, [
-                    _vm._v(
-                      "\n                            水健康指數:\n                            光健康指數:\n                            空氣健康指數:\n                            氣候健康指數:\n                        "
-                    )
+                    _c("div", {staticClass: "card card-body collapse-item"}, [
+                        _c("span", {}, [_vm._v("權重對應表 ")]),
+                        _vm._v(" "),
+                        _c("div", [
+                            _vm._v(_vm._s((_vm.innerHTML = _vm.textWeights())))
+                        ])
                   ])
                 ]
               )
@@ -67870,7 +67905,7 @@ var render = function() {
             "div",
             { staticClass: "row no-gutters" },
             [
-              _vm._l(_vm.hex_values, function(hex_value, index) {
+                _vm._l(_vm.hex_values[1], function (hex_value, item, key) {
                 return _c(
                   "div",
                   {
@@ -67878,9 +67913,14 @@ var render = function() {
                       "col-3 mt-3 h-100 d-flex justify-content-center  align-items-center"
                   },
                   [
-                    _c("div", { staticClass: "monitor-items" }, [
-                      _c("div", { attrs: { id: _vm.count_off(index) } })
-                    ])
+                      _c(
+                          "div",
+                          {
+                              staticClass: "monitor-items",
+                              attrs: {id: _vm.count_off(key)}
+                          },
+                          [_c("div", [_vm._v(_vm._s(_vm.item_id[key]))])]
+                      )
                   ]
                 )
               }),
@@ -68497,13 +68537,20 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "border w-100 p-2" },
+      {staticClass: "border w-100 p-2 my-2 shadow"},
     _vm._l(_vm.item_infos.classes, function(item_info, index) {
       return _c(
         "div",
         {
-          staticClass: "row border no-gutters my-3 monitor-item",
-          class: _vm.item_infos.classes[index]
+            staticClass: "row border no-gutters m-3 monitor-item",
+            class: [
+                _vm.monitor_value[index] <= 30
+                    ? "border-danger"
+                    : _vm.monitor_value[index] > 60
+                    ? "border-success"
+                    : "border-warning",
+                _vm.item_infos.classes[index]
+            ]
         },
         [
           _c(
@@ -68515,7 +68562,13 @@ var render = function() {
               ]),
               _vm._v(" "),
               _vm._l(_vm.item_infos.items[index], function(item) {
-                return _c("div", { staticClass: "col", attrs: { id: item } })
+                  return _c("div", {staticClass: "col"}, [
+                      _c("div", {staticClass: "text-center"}, [
+                          _vm._v(_vm._s(item))
+                      ]),
+                      _vm._v(" "),
+                      _c("div", {staticClass: "text-center", attrs: {id: item}})
+                  ])
               })
             ],
             2

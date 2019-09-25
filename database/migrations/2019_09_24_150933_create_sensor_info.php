@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFormTable extends Migration
+class CreateSensorInfo extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateFormTable extends Migration
      */
     public function up()
     {
-        Schema::create('formerInfo', function (Blueprint $table) {
+        Schema::create('sensor_info', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('former')->nullable();
-            $table->string('form')->nullable();
-            $table->string('crop')->nullable();
-            $table->string('address')->nullable();
-            $table->dateTime('create_time');
+            $table->string('former');
+            $table->string('farmland');
+            $table->string('sensor');
+            $table->integer('max');
+            $table->integer('min');
         });
     }
 
@@ -30,6 +30,6 @@ class CreateFormTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('formerInfo');
+        Schema::dropIfExists('sensor_info');
     }
 }

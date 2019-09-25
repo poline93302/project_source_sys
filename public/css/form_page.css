@@ -41,6 +41,10 @@ footer > pre {
     min-height: 20rem;
 }
 
+.collapse-item {
+    font-size: 0.5rem !important;
+}
+
 .hexagon {
     display: flex;
     justify-content: center;

@@ -13,9 +13,10 @@ class CreateAirValue extends Migration
      */
     public function up()
     {
-        Schema::create('Air_Recy', function (Blueprint $table) {
+        Schema::create('airRecy', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('former');
+            $table->integer('farmland');
             $table->string('sensor');
             $table->double('value');
             $table->dateTime('send_time');
@@ -29,6 +30,6 @@ class CreateAirValue extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('air_value');
+        Schema::dropIfExists('airRecy');
     }
 }

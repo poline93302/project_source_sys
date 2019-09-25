@@ -13,9 +13,10 @@ class CreateWeatherValue extends Migration
      */
     public function up()
     {
-        Schema::create('Weather_Recy', function (Blueprint $table) {
+        Schema::create('weatherRecy', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('former');
+            $table->integer('farmland');
             $table->string('sensor');
             $table->double('value');
             $table->dateTime('send_time');
@@ -29,6 +30,6 @@ class CreateWeatherValue extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('weather_value');
+        Schema::dropIfExists('weatherRecy');
     }
 }

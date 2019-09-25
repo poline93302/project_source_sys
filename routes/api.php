@@ -13,9 +13,16 @@ use Illuminate\Http\Request;
 |
 */
 
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
-//Route::group(['prefix'=>'numerical'][
-////    Route::get('/',)
-//]);
+
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+Route::group(['prefix' => 'numerical'], function () {
+    Route::post('/target', 'apiController@numberTarget')->name('api.get.number.target');
+    Route::get('/test', 'apiController@sensorData');
+});
+
+
+
+
