@@ -63,7 +63,7 @@
                 let info = [];
                 let self = this;
                 info = this.form_crop.split('_');
-                console.log();
+
                 axios.post(this.url_api_target, {
                     'name': this.name,
                     'farmland': this.config_number,
@@ -98,9 +98,9 @@
             return {
                 hex_values: [],
                 //六角形ID
-                monitor_id: ['monitor-water', 'monitor-light', 'monitor-air', 'monitor-weather'],
-                item_id: ['水健康指數', '光健康指數', '空氣健康指數', '氣候健康指數'],
-                en_item_id: ['water', 'light', 'air', 'weather'],
+                monitor_id: ['monitor-air', 'monitor-weather', 'monitor-water', 'monitor-light'],
+                item_id: ['空氣健康指數', '氣候健康指數', '水健康指數', '光健康指數'],
+                en_item_id: ['air', 'weather', 'water', 'light'],
                 //hex_draw 得到數值
                 hex_draw: {},
                 register: true,

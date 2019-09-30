@@ -79,7 +79,7 @@
                         :form_crop="{{ json_encode($d[0]) }}"
                         :config_number="{{$key}}"
                         :url_api_target="{{json_encode(route('api.get.number.target'))}}"
-                        :url_path="{{json_encode(route('monitor_former_config',['form_crop'=>$d[0]]))}}">
+                        :url_path="{{json_encode(route('monitor_former_config',['form_crop'=>$key]))}}">
                 </Conitor-Exponent>
             @endforeach
         @endif

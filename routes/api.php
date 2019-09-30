@@ -20,7 +20,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'numerical'], function () {
     Route::post('/target', 'apiController@numberTarget')->name('api.get.number.target');
-    Route::get('/test', 'apiController@sensorData');
+    Route::post('/findNow', 'apiController@getNowData')->name('api.get.item.number');
+    Route::post('/critical', 'apiController@sensorChangeData')->name('api.get.item.critical');
+});
+
+Route::group(['prefix' => 'config'], function () {
+    Route::post('/create', 'FormerConfigController@create')->name('api.post.config.create');
+    Route::post('/update', 'FormerConfigController@update')->name('api.post.config.update');
+    Route::post('/switch', 'FormerConfigController@switch')->name('api.post.config.switch');
+    Route::post('/delete', 'FormerConfigController@delete')->name('api.post.config.delete');
+    Route::get('/test', 'FormerConfigController@switch');
 });
 
 

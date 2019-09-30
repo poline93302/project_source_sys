@@ -190,3 +190,7 @@ footer > pre {
 .w-98 {
     width: 98% !important;
 }
+
+.bg-yellow {
+    background-color: #e3c027 !important;
+}

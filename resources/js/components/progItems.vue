@@ -1,5 +1,5 @@
 <template>
-    <ul class="col-12 h-scroll flex-total-center" id="get-li-part" v-html="li_str">
+    <ul class="col-12 h-scroll flex-total-center border rounded" id="get-li-part" v-html="li_str">
     </ul>
 </template>
 
@@ -8,24 +8,42 @@
     export default {
         name: "progItems",
         props: {
-            config_value: '',
-            config_index: 0,
+            config_value: Number,
+            config_index: Number,
+            config_sensor: '',
+            config_critical: Object,
         },
         methods: {
             //建立li
             create_li(value) {
-                let small_range = Math.floor(process_max / 3);
-                let bg_color = ['bg-light', 'bg-danger', 'bg-warning', 'bg-success'];
-                //判斷index
+                //li隔數
+                let process_max = 25;
+                //數值的總範圍
+                let ran = (this.config_critical[this.config_sensor].max - this.config_critical[this.config_sensor].min);
+                //計算一個li數值為多少
+                let wegi = ran / process_max;
+                //一個為多少
+                let smallRan = ((Math.floor(25 / 3)) * wegi);
+                //顏色this.config_critical[this.config_sensor].min
+                let bg_color = ['bg-danger', 'bg-warning', 'bg-success', 'bg-success', 'bg-light'];
+                //計算第幾個li為終點
+                let manyPoint = Math.floor((value - this.config_critical[this.config_sensor].min) / wegi);
+
+                console.log(smallRan);
+                //計算li
                 for (let i = 0; i < process_max; i++) {
                     this.li_str +=
-                        `<li class="blk ${i <= value ? bg_color[Math.ceil(value / small_range)] : bg_color[0]}  ${i === 0 ? 'rounded-left' : i === process_max - 1 ? 'rounded-right' : 'rounded-0'}" id="blk-${this.config_index}-${i}"></li>`;
+                        `<li class="border blk ${i <= manyPoint ? bg_color[Math.floor((value - this.config_critical[this.config_sensor].min) / smallRan)] : bg_color[4]} ${i === 0 ? 'rounded-left' : i === process_max - 1 ? 'rounded-right' : 'rounded-0'}" id="blk-${this.config_index}-${i}"></li>`;
                 }
                 this.add_listener();
             },
             //呼叫 father change
-            trigger_set(value) {
-                this.$emit('update_value', value, this.config_index);
+            trigger_set(id) {
+                let ran = (this.config_critical[this.config_sensor].max - this.config_critical[this.config_sensor].min);
+                let wegi = ran / process_max;
+                let changeValue = (wegi * id) + this.config_critical[this.config_sensor].min;
+                console.log(changeValue);
+                this.$emit('update_value', changeValue, this.config_index);
             },
             //加入聆聽事件
             add_listener() {

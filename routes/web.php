@@ -27,7 +27,6 @@ Route::group(['prefix' => 'monitor'], function () {
     Route::get('/item/{form_crop}', 'FormerConfigController@show')->name('monitor_former_config');
 });
 
-
 //有關使用者相關
 Route::group(['prefix' => 'user'], function () {
     Route::get('/', 'FormerInfoController@index')->name('former_homepage');

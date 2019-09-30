@@ -1,45 +1,45 @@
+<!--個別監控的數值畫面的主畫面-->
 <template>
     <div class="border w-100 p-2 my-2 shadow">
-        <div v-for="(item_info,index) in item_infos.classes"
-             :class="[monitor_value[index]<=30 ? 'border-danger' : monitor_value[index]>60? 'border-success': 'border-warning',item_infos.classes[index]]"
-             class="row border no-gutters m-3 monitor-item">
-
-            <!--            item_infos.classes[index]-->
-            <div class="col-10 monitor-item-show row flex-total-center ">
-                <div class="col-12 flex-total-center">{{item_infos.names[index]}}</div>
-                <div v-for="item in item_infos.items[index]" class="col">
-                    <div class="text-center">{{item}}</div>
+        <div :class="[monitor_target<=30 ? 'border-danger' : monitor_target>60? 'border-success': 'border-warning', item_infos.classes[target_name]]"
+             class="row border no-gutters m-3 monitor-item rounded-top ">
+            <div class="item-info col-12 flex-total-center bg-success rounded-top mb-3"
+                 :class="monitor_target<=30 ? 'bg-danger' : monitor_target>60? 'bg-success': 'bg-warning'">
+                {{ item_infos.names[target_name]}}
+            </div>
+            <div class=" col-10 monitor-item-show row float-left">
+                <div v-for="(item,index) in monitor_items" v-if="index % 2 === 0" class="col-4">
+                    <div class="text-center">{{ item_infos.items[item] }}</div>
                     <div :id="item" class="text-center"></div>
                 </div>
             </div>
             <div class="col-2">
-                <div class="row no-gutters bg-white rounded my-3">
+                <div class="row no-gutters bg-white rounded my-3 shadow">
                     <span class="weights-style col-4 text-dark border border-success flex-total-center ">權重</span>
                     <span class="items-style col-8 text-dark border border-info flex-total-center">項目</span>
 
-                    <div class="col-12 monitor-item-list row text-dark no-gutters">
-                        <div v-for="(item_list,key) in ch_name[index]" class="col-12  flex-total-center">
+                    <div class="col-12 monitor-item-list row text-dark no-gutters  border border-dark">
+                        <div v-for="(item,index) in monitor_items" v-if="index % 2 === 0"
+                             class="col-12  flex-total-center border-bottom ">
                             <div class="row item-list-count w-100">
-                                <div class="col-4 text-dark text-center"> {{ item_count[index][key] }}</div>
-                                <div class="col-8 text-dark text-right"> {{ item_list }}</div>
+                                <div class="col-4 text-dark text-center  border-right">{{ monitor_items[index+1] }}
+                                </div>
+                                <div class="col-8 text-dark text-right">{{ item_infos.items[item] }}</div>
                             </div>
                         </div>
-                        <div class="col-12  justify-content-center align-items-end d-flex ">
-                            <div class="row no-gutters">
-                                <div class="col-12 text-dark flex-total-center">
-                                    綜合指數 ： {{ monitor_value[index] }}
-                                </div>
-                                <div class="col-12 color-identification flex-total-center w-100"
-                                     :class="monitor_value[index]<=30 ? 'bg-danger' : monitor_value[index]>60? 'bg-success': 'bg-warning'"
-                                >
-                                </div>
+                    </div>
+                    <div class="col-12 border border-dark ">
+                        <div class="row no-gutters flex-total-center">
+                            <div class="col-2 flex-total-center">
+                                <i class="fa fa-cog" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-10 text-dark flex-total-center">
+                                綜合指數：
+                                <div class="text-small">{{ monitor_target }}</div>
                             </div>
                         </div>
-                        <!--                辨識條-->
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -53,76 +53,82 @@
     export default {
         name: "MonitorItemsShow",
         props: {
-            monitor_value: Array,
+            monitor_target: Number,
+            monitor_items: Array,
+            target_name: String,
+            url_api: '',
+            name: String,
+            farmland: Number,
         },
         methods: {
             get_value() {
-                console.log('Time_Out');
+                let self = this;
+                axios.post(this.url_api, {
+                    'name': this.name,
+                    'farmland': this.farmland,
+                    'type': this.target_name,
+                }).then(function (res) {
+                    self.item_value = res.data;
+                }).catch(function (err) {
+                    console.log(err);
+                }).finally(function () {
+                    self.finish_draw();
+                })
             },
+            finish_draw() {
+                let self = this;
+                _.forEach(this.item_value, function (id, key) {
+                    self.draw_Info[key] = new Draw_Info(self.item_infos.sensor[id['sensor']], id['value'], id['max'], id['min']);
+                    Make_Circle(self.draw_Info[key]);
+                });
+            }
         },
         data: function () {
             return {
                 item_infos: {
-                    classes: ['monitor-item-water', 'monitor-item-light', 'monitor-item-air', 'monitor-item-weather'],
-                    names: ['水健康指數', '燈泡健康指數', '空氣健康指數', '氣候健康指數'],
-                    items: [
-                        ['water-level', 'water-ph', 'water-soil'],
-                        ['light-lux'],
-                        ['air-co', 'air-ch', 'air-tem', 'air-hum'],
-                        ['weather-wind-way', 'weather-wind-speed', 'weather-rain-acc']
-                    ]
+                    classes: {
+                        'water': 'monitor-item-water',
+                        'light': 'monitor-item-light',
+                        'air': 'monitor-item-air',
+                        'weather': 'monitor-item-weather'
+                    },
+                    names: {
+                        'water': '水健康指數',
+                        'light': '燈泡健康指數',
+                        'air': '空氣健康指數',
+                        'weather': '氣候健康指數'
+                    },
+                    sensor: {
+                        "AI1": 'air_cp', "AI2": 'air_ph4',
+                        "AI3": 'air_hun', "AI4": 'air_tem',
+                        "WA1": 'water_level', "WA2": 'water_ph',
+                        "WA3": 'water_soil', "LIG": 'light_lux',
+                        "WE1": 'weather_windWay', "WE2": 'weather_windSpeed',
+                        "WE3": 'weather_rainAccumulation',
+                    },
+                    items:
+                        {
+                            'water_level': '水位',
+                            'water_ph': '水PH',
+                            'water_soil': '土壤濕度',
+                            'light_lux': '亮度',
+                            'air_cp': '一氧化碳',
+                            'air_ph4': '甲烷',
+                            'air_hun': '濕度',
+                            'air_tem': '溫度',
+                            'weather_windWay': '風向',
+                            'weather_windSpeed': '風速',
+                            'weather_rainAccumulation': '累積雨量',
+                        },
                 },
+                item_value: {},
                 draw_Info: {},
-                //感測器比重
-                item_count: [
-                    [30, 20, 50],
-                    [100],
-                    [20, 20, 30, 30],
-                    [30, 30, 40]
-                ],
-                item_value: [
-                    [200, 7, 50],
-                    [2000],
-                    [30, 40, 24, 80],
-                    [360, 23, 150]
-                ],
-                //各項的[MIN,MAX]
-                item_critical: [
-                    [
-                        [0, 500], [0, 14], [0, 100]
-                    ],
-                    [
-                        [100, 3000]
-                    ],
-                    [
-                        [0, 100], [0, 100], [0, 40], [0, 100]
-                    ],
-                    [
-                        [0, 360], [0, 25], [0, 500]
-                    ],
-                ],
-                ch_name: [
-                    ['水位', '水PH', '土壤濕度'],
-                    ['燈泡亮度'],
-                    ['一氧化碳', '甲烷', '溫度', '濕度'],
-                    ['風向', '風速', '累積雨量']
-                ],
 
             }
         },
         mounted() {
-            let self = this;
-            let value_wrap = 0;
-            _.forEach(this.item_infos.items, function (id, key) {
-                for (let i = 0; i < id.length; i++) {
-                    self.draw_Info[value_wrap] = new Draw_Info(id[i], self.item_value[key][i], self.item_critical[key][i][1], self.item_critical[key][i][0]);
-                    Make_Circle(self.draw_Info[value_wrap]);
-                    value_wrap++;
-                }
-            });
-        },
-        created() {
-            setTimeout(this.get_value, 5000);
+            this.get_value();
+            // setTimeout(, 3600);
         }
     }
 </script>
@@ -134,5 +140,13 @@
 
     .items-style {
         border-radius: 0 0.25rem 0 0;
+    }
+
+    .item-info {
+        height: 1.5rem;
+    }
+
+    .text-small {
+        font-size: 0.8rem;
     }
 </style>

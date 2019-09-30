@@ -1697,6 +1697,10 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+        /* harmony import */
+        var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -1781,59 +1785,119 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-var ch_name = {
-  'WTL': '水位感測器',
-  'SOL': '土壤感測器'
-};
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ConfigPlace",
+            props: {
+                back_url: '',
+                config_infos: Array,
+                name_critical: {},
+                api_url: Array,
+                former_name: ''
+            },
   data: function data() {
     return {
-      Config_Infos: [{
-        id: 0,
-        sensor_name: 'WTL_001',
-        "switch": true,
-        sensor_value: 20,
-        create_config_info: true
-      }],
-      value_items: ['rounded-left', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-right']
+        value_items: ['rounded-left', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-right'],
+        Config_Infos: this.config_infos,
+        ch_name: {
+            "WA1": '水位感測器',
+            "WA2": '水PH感測器',
+            "AI1": '溫度感測器',
+            "AI3": '甲烷感測器',
+            "WE1": '風速感測器',
+            "WE2": '風向感測器',
+            "LIG": '光線感測器',
+            "WA3": '土壤濕度感測器',
+            "AI2": '相對濕度感測器',
+            "AI4": '一氧化碳感測器',
+            "WE3": '累積雨量感測器'
+        }
     };
   },
   methods: {
+      //新增Array
     add_Configs: function add_Configs() {
       this.Config_Infos.push({
         id: this.Config_Infos.length,
-        sensor_name: null,
+          sensor: null,
         "switch": false,
-        create_config_info: false,
-        sensor_value: 0
+          farmland: 0,
+          former: '',
+          value: 0,
+          control: false
       });
     },
-    //打開子畫面
-    open_page: function open_page(index) {
-      var part = document.getElementById('config-part' + index);
-      var info = this.Config_Infos[index];
-      if (info.sensor_name !== 'null') part.style.display === 'flex' ? part.style.display = 'none' : part.style.display = 'flex';
-    },
+      //中英文轉換
     change_chi: function change_chi(name) {
       //先進行切割 後放入物件 撈出
-      return ch_name[name.split('_')[0]];
+        return this.ch_name[name];
     },
+      //用以emit進行更改數值
     set_value: function set_value(number, index) {
       //設定數值
-      this.$set(this.Config_Infos[index], 'sensor_value', number);
+        this.$set(this.Config_Infos[index], 'value', number);
     },
-    //進去條背景改變
-    bg_item_value: function bg_item_value(index) {
-      var item_value = [];
-      var item_id = 'blk';
+      //針對新增的Config進行 設定value
+      sensorGet: function sensorGet(id) {
+          var value = document.getElementById('select_sensor_name');
+          this.Config_Infos[id].sensor = value.value;
+      },
+      deleteConfig: function deleteConfig(index) {
+          var self = this;
 
-      for (var i = 0; i <= index; i++) {
-        item_value[i] = document.getElementById(item_id + i); // item_value[i].className('blk-bark');
-
-        console.log(item_value[i]);
+          if (confirm('確定刪除')) {
+              axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(self.api_url[1], {
+                  'former': self.former_name,
+                  'farmland': self.Config_Infos[index].farmland,
+                  'sensor': self.Config_Infos[index].sensor
+              }).then(function (res) {
+                  console.log(res.data);
+              })["catch"](function (err) {
+                  console.log(err);
+              })["finally"](function () {
+                  self.$delete(self.Config_Infos, index);
+              });
       }
-    }
+      },
+      updateCreateConfig: function updateCreateConfig(index) {
+          var api = this.Config_Infos[index].control ? this.api_url[2] : this.api_url[0];
+          axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(api, {
+              'former': this.former_name,
+              'farmland': this.Config_Infos[index].farmland,
+              'sensor': this.Config_Infos[index].sensor,
+              'switch': this.Config_Infos[index]["switch"],
+              'value': this.Config_Infos[index].value
+          }).then(function (res) {
+              console.log(res.data);
+          })["catch"](function (err) {
+              console.log(err);
+          })["finally"](function () {
+              alert('新增/更新成功');
+          });
+          this.$set(this.Config_Infos[index], 'control', true);
+      },
+      updateSwitch: function updateSwitch(index) {
+          var self = this;
+          axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(this.api_url[3], {
+              'former': self.former_name,
+              'farmland': this.Config_Infos[index].farmland,
+              'sensor': this.Config_Infos[index].sensor,
+              'switch': this.Config_Infos[index]["switch"]
+          }).then(function (res) {
+              console.log(res.data);
+          })["catch"](function (err) {
+              console.log(err);
+          });
+      }
   }
 });
 
@@ -1918,7 +1982,6 @@ __webpack_require__.r(__webpack_exports__);
         var info = [];
         var self = this;
         info = this.form_crop.split('_');
-        console.log();
         axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api_target, {
             'name': this.name,
             'farmland': this.config_number
@@ -1947,9 +2010,9 @@ __webpack_require__.r(__webpack_exports__);
     return {
       hex_values: [],
       //六角形ID
-      monitor_id: ['monitor-water', 'monitor-light', 'monitor-air', 'monitor-weather'],
-        item_id: ['水健康指數', '光健康指數', '空氣健康指數', '氣候健康指數'],
-        en_item_id: ['water', 'light', 'air', 'weather'],
+        monitor_id: ['monitor-air', 'monitor-weather', 'monitor-water', 'monitor-light'],
+        item_id: ['空氣健康指數', '氣候健康指數', '水健康指數', '光健康指數'],
+        en_item_id: ['air', 'weather', 'water', 'light'],
       //hex_draw 得到數值
         hex_draw: {},
         register: true
@@ -2284,43 +2347,85 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "MonitorItemsShow",
   props: {
-    monitor_value: Array
+      monitor_target: Number,
+      monitor_items: Array,
+      target_name: String,
+      url_api: '',
+      name: String,
+      farmland: Number
   },
   methods: {
     get_value: function get_value() {
-        console.log('Time_Out');
+        var self = this;
+        axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api, {
+            'name': this.name,
+            'farmland': this.farmland,
+            'type': this.target_name
+        }).then(function (res) {
+            self.item_value = res.data;
+        })["catch"](function (err) {
+            console.log(err);
+        })["finally"](function () {
+            self.finish_draw();
+        });
+    },
+      finish_draw: function finish_draw() {
+          var self = this;
+
+          lodash__WEBPACK_IMPORTED_MODULE_1___default.a.forEach(this.item_value, function (id, key) {
+              self.draw_Info[key] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](self.item_infos.sensor[id['sensor']], id['value'], id['max'], id['min']);
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Make_Circle"])(self.draw_Info[key]);
+          });
     }
   },
   data: function data() {
     return {
       item_infos: {
-        classes: ['monitor-item-water', 'monitor-item-light', 'monitor-item-air', 'monitor-item-weather'],
-        names: ['水健康指數', '燈泡健康指數', '空氣健康指數', '氣候健康指數'],
-        items: [['water-level', 'water-ph', 'water-soil'], ['light-lux'], ['air-co', 'air-ch', 'air-tem', 'air-hum'], ['weather-wind-way', 'weather-wind-speed', 'weather-rain-acc']]
+          classes: {
+              'water': 'monitor-item-water',
+              'light': 'monitor-item-light',
+              'air': 'monitor-item-air',
+              'weather': 'monitor-item-weather'
+          },
+          names: {
+              'water': '水健康指數',
+              'light': '燈泡健康指數',
+              'air': '空氣健康指數',
+              'weather': '氣候健康指數'
+          },
+          sensor: {
+              "AI1": 'air_cp',
+              "AI2": 'air_ph4',
+              "AI3": 'air_hun',
+              "AI4": 'air_tem',
+              "WA1": 'water_level',
+              "WA2": 'water_ph',
+              "WA3": 'water_soil',
+              "LIG": 'light_lux',
+              "WE1": 'weather_windWay',
+              "WE2": 'weather_windSpeed',
+              "WE3": 'weather_rainAccumulation'
+          },
+          items: {
+              'water_level': '水位',
+              'water_ph': '水PH',
+              'water_soil': '土壤濕度',
+              'light_lux': '亮度',
+              'air_cp': '一氧化碳',
+              'air_ph4': '甲烷',
+              'air_hun': '濕度',
+              'air_tem': '溫度',
+              'weather_windWay': '風向',
+              'weather_windSpeed': '風速',
+              'weather_rainAccumulation': '累積雨量'
+          }
       },
-      draw_Info: {},
-      //感測器比重
-      item_count: [[30, 20, 50], [100], [20, 20, 30, 30], [30, 30, 40]],
-      item_value: [[200, 7, 50], [2000], [30, 40, 24, 80], [360, 23, 150]],
-      //各項的[MIN,MAX]
-      item_critical: [[[0, 500], [0, 14], [0, 100]], [[100, 3000]], [[0, 100], [0, 100], [0, 40], [0, 100]], [[0, 360], [0, 25], [0, 500]]],
-      ch_name: [['水位', '水PH', '土壤濕度'], ['燈泡亮度'], ['一氧化碳', '甲烷', '溫度', '濕度'], ['風向', '風速', '累積雨量']]
+        item_value: {},
+        draw_Info: {}
     };
   },
   mounted: function mounted() {
-    var self = this;
-    var value_wrap = 0;
-
-    lodash__WEBPACK_IMPORTED_MODULE_1___default.a.forEach(this.item_infos.items, function (id, key) {
-      for (var i = 0; i < id.length; i++) {
-        self.draw_Info[value_wrap] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](id[i], self.item_value[key][i], self.item_critical[key][i][1], self.item_critical[key][i][0]);
-        Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Make_Circle"])(self.draw_Info[value_wrap]);
-        value_wrap++;
-      }
-    });
-  },
-  created: function created() {
-    setTimeout(this.get_value, 5000);
+      this.get_value(); // setTimeout(, 3600);
   }
 });
 
@@ -2344,24 +2449,41 @@ var process_max = 25;
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "progItems",
   props: {
-    config_value: '',
-    config_index: 0
+      config_value: Number,
+      config_index: Number,
+      config_sensor: '',
+      config_critical: Object
   },
   methods: {
     //建立li
     create_li: function create_li(value) {
-      var small_range = Math.floor(process_max / 3);
-      var bg_color = ['bg-light', 'bg-danger', 'bg-warning', 'bg-success']; //判斷index
+        //li隔數
+        var process_max = 25; //數值的總範圍
+
+        var ran = this.config_critical[this.config_sensor].max - this.config_critical[this.config_sensor].min; //計算一個li數值為多少
+
+        var wegi = ran / process_max; //一個為多少
+
+        var smallRan = Math.floor(25 / 3) * wegi; //顏色this.config_critical[this.config_sensor].min
+
+        var bg_color = ['bg-danger', 'bg-warning', 'bg-success', 'bg-success', 'bg-light']; //計算第幾個li為終點
+
+        var manyPoint = Math.floor((value - this.config_critical[this.config_sensor].min) / wegi);
+        console.log(smallRan); //計算li
 
       for (var i = 0; i < process_max; i++) {
-        this.li_str += "<li class=\"blk ".concat(i <= value ? bg_color[Math.ceil(value / small_range)] : bg_color[0], "  ").concat(i === 0 ? 'rounded-left' : i === process_max - 1 ? 'rounded-right' : 'rounded-0', "\" id=\"blk-").concat(this.config_index, "-").concat(i, "\"></li>");
+          this.li_str += "<li class=\"border blk ".concat(i <= manyPoint ? bg_color[Math.floor((value - this.config_critical[this.config_sensor].min) / smallRan)] : bg_color[4], " ").concat(i === 0 ? 'rounded-left' : i === process_max - 1 ? 'rounded-right' : 'rounded-0', "\" id=\"blk-").concat(this.config_index, "-").concat(i, "\"></li>");
       }
 
       this.add_listener();
     },
     //呼叫 father change
-    trigger_set: function trigger_set(value) {
-      this.$emit('update_value', value, this.config_index);
+      trigger_set: function trigger_set(id) {
+          var ran = this.config_critical[this.config_sensor].max - this.config_critical[this.config_sensor].min;
+          var wegi = ran / process_max;
+          var changeValue = wegi * id + this.config_critical[this.config_sensor].min;
+          console.log(changeValue);
+          this.$emit('update_value', changeValue, this.config_index);
     },
     //加入聆聽事件
     add_listener: function add_listener() {
@@ -6857,7 +6979,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.close_box[data-v-64531f4a] {\n    display: none;\n}\nlabel[data-v-64531f4a] {\n    margin: 0;\n    height: 1rem;\n}\nul[data-v-64531f4a] {\n    list-style-type: none;\n    margin: 0;\n}\n#get-li-part ul[data-v-64531f4a], li[data-v-64531f4a] {\n    float: left;\n}\n#get-li-part li[data-v-64531f4a] {\n    margin-right: 0.25rem;\n}\n.scroll-range > span[data-v-64531f4a] {\n    font-size: 0.5rem !important;\n}\n.btn-cancel[data-v-64531f4a] {\n    width: 4rem;\n    background-color: #1f6fb2;\n}\n.btn-create[data-v-64531f4a] {\n    width: 4rem;\n    background-color: #113049;\n}\n.switch_box[data-v-64531f4a] {\n    display: inline-block;\n    width: 2rem;\n    height: 1.2rem;\n    border-radius: 100px;\n    background-color: gainsboro;\n}\n.switch_box .switch_btn[data-v-64531f4a] {\n    display: inline-block;\n    width: 1rem;\n    height: 1rem;\n    border-radius: 50%;\n    background-color: white;\n}\n.check_box[data-v-64531f4a] {\n    position: absolute;\n    opacity: 0;\n}\n.check_box:checked + .switch_box .switch_btn[data-v-64531f4a] {\n    margin-left: 1rem;\n}\n.check_box:checked + .switch_box[data-v-64531f4a] {\n    background-color: #5cd08d;\n}\n.sensor_choice[data-v-64531f4a] {\n    width: 10rem;\n    color: #000;\n}\n.value-height[data-v-64531f4a] {\n    height: 2rem;\n}\n.symbol-w-h[data-v-64531f4a]:before {\n    height: 1rem;\n    width: 1rem;\n}\n", ""]);
+        exports.push([module.i, "\n.close_box[data-v-64531f4a] {\n    display: none;\n}\nlabel[data-v-64531f4a] {\n    margin: 0;\n    height: 1rem;\n}\nul[data-v-64531f4a] {\n    list-style-type: none;\n    margin: 0;\n}\n#get-li-part ul[data-v-64531f4a], li[data-v-64531f4a] {\n    float: left;\n}\n#get-li-part li[data-v-64531f4a] {\n    margin-right: 0.25rem;\n}\n.scroll-range > span[data-v-64531f4a] {\n    font-size: 0.5rem !important;\n}\n.btn-cancel[data-v-64531f4a] {\n    width: 4rem;\n    background-color: #1f6fb2;\n}\n.btn-create[data-v-64531f4a] {\n    width: 4rem;\n    background-color: #113049;\n}\n.switch_box[data-v-64531f4a] {\n    display: inline-block;\n    width: 2rem;\n    height: 1.3rem;\n    border-radius: 100px;\n    background-color: gainsboro;\n}\n.switch_box .switch_btn[data-v-64531f4a] {\n    display: inline-block;\n    width: 1rem;\n    height: 1rem;\n    border-radius: 50%;\n    background-color: white;\n}\n.check_box[data-v-64531f4a] {\n    position: absolute;\n    opacity: 0;\n}\n.check_box:checked + .switch_box .switch_btn[data-v-64531f4a] {\n    margin-left: 1rem;\n}\n.check_box:checked + .switch_box[data-v-64531f4a] {\n    background-color: #5cd08d;\n}\n.sensor_choice[data-v-64531f4a] {\n    width: 10rem;\n    color: #000;\n}\n.value-height[data-v-64531f4a] {\n    height: 2.5rem;\n}\n.text-small[data-v-64531f4a] {\n    font-size: 0.5rem;\n}\n.symbol-w-h[data-v-64531f4a]:before {\n    height: 1rem;\n    width: 1rem;\n}\n", ""]);
 
 // exports
 
@@ -6895,7 +7017,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.weights-style[data-v-26f9a78e] {\n    border-radius: 0.25rem 0 0 0;\n}\n.items-style[data-v-26f9a78e] {\n    border-radius: 0 0.25rem 0 0;\n}\n", ""]);
+        exports.push([module.i, "\n.weights-style[data-v-26f9a78e] {\n    border-radius: 0.25rem 0 0 0;\n}\n.items-style[data-v-26f9a78e] {\n    border-radius: 0 0.25rem 0 0;\n}\n.item-info[data-v-26f9a78e] {\n    height: 1.5rem;\n}\n.text-small[data-v-26f9a78e] {\n    font-size: 0.8rem;\n}\n", ""]);
 
 // exports
 
@@ -67556,227 +67678,339 @@ var render = function() {
   return _c("div", { staticClass: "row my-3 monitor-configs" }, [
     _c(
       "div",
-      { staticClass: "col-12  rounded border" },
-      [
-        _vm._l(_vm.Config_Infos, function(Config_Info, index) {
-          return _c("div", { staticClass: "config-place border my-3" }, [
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-12 my-3" }, [
-                _c("div", { staticClass: "row mx-3 rounded" }, [
-                  _c("div", { staticClass: "col-3 flex-total-left" }, [
-                    !Config_Info.sensor_name
-                      ? _c("div", { staticClass: "flex-total-left" }, [
-                          _c("label", { attrs: { for: "select_sensor_name" } }),
-                          _vm._v(" "),
-                          _vm._m(0, true)
-                        ])
-                      : _c("div", { staticClass: "flex-total-left" }, [
-                          _vm._v(
-                            "\n                                " +
-                              _vm._s(_vm.change_chi(Config_Info.sensor_name)) +
-                              "\n                            "
-                          )
-                        ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-5" }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "col-4 justify-content-end d-flex align-items-center"
-                    },
-                    [
-                      _vm._m(1, true),
-                      _vm._v(" "),
-                      _c("label", { staticClass: "mx-2" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: Config_Info.switch,
-                              expression: "Config_Info.switch"
-                            }
-                          ],
-                          staticClass: "check_box d-none",
-                          attrs: {
-                            type: "checkbox",
-                            name: "switch_config",
-                            id: "switch_control"
-                          },
-                          domProps: {
-                            checked: Array.isArray(Config_Info.switch)
-                              ? _vm._i(Config_Info.switch, null) > -1
-                              : Config_Info.switch
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = Config_Info.switch,
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = null,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    _vm.$set(
-                                      Config_Info,
-                                      "switch",
-                                      $$a.concat([$$v])
-                                    )
-                                } else {
-                                  $$i > -1 &&
-                                    _vm.$set(
-                                      Config_Info,
-                                      "switch",
-                                      $$a
-                                        .slice(0, $$i)
-                                        .concat($$a.slice($$i + 1))
-                                    )
-                                }
-                              } else {
-                                _vm.$set(Config_Info, "switch", $$c)
-                              }
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _vm._m(2, true)
-                      ]),
-                      _vm._v(" "),
-                      _c("i", {
-                        staticClass: "fa fa-sort-desc ",
-                        attrs: { "aria-hidden": "true" },
-                        on: {
-                          click: function($event) {
-                            return _vm.open_page(Config_Info.id)
-                          }
-                        }
-                      })
-                    ]
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c(
+        {staticClass: "col-12"},
+        _vm._l(_vm.Config_Infos, function (Config_Info, index) {
+            return _c(
                 "div",
                 {
-                  staticClass: "son-part col-12 flex-total-center",
-                  class: Config_Info.create_config_info
-                    ? "close_box"
-                    : "open_box",
-                  attrs: { id: "config-part" + index }
+                    staticClass: "config-place border my-3 rounded",
+                    class: Config_Info.switch ? "shadow" : ""
                 },
                 [
-                  _c("div", { staticClass: "row flex-total-center w-100" }, [
-                    _c(
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-12 my-3" }, [
+                  _c(
                       "div",
-                      { staticClass: "col-12 mb-3 row flex-total-center" },
+                      {staticClass: "row mx-2 rounded-top bg-info value-height"},
                       [
-                        _c(
-                          "div",
-                          { staticClass: "col-6 row" },
-                          [
-                            _c("prog-items", {
-                              staticClass: "value-config value-height",
-                              attrs: {
-                                config_value: Config_Info.sensor_value,
-                                config_index: index
-                              },
-                              on: { update_value: _vm.set_value }
-                            })
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "col-6 row value-show value-height" },
-                          [
-                            _c(
+                          _c("div", {staticClass: "col-4 flex-total-left"}, [
+                              !Config_Info.sensor
+                                  ? _c("div", {staticClass: "flex-total-left"}, [
+                                      _c("label", {
+                                          attrs: {for: "select_sensor_name"}
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                          "select",
+                                          {
+                                              staticClass: "sensor_choice",
+                                              attrs: {id: "select_sensor_name"},
+                                              on: {
+                                                  change: function ($event) {
+                                                      return _vm.sensorGet(index)
+                                                  }
+                                              }
+                                          },
+                                          [
+                                              _c("option", {attrs: {value: "null"}}, [
+                                                  _vm._v("請選擇")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("option", {attrs: {value: "WA1"}}, [
+                                                  _vm._v("水位感測器")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("option", {attrs: {value: "WA2"}}, [
+                                                  _vm._v("水PH感測器")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("option", {attrs: {value: "WA3"}}, [
+                                                  _vm._v("土壤濕度感測器")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("option", {attrs: {value: "AI1"}}, [
+                                                  _vm._v("溫度感測器")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("option", {attrs: {value: "AI2"}}, [
+                                                  _vm._v("相對濕度感測器")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("option", {attrs: {value: "AI3"}}, [
+                                                  _vm._v("甲烷感測器")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("option", {attrs: {value: "AI4"}}, [
+                                                  _vm._v("一氧化碳感測器")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("option", {attrs: {value: "WE1"}}, [
+                                                  _vm._v("風速感測器")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("option", {attrs: {value: "WE2"}}, [
+                                                  _vm._v("風向感測器")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("option", {attrs: {value: "WE3"}}, [
+                                                  _vm._v("累積雨量感測器")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("option", {attrs: {value: "LIG"}}, [
+                                                  _vm._v("光線感測器")
+                                              ])
+                                          ]
+                                      )
+                                  ])
+                                  : _c("div", {staticClass: "flex-total-left"}, [
+                                      _vm._v(
+                                          "\n                                " +
+                                          _vm._s(_vm.change_chi(Config_Info.sensor)) +
+                                          "\n                            "
+                                      )
+                                  ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", {staticClass: "col-4"}),
+                          _vm._v(" "),
+                          _c(
                               "div",
-                              { staticClass: "col-12 flex-total-center" },
+                              {
+                                  staticClass:
+                                      "col-4 justify-content-end d-flex align-items-center"
+                              },
                               [
-                                _vm._v(
-                                  "\n                                    " +
-                                    _vm._s(Config_Info.sensor_value) +
-                                    "\n                                "
-                                )
+                                  _c("i", {
+                                      staticClass: "fa fa-trash",
+                                      attrs: {"aria-hidden": "true"},
+                                      on: {
+                                          click: function ($event) {
+                                              return _vm.deleteConfig(index)
+                                          }
+                                      }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("label", {staticClass: "mx-2"}, [
+                                      _c("input", {
+                                          directives: [
+                                              {
+                                                  name: "model",
+                                                  rawName: "v-model",
+                                                  value: Config_Info.switch,
+                                                  expression: "Config_Info.switch"
+                                              }
+                                          ],
+                                          staticClass: "check_box d-none",
+                                          attrs: {
+                                              type: "checkbox",
+                                              name: "switch_config",
+                                              id: "switch_control"
+                                          },
+                                          domProps: {
+                                              checked: Array.isArray(Config_Info.switch)
+                                                  ? _vm._i(Config_Info.switch, null) > -1
+                                                  : Config_Info.switch
+                                          },
+                                          on: {
+                                              change: [
+                                                  function ($event) {
+                                                      var $$a = Config_Info.switch,
+                                                          $$el = $event.target,
+                                                          $$c = $$el.checked ? true : false
+                                                      if (Array.isArray($$a)) {
+                                                          var $$v = null,
+                                                              $$i = _vm._i($$a, $$v)
+                                                          if ($$el.checked) {
+                                                              $$i < 0 &&
+                                                              _vm.$set(
+                                                                  Config_Info,
+                                                                  "switch",
+                                                                  $$a.concat([$$v])
+                                                              )
+                                                          } else {
+                                                              $$i > -1 &&
+                                                              _vm.$set(
+                                                                  Config_Info,
+                                                                  "switch",
+                                                                  $$a
+                                                                      .slice(0, $$i)
+                                                                      .concat($$a.slice($$i + 1))
+                                                              )
+                                                          }
+                                                      } else {
+                                                          _vm.$set(Config_Info, "switch", $$c)
+                                                      }
+                                                  },
+                                                  function ($event) {
+                                                      return _vm.updateSwitch(index)
+                                                  }
+                                              ]
+                                          }
+                                      }),
+                                      _vm._v(" "),
+                                      _vm._m(0, true)
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                      "a",
+                                      {
+                                          attrs: {
+                                              "data-toggle": "collapse",
+                                              href: "#collapseUseful" + index,
+                                              "aria-expanded": "false",
+                                              "aria-controls": "collapseUseful"
+                                          }
+                                      },
+                                      [
+                                          _c("i", {
+                                              staticClass: "fa fa-sort-desc",
+                                              attrs: {"aria-hidden": "true"}
+                                          })
+                                      ]
+                                  )
                               ]
-                            )
-                          ]
-                        )
+                          )
                       ]
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-12 row mb-3" }, [
-                      _vm._m(3, true),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-6 flex-total-right" }, [
-                        _c("a", { staticClass: "mx-3", attrs: { href: "#" } }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "btn-cancel flex-total-center rounded"
-                            },
-                            [
-                              _vm._v(
-                                " " +
-                                  _vm._s(
-                                    Config_Info.create_config_info
-                                      ? "取消"
-                                      : "清除"
-                                  ) +
-                                  "\n                                    "
-                              )
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("a", { staticClass: "ml-3", attrs: { href: "#" } }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "btn-create flex-total-center rounded"
-                            },
-                            [
-                              _vm._v(
-                                " " +
-                                  _vm._s(
-                                    Config_Info.create_config_info
-                                      ? "修改"
-                                      : "新增"
-                                  ) +
-                                  "\n                                    "
-                              )
-                            ]
-                          )
-                        ])
-                      ])
-                    ])
-                  ])
-                ]
-              )
+                  ),
+                  _vm._v(" "),
+                  _c(
+                      "div",
+                      {
+                          key: "config-part" + index,
+                          staticClass:
+                              "mx-2 son-partflex-total-center border rounded-bottom collapse",
+                          class: Config_Info.control ? "" : "show",
+                          attrs: {id: "collapseUseful" + index}
+                      },
+                      [
+                          _c("div", {staticClass: "row flex-total-center mt-3"}, [
+                              Config_Info.sensor
+                                  ? _c(
+                                  "div",
+                                  {
+                                      staticClass: "col-12 mb-3 row flex-total-center"
+                                  },
+                                  [
+                                      _c(
+                                          "div",
+                                          {staticClass: "col-6"},
+                                          [
+                                              _c("prog-items", {
+                                                  staticClass: "value-config value-height",
+                                                  attrs: {
+                                                      config_value: Config_Info.value,
+                                                      config_index: index,
+                                                      config_sensor: Config_Info.sensor,
+                                                      config_critical: _vm.name_critical
+                                                  },
+                                                  on: {update_value: _vm.set_value}
+                                              })
+                                          ],
+                                          1
+                                      ),
+                                      _vm._v(" "),
+                                      _c("div", {staticClass: "col-2"}, [
+                                          _c(
+                                              "span",
+                                              {staticClass: "text-secondary text-small"},
+                                              [
+                                                  _vm._v(
+                                                      "\n                                        該範圍  " +
+                                                      _vm._s(
+                                                          _vm.name_critical[Config_Info.sensor]
+                                                              .min
+                                                      ) +
+                                                      " ~ " +
+                                                      _vm._s(
+                                                          _vm.name_critical[Config_Info.sensor]
+                                                              .max
+                                                      ) +
+                                                      "\n                                    "
+                                                  )
+                                              ]
+                                          )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                          "div",
+                                          {staticClass: "col-1 flex-total-center"},
+                                          [
+                                              _vm._v(
+                                                  "\n                                    " +
+                                                  _vm._s(Config_Info.value) +
+                                                  "\n                                "
+                                              )
+                                          ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                          "div",
+                                          {staticClass: "col-3 flex-total-right"},
+                                          [
+                                              _c(
+                                                  "button",
+                                                  {
+                                                      staticClass:
+                                                          "btn-create flex-total-center rounded text-white",
+                                                      on: {
+                                                          click: function ($event) {
+                                                              return _vm.updateCreateConfig(index)
+                                                          }
+                                                      }
+                                                  },
+                                                  [
+                                                      _vm._v(
+                                                          "\n                                        " +
+                                                          _vm._s(
+                                                              Config_Info.control
+                                                                  ? "修改"
+                                                                  : "新增"
+                                                          ) +
+                                                          "\n                                    "
+                                                      )
+                                                  ]
+                                              )
+                                          ]
+                                      )
+                                  ]
+                                  )
+                                  : _c(
+                                  "div",
+                                  {
+                                      staticClass:
+                                          "col-12 flex-total-center my-3 text-secondary"
+                                  },
+                                  [_vm._v("請選擇感測器")]
+                                  )
+                          ])
+                      ]
+                  )
+              ])
             ])
-          ])
+                ]
+            )
         }),
-        _vm._v(" "),
-        _c("i", {
-          staticClass: "fa fa-plus monitor-item-name mb-3",
-          attrs: { "aria-hidden": "true" },
-          on: {
-            click: function($event) {
-              return _vm.add_Configs()
-            }
-          }
-        })
-      ],
-      2
-    )
+        0
+    ),
+      _vm._v(" "),
+      _c("div", {staticClass: "col-12 d-flex justify-content-between px-3"}, [
+          _c("a", {attrs: {href: _vm.back_url}}, [
+              _c("i", {
+                  staticClass: "fa fa-reply",
+                  attrs: {"aria-hidden": "true"}
+              })
+          ]),
+          _vm._v(" "),
+          _c("i", {
+              staticClass: "fa fa-plus monitor-item-name mb-3",
+              attrs: {"aria-hidden": "true"},
+              on: {
+                  click: function ($event) {
+                      return _vm.add_Configs()
+                  }
+              }
+          })
+      ])
   ])
 }
 var staticRenderFns = [
@@ -67784,42 +68018,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "select",
-      { staticClass: "sensor_choice", attrs: { id: "select_sensor_name" } },
-      [
-        _c("option", { attrs: { value: "null" } }, [_vm._v("請選擇")]),
-        _vm._v(" "),
-        _c("option", { attrs: { value: "WTL" } }, [_vm._v("水位感測器")]),
-        _vm._v(" "),
-        _c("option", { attrs: { value: "SOL" } }, [_vm._v("土壤感測器")])
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("a", { staticClass: "mx-1", attrs: { href: "#" } }, [
-      _c("i", { staticClass: "fa fa-trash", attrs: { "aria-hidden": "true" } })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("span", { staticClass: "switch_box" }, [
       _c("span", { staticClass: "switch_btn" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-6" }, [
-      _c("div", { staticClass: "col-12 scroll-range flex-total-center" }, [
-        _c("span", [_vm._v("該範圍A~B")])
-      ])
     ])
   }
 ]
@@ -68535,47 +68735,64 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-      {staticClass: "border w-100 p-2 my-2 shadow"},
-    _vm._l(_vm.item_infos.classes, function(item_info, index) {
-      return _c(
-        "div",
-        {
-            staticClass: "row border no-gutters m-3 monitor-item",
-            class: [
-                _vm.monitor_value[index] <= 30
-                    ? "border-danger"
-                    : _vm.monitor_value[index] > 60
-                    ? "border-success"
-                    : "border-warning",
-                _vm.item_infos.classes[index]
-            ]
-        },
-        [
-          _c(
+    return _c("div", {staticClass: "border w-100 p-2 my-2 shadow"}, [
+        _c(
             "div",
-            { staticClass: "col-10 monitor-item-show row flex-total-center " },
+            {
+                staticClass: "row border no-gutters m-3 monitor-item rounded-top ",
+                class: [
+                    _vm.monitor_target <= 30
+                        ? "border-danger"
+                        : _vm.monitor_target > 60
+                        ? "border-success"
+                        : "border-warning",
+                    _vm.item_infos.classes[_vm.target_name]
+                ]
+            },
             [
-              _c("div", { staticClass: "col-12 flex-total-center" }, [
-                _vm._v(_vm._s(_vm.item_infos.names[index]))
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.item_infos.items[index], function(item) {
-                  return _c("div", {staticClass: "col"}, [
-                      _c("div", {staticClass: "text-center"}, [
-                          _vm._v(_vm._s(item))
-                      ]),
-                      _vm._v(" "),
-                      _c("div", {staticClass: "text-center", attrs: {id: item}})
-                  ])
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-2" }, [
-            _c("div", { staticClass: "row no-gutters bg-white rounded my-3" }, [
+                _c(
+                    "div",
+                    {
+                        staticClass:
+                            "item-info col-12 flex-total-center bg-success rounded-top mb-3",
+                        class:
+                            _vm.monitor_target <= 30
+                                ? "bg-danger"
+                                : _vm.monitor_target > 60
+                                ? "bg-success"
+                                : "bg-warning"
+                    },
+                    [
+                        _vm._v(
+                            "\n            " +
+                            _vm._s(_vm.item_infos.names[_vm.target_name]) +
+                            "\n        "
+                        )
+                    ]
+                ),
+                _vm._v(" "),
+                _c(
+                    "div",
+                    {staticClass: " col-10 monitor-item-show row float-left"},
+                    _vm._l(_vm.monitor_items, function (item, index) {
+                        return index % 2 === 0
+                            ? _c("div", {staticClass: "col-4"}, [
+                                _c("div", {staticClass: "text-center"}, [
+                                    _vm._v(_vm._s(_vm.item_infos.items[item]))
+                                ]),
+                                _vm._v(" "),
+                                _c("div", {staticClass: "text-center", attrs: {id: item}})
+                            ])
+                            : _vm._e()
+                    }),
+                    0
+                ),
+                _vm._v(" "),
+                _c("div", {staticClass: "col-2"}, [
+                    _c(
+                        "div",
+                        {staticClass: "row no-gutters bg-white rounded my-3 shadow"},
+                        [
               _c(
                 "span",
                 {
@@ -68598,80 +68815,84 @@ var render = function() {
                 "div",
                 {
                   staticClass:
-                    "col-12 monitor-item-list row text-dark no-gutters"
+                      "col-12 monitor-item-list row text-dark no-gutters  border border-dark"
                 },
-                [
-                  _vm._l(_vm.ch_name[index], function(item_list, key) {
-                    return _c(
-                      "div",
-                      { staticClass: "col-12  flex-total-center" },
-                      [
-                        _c(
-                          "div",
-                          { staticClass: "row item-list-count w-100" },
-                          [
-                            _c(
+                  _vm._l(_vm.monitor_items, function (item, index) {
+                      return index % 2 === 0
+                          ? _c(
                               "div",
-                              { staticClass: "col-4 text-dark text-center" },
-                              [_vm._v(" " + _vm._s(_vm.item_count[index][key]))]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "col-8 text-dark text-right" },
-                              [_vm._v(" " + _vm._s(item_list))]
-                            )
-                          ]
-                        )
-                      ]
-                    )
+                              {
+                                  staticClass:
+                                      "col-12  flex-total-center border-bottom "
+                              },
+                              [
+                                  _c(
+                                      "div",
+                                      {staticClass: "row item-list-count w-100"},
+                                      [
+                                          _c(
+                                              "div",
+                                              {
+                                                  staticClass:
+                                                      "col-4 text-dark text-center  border-right"
+                                              },
+                                              [
+                                                  _vm._v(
+                                                      _vm._s(_vm.monitor_items[index + 1]) +
+                                                      "\n                            "
+                                                  )
+                                              ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                              "div",
+                                              {staticClass: "col-8 text-dark text-right"},
+                                              [_vm._v(_vm._s(_vm.item_infos.items[item]))]
+                                          )
+                                      ]
+                                  )
+                              ]
+                          )
+                          : _vm._e()
                   }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "col-12  justify-content-center align-items-end d-flex "
-                    },
-                    [
-                      _c("div", { staticClass: "row no-gutters" }, [
-                        _c(
-                          "div",
-                          { staticClass: "col-12 text-dark flex-total-center" },
-                          [
-                            _vm._v(
-                              "\n                                綜合指數 ： " +
-                                _vm._s(_vm.monitor_value[index]) +
-                                "\n                            "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c("div", {
-                          staticClass:
-                            "col-12 color-identification flex-total-center w-100",
-                          class:
-                            _vm.monitor_value[index] <= 30
-                              ? "bg-danger"
-                              : _vm.monitor_value[index] > 60
-                              ? "bg-success"
-                              : "bg-warning"
-                        })
+                  0
+              ),
+                            _vm._v(" "),
+                            _c("div", {staticClass: "col-12 border border-dark "}, [
+                                _c("div", {staticClass: "row no-gutters flex-total-center"}, [
+                                    _vm._m(0),
+                                    _vm._v(" "),
+                                    _c(
+                                        "div",
+                                        {staticClass: "col-10 text-dark flex-total-center"},
+                                        [
+                                            _vm._v(
+                                                "\n                            綜合指數：\n                            "
+                                            ),
+                                            _c("div", {staticClass: "text-small"}, [
+                                                _vm._v(_vm._s(_vm.monitor_target))
                       ])
                     ]
                   )
-                ],
-                2
-              )
-            ])
-          ])
-        ]
-      )
-    }),
-    0
-  )
+                                ])
+                            ])
+                        ]
+                    )
+                ])
+            ]
+        )
+    ])
 }
-var staticRenderFns = []
+        var staticRenderFns = [
+            function () {
+                var _vm = this
+                var _h = _vm.$createElement
+                var _c = _vm._self._c || _h
+                return _c("div", {staticClass: "col-2 flex-total-center"}, [
+                    _c("i", {staticClass: "fa fa-cog", attrs: {"aria-hidden": "true"}})
+                ])
+            }
+        ]
 render._withStripped = true
 
 
@@ -68694,7 +68915,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("ul", {
-    staticClass: "col-12 h-scroll flex-total-center",
+      staticClass: "col-12 h-scroll flex-total-center border rounded",
     attrs: { id: "get-li-part" },
     domProps: { innerHTML: _vm._s(_vm.li_str) }
   })
