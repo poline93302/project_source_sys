@@ -8,9 +8,9 @@
                 {{ item_infos.names[target_name]}}
             </div>
             <div class=" col-10 monitor-item-show row float-left">
-                <div v-for="(item,index) in monitor_items" v-if="index % 2 === 0" class="col-4">
-                    <div class="text-center">{{ item_infos.items[item] }}</div>
-                    <div :id="item" class="text-center"></div>
+                <div v-for="(item,index) in monitor_items" class="col-4">
+                    <div class="text-center">{{ item_infos.items[index] }}</div>
+                    <div :id="index" class="text-center"></div>
                 </div>
             </div>
             <div class="col-2">
@@ -19,12 +19,12 @@
                     <span class="items-style col-8 text-dark border border-info flex-total-center">項目</span>
 
                     <div class="col-12 monitor-item-list row text-dark no-gutters  border border-dark">
-                        <div v-for="(item,index) in monitor_items" v-if="index % 2 === 0"
+                        <div v-for="(item,index) in monitor_items"
                              class="col-12  flex-total-center border-bottom ">
                             <div class="row item-list-count w-100">
-                                <div class="col-4 text-dark text-center  border-right">{{ monitor_items[index+1] }}
+                                <div class="col-4 text-dark text-center  border-right">{{ item }}
                                 </div>
-                                <div class="col-8 text-dark text-right">{{ item_infos.items[item] }}</div>
+                                <div class="col-8 text-dark text-right">{{ item_infos.items[index] }}</div>
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
         name: "MonitorItemsShow",
         props: {
             monitor_target: Number,
-            monitor_items: Array,
+            monitor_items: Object,
             target_name: String,
             url_api: '',
             name: String,

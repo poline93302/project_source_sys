@@ -1784,16 +1784,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ConfigPlace",
@@ -1807,20 +1797,18 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
         value_items: ['rounded-left', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-right'],
-        Config_Infos: this.config_infos,
+        Config_Infos: _.cloneDeep(this.config_infos),
         ch_name: {
             "WA1": '水位感測器',
             "WA2": '水PH感測器',
             "AI1": '溫度感測器',
             "AI3": '甲烷感測器',
-            "WE1": '風速感測器',
-            "WE2": '風向感測器',
             "LIG": '光線感測器',
             "WA3": '土壤濕度感測器',
             "AI2": '相對濕度感測器',
-            "AI4": '一氧化碳感測器',
-            "WE3": '累積雨量感測器'
-        }
+            "AI4": '一氧化碳感測器'
+        },
+        items: ['WA1', 'WA2', 'WA3', 'AI1', 'AI2', 'AI3', 'AI4', 'LIG']
     };
   },
   methods: {
@@ -1867,9 +1855,13 @@ __webpack_require__.r(__webpack_exports__);
                   self.$delete(self.Config_Infos, index);
               });
       }
+
+          this.Config_Infos[index].control ? this.items.push(this.Config_Infos[index].sensor) : "";
+          this.items.sort();
       },
       updateCreateConfig: function updateCreateConfig(index) {
           var api = this.Config_Infos[index].control ? this.api_url[2] : this.api_url[0];
+          var self = this;
           axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(api, {
               'former': this.former_name,
               'farmland': this.Config_Infos[index].farmland,
@@ -1883,6 +1875,7 @@ __webpack_require__.r(__webpack_exports__);
           })["finally"](function () {
               alert('新增/更新成功');
           });
+          this.items.splice(this.items.indexOf(this.Config_Infos[index].sensor), 1);
           this.$set(this.Config_Infos[index], 'control', true);
       },
       updateSwitch: function updateSwitch(index) {
@@ -1897,7 +1890,19 @@ __webpack_require__.r(__webpack_exports__);
           })["catch"](function (err) {
               console.log(err);
           });
+      },
+      searchSensor: function searchSensor() {
+          var number;
+          var self = this;
+
+          _.forEach(this.Config_Infos, function (item) {
+              number = self.items.indexOf(item.sensor);
+              self.items.splice(number, 1);
+          });
       }
+  },
+            mounted: function mounted() {
+                this.searchSensor();
   }
 });
 
@@ -2348,7 +2353,7 @@ __webpack_require__.r(__webpack_exports__);
   name: "MonitorItemsShow",
   props: {
       monitor_target: Number,
-      monitor_items: Array,
+      monitor_items: Object,
       target_name: String,
       url_api: '',
       name: String,
@@ -67716,59 +67721,28 @@ var render = function() {
                                                   _vm._v("請選擇")
                                               ]),
                                               _vm._v(" "),
-                                              _c("option", {attrs: {value: "WA1"}}, [
-                                                  _vm._v("水位感測器")
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("option", {attrs: {value: "WA2"}}, [
-                                                  _vm._v("水PH感測器")
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("option", {attrs: {value: "WA3"}}, [
-                                                  _vm._v("土壤濕度感測器")
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("option", {attrs: {value: "AI1"}}, [
-                                                  _vm._v("溫度感測器")
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("option", {attrs: {value: "AI2"}}, [
-                                                  _vm._v("相對濕度感測器")
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("option", {attrs: {value: "AI3"}}, [
-                                                  _vm._v("甲烷感測器")
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("option", {attrs: {value: "AI4"}}, [
-                                                  _vm._v("一氧化碳感測器")
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("option", {attrs: {value: "WE1"}}, [
-                                                  _vm._v("風速感測器")
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("option", {attrs: {value: "WE2"}}, [
-                                                  _vm._v("風向感測器")
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("option", {attrs: {value: "WE3"}}, [
-                                                  _vm._v("累積雨量感測器")
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("option", {attrs: {value: "LIG"}}, [
-                                                  _vm._v("光線感測器")
-                                              ])
-                                          ]
+                                              _vm._l(_vm.items, function (item) {
+                                                  return _c(
+                                                      "option",
+                                                      {domProps: {value: item}},
+                                                      [_vm._v(_vm._s(_vm.ch_name[item]))]
+                                                  )
+                                              })
+                                          ],
+                                          2
                                       )
                                   ])
-                                  : _c("div", {staticClass: "flex-total-left"}, [
+                                  : _c(
+                                  "div",
+                                  {staticClass: "flex-total-left text-light"},
+                                  [
                                       _vm._v(
                                           "\n                                " +
                                           _vm._s(_vm.change_chi(Config_Info.sensor)) +
                                           "\n                            "
                                       )
-                                  ])
+                                  ]
+                                  )
                           ]),
                           _vm._v(" "),
                           _c("div", {staticClass: "col-4"}),
@@ -68775,15 +68749,13 @@ var render = function() {
                     "div",
                     {staticClass: " col-10 monitor-item-show row float-left"},
                     _vm._l(_vm.monitor_items, function (item, index) {
-                        return index % 2 === 0
-                            ? _c("div", {staticClass: "col-4"}, [
-                                _c("div", {staticClass: "text-center"}, [
-                                    _vm._v(_vm._s(_vm.item_infos.items[item]))
-                                ]),
-                                _vm._v(" "),
-                                _c("div", {staticClass: "text-center", attrs: {id: item}})
-                            ])
-                            : _vm._e()
+                        return _c("div", {staticClass: "col-4"}, [
+                            _c("div", {staticClass: "text-center"}, [
+                                _vm._v(_vm._s(_vm.item_infos.items[index]))
+                            ]),
+                            _vm._v(" "),
+                            _c("div", {staticClass: "text-center", attrs: {id: index}})
+                        ])
                     }),
                     0
                 ),
@@ -68818,42 +68790,32 @@ var render = function() {
                       "col-12 monitor-item-list row text-dark no-gutters  border border-dark"
                 },
                   _vm._l(_vm.monitor_items, function (item, index) {
-                      return index % 2 === 0
-                          ? _c(
-                              "div",
-                              {
-                                  staticClass:
-                                      "col-12  flex-total-center border-bottom "
-                              },
-                              [
+                      return _c(
+                          "div",
+                          {staticClass: "col-12  flex-total-center border-bottom "},
+                          [
+                              _c("div", {staticClass: "row item-list-count w-100"}, [
                                   _c(
                                       "div",
-                                      {staticClass: "row item-list-count w-100"},
+                                      {
+                                          staticClass:
+                                              "col-4 text-dark text-center  border-right"
+                                      },
                                       [
-                                          _c(
-                                              "div",
-                                              {
-                                                  staticClass:
-                                                      "col-4 text-dark text-center  border-right"
-                                              },
-                                              [
-                                                  _vm._v(
-                                                      _vm._s(_vm.monitor_items[index + 1]) +
-                                                      "\n                            "
-                                                  )
-                                              ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                              "div",
-                                              {staticClass: "col-8 text-dark text-right"},
-                                              [_vm._v(_vm._s(_vm.item_infos.items[item]))]
+                                          _vm._v(
+                                              _vm._s(item) + "\n                            "
                                           )
                                       ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                      "div",
+                                      {staticClass: "col-8 text-dark text-right"},
+                                      [_vm._v(_vm._s(_vm.item_infos.items[index]))]
                                   )
-                              ]
-                          )
-                          : _vm._e()
+                              ])
+                          ]
+                      )
                   }),
                   0
               ),

@@ -13,20 +13,10 @@
                                     <label for="select_sensor_name"></label>
                                     <select id="select_sensor_name" class="sensor_choice" @change="sensorGet(index)">
                                         <option value=null class="">請選擇</option>
-                                        <option value="WA1" class="">水位感測器</option>
-                                        <option value="WA2" class="">水PH感測器</option>
-                                        <option value="WA3" class="">土壤濕度感測器</option>
-                                        <option value="AI1" class="">溫度感測器</option>
-                                        <option value="AI2" class="">相對濕度感測器</option>
-                                        <option value="AI3" class="">甲烷感測器</option>
-                                        <option value="AI4" class="">一氧化碳感測器</option>
-                                        <option value="WE1" class="">風速感測器</option>
-                                        <option value="WE2" class="">風向感測器</option>
-                                        <option value="WE3" class="">累積雨量感測器</option>
-                                        <option value="LIG" class="">光線感測器</option>
+                                        <option v-for="item in items" :value="item" class="">{{ch_name[item]}}</option>
                                     </select>
                                 </div>
-                                <div v-else class="flex-total-left">
+                                <div v-else class="flex-total-left text-light">
                                     {{ change_chi(Config_Info.sensor) }}
                                 </div>
                             </div>
@@ -108,20 +98,18 @@
                     'rounded-left', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0',
                     'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-right'
                 ],
-                Config_Infos: this.config_infos,
+                Config_Infos: _.cloneDeep(this.config_infos),
                 ch_name: {
                     "WA1": '水位感測器',
                     "WA2": '水PH感測器',
                     "AI1": '溫度感測器',
                     "AI3": '甲烷感測器',
-                    "WE1": '風速感測器',
-                    "WE2": '風向感測器',
                     "LIG": '光線感測器',
                     "WA3": '土壤濕度感測器',
                     "AI2": '相對濕度感測器',
                     "AI4": '一氧化碳感測器',
-                    "WE3": '累積雨量感測器',
                 },
+                items: ['WA1', 'WA2', 'WA3', 'AI1', 'AI2', 'AI3', 'AI4', 'LIG'],
             }
         },
         methods: {
@@ -167,10 +155,12 @@
                         self.$delete(self.Config_Infos, index);
                     });
                 }
+                this.Config_Infos[index].control ? this.items.push(this.Config_Infos[index].sensor) : "";
+                this.items.sort();
             },
             updateCreateConfig(index) {
                 let api = this.Config_Infos[index].control ? this.api_url[2] : this.api_url[0];
-
+                let self = this;
                 axios.post(api, {
                     'former': this.former_name,
                     'farmland': this.Config_Infos[index].farmland,
@@ -185,6 +175,7 @@
                     alert('新增/更新成功');
                 });
 
+                this.items.splice(this.items.indexOf(this.Config_Infos[index].sensor), 1);
                 this.$set(this.Config_Infos[index], 'control', true);
             },
             updateSwitch(index) {
@@ -200,7 +191,18 @@
                     console.log(err);
                 })
             },
+            searchSensor() {
+                let number;
+                let self = this;
+                _.forEach(this.Config_Infos, function (item) {
+                    number = self.items.indexOf(item.sensor);
+                    self.items.splice(number, 1);
+                })
+            }
         },
+        mounted() {
+            this.searchSensor();
+        }
 
     }
 </script>
