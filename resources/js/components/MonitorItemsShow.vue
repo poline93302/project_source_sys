@@ -22,16 +22,19 @@
                         <div v-for="(item,index) in monitor_items"
                              class="col-12  flex-total-center border-bottom ">
                             <div class="row item-list-count w-100">
-                                <div class="col-4 text-dark text-center  border-right">{{ item }}
+                                <div class="col-4 text-dark text-center  border-right flex-total-center">{{ item }}
                                 </div>
-                                <div class="col-8 text-dark text-right">{{ item_infos.items[index] }}</div>
+                                <div class="col-8 text-dark text-right flex-total-center">
+                                    {{ item_infos.items[index] }}
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 border border-dark ">
                         <div class="row no-gutters flex-total-center">
                             <div class="col-2 flex-total-center">
-                                <i class="fa fa-cog" aria-hidden="true"></i>
+                                <i class="fa fa-cog" aria-hidden="true" data-toggle="modal"
+                                   :data-target="'#weight_Modal_'+target_name"></i>
                             </div>
                             <div class="col-10 text-dark flex-total-center">
                                 綜合指數：
@@ -42,6 +45,8 @@
                 </div>
             </div>
         </div>
+        <weights-modal :type="target_name" :title="item_infos.names[target_name]" :items="monitor_items"
+                       :ch_name="item_infos.items" :itemsThreshold="item_value"></weights-modal>
     </div>
 </template>
 
@@ -68,7 +73,9 @@
                     'farmland': this.farmland,
                     'type': this.target_name,
                 }).then(function (res) {
-                    self.item_value = res.data;
+                    _.forEach(res.data, function (item) {
+                        self.item_value[item.sensor] = {'max': item.max, 'min': item.min, 'value': item.value};
+                    });
                 }).catch(function (err) {
                     console.log(err);
                 }).finally(function () {
@@ -78,7 +85,7 @@
             finish_draw() {
                 let self = this;
                 _.forEach(this.item_value, function (id, key) {
-                    self.draw_Info[key] = new Draw_Info(self.item_infos.sensor[id['sensor']], id['value'], id['max'], id['min']);
+                    self.draw_Info[key] = new Draw_Info(self.item_infos.sensor[key], id['value'], id['max'], id['min']);
                     Make_Circle(self.draw_Info[key]);
                 });
             }
@@ -123,7 +130,6 @@
                 },
                 item_value: {},
                 draw_Info: {},
-
             }
         },
         mounted() {

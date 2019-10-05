@@ -2346,6 +2346,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -2367,7 +2372,13 @@ __webpack_require__.r(__webpack_exports__);
             'farmland': this.farmland,
             'type': this.target_name
         }).then(function (res) {
-            self.item_value = res.data;
+            lodash__WEBPACK_IMPORTED_MODULE_1___default.a.forEach(res.data, function (item) {
+                self.item_value[item.sensor] = {
+                    'max': item.max,
+                    'min': item.min,
+                    'value': item.value
+                };
+            });
         })["catch"](function (err) {
             console.log(err);
         })["finally"](function () {
@@ -2378,7 +2389,7 @@ __webpack_require__.r(__webpack_exports__);
           var self = this;
 
           lodash__WEBPACK_IMPORTED_MODULE_1___default.a.forEach(this.item_value, function (id, key) {
-              self.draw_Info[key] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](self.item_infos.sensor[id['sensor']], id['value'], id['max'], id['min']);
+              self.draw_Info[key] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](self.item_infos.sensor[key], id['value'], id['max'], id['min']);
               Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Make_Circle"])(self.draw_Info[key]);
           });
     }
@@ -2434,7 +2445,161 @@ __webpack_require__.r(__webpack_exports__);
   }
 });
 
-/***/ }),
+        /***/
+    }),
+
+    /***/
+    "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WeightsModal.vue?vue&type=script&lang=js&":
+    /*!***********************************************************************************************************************************************************************!*\
+      !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/WeightsModal.vue?vue&type=script&lang=js& ***!
+      \***********************************************************************************************************************************************************************/
+    /*! exports provided: default */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+        /* harmony import */
+        var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+        /* harmony default export */
+        __webpack_exports__["default"] = ({
+            name: "WeightsModal",
+            props: {
+                type: String,
+                title: String,
+                items: Object,
+                itemsThreshold: Object,
+                ch_name: Object
+            },
+            methods: {
+                resetData: function resetData() {
+                    this.use_items = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.items);
+                },
+                submitData: function submitData() {
+                    var self = this;
+                    var upTotal = 0;
+                    var total = 0;
+                    var count = 0; // 改變後的數值
+
+                    var changeNumber = []; // 存放sensor之順序
+
+                    var sensor_name = [];
+                    var alert_str = '您輸入的數值錯誤是否願意以[';
+
+                    if (!this.edit) {
+                        //建立新的陣列
+                        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(this.use_items, function (value, key) {
+                            sensor_name.push(key);
+                            changeNumber.push(value);
+                        }); //計算最佳數直
+
+
+                        do {
+                            upTotal = total;
+                            total = 0; //     //計算總和
+
+                            lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(changeNumber, function (value) {
+                                total += Number(value);
+                            });
+
+                            for (var i = 0; i < changeNumber.length; i++) {
+                                changeNumber[i] = Math.round(changeNumber[i] / total * 10000 / 100);
+                            } //  判斷計算是否總和為無窮 連續兩為無窮數 進行最大值++
+
+
+                            if (upTotal === total) count++; // 確認最大值
+
+                            if (count > 2) {
+                                changeNumber.sort();
+                                changeNumber[changeNumber.length - 1] += Math.abs(upTotal - 100);
+                                break;
+                            }
+                        } while (total !== 100); // //設定顯示資訊之的數值
+
+
+                        for (var _i = 0; _i < sensor_name.length; _i++) {
+                            alert_str += self.ch_name[sensor_name[_i]] + ' = ' + changeNumber[_i] + "%";
+                            _i !== sensor_name.length - 1 ? alert_str += ', ' : alert_str += ']';
+                        } // //設定權重上拉下降後的數值
+
+
+                        if (confirm(alert_str)) {
+                            for (var _i2 = 0; _i2 < changeNumber.length; _i2++) {
+                                this.$set(this.use_items, sensor_name[_i2], changeNumber[_i2]);
+                            }
+                        } else {
+                            this.resetData();
+                        }
+
+                        this.edit = true;
+                    } else {
+                        console.log('update');
+                    }
+                }
+            },
+            data: function data() {
+                return {
+                    use_items: {},
+                    use_threshold: {},
+                    // 是否編輯過
+                    edit: true
+                };
+            },
+            mounted: function mounted() {
+                this.use_items = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.items);
+                this.use_threshold = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.itemsThreshold);
+            }
+        });
+
+        /***/ }),
 
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/progItems.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************************************************!*\
@@ -68709,149 +68874,409 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-    return _c("div", {staticClass: "border w-100 p-2 my-2 shadow"}, [
-        _c(
-            "div",
-            {
-                staticClass: "row border no-gutters m-3 monitor-item rounded-top ",
-                class: [
-                    _vm.monitor_target <= 30
-                        ? "border-danger"
-                        : _vm.monitor_target > 60
-                        ? "border-success"
-                        : "border-warning",
-                    _vm.item_infos.classes[_vm.target_name]
-                ]
-            },
-            [
-                _c(
-                    "div",
-                    {
-                        staticClass:
-                            "item-info col-12 flex-total-center bg-success rounded-top mb-3",
-                        class:
-                            _vm.monitor_target <= 30
-                                ? "bg-danger"
-                                : _vm.monitor_target > 60
-                                ? "bg-success"
-                                : "bg-warning"
-                    },
-                    [
-                        _vm._v(
-                            "\n            " +
-                            _vm._s(_vm.item_infos.names[_vm.target_name]) +
-                            "\n        "
-                        )
-                    ]
-                ),
-                _vm._v(" "),
-                _c(
-                    "div",
-                    {staticClass: " col-10 monitor-item-show row float-left"},
-                    _vm._l(_vm.monitor_items, function (item, index) {
-                        return _c("div", {staticClass: "col-4"}, [
-                            _c("div", {staticClass: "text-center"}, [
-                                _vm._v(_vm._s(_vm.item_infos.items[index]))
-                            ]),
-                            _vm._v(" "),
-                            _c("div", {staticClass: "text-center", attrs: {id: index}})
-                        ])
-                    }),
-                    0
-                ),
-                _vm._v(" "),
-                _c("div", {staticClass: "col-2"}, [
-                    _c(
-                        "div",
-                        {staticClass: "row no-gutters bg-white rounded my-3 shadow"},
-                        [
-              _c(
-                "span",
-                {
-                  staticClass:
-                    "weights-style col-4 text-dark border border-success flex-total-center "
-                },
-                [_vm._v("權重")]
-              ),
-              _vm._v(" "),
-              _c(
-                "span",
-                {
-                  staticClass:
-                    "items-style col-8 text-dark border border-info flex-total-center"
-                },
-                [_vm._v("項目")]
-              ),
-              _vm._v(" "),
-              _c(
+    return _c(
+        "div",
+        {staticClass: "border w-100 p-2 my-2 shadow"},
+        [
+            _c(
                 "div",
                 {
-                  staticClass:
-                      "col-12 monitor-item-list row text-dark no-gutters  border border-dark"
+                    staticClass: "row border no-gutters m-3 monitor-item rounded-top ",
+                    class: [
+                        _vm.monitor_target <= 30
+                            ? "border-danger"
+                            : _vm.monitor_target > 60
+                            ? "border-success"
+                            : "border-warning",
+                        _vm.item_infos.classes[_vm.target_name]
+                    ]
                 },
-                  _vm._l(_vm.monitor_items, function (item, index) {
-                      return _c(
-                          "div",
-                          {staticClass: "col-12  flex-total-center border-bottom "},
-                          [
-                              _c("div", {staticClass: "row item-list-count w-100"}, [
-                                  _c(
-                                      "div",
-                                      {
-                                          staticClass:
-                                              "col-4 text-dark text-center  border-right"
-                                      },
-                                      [
-                                          _vm._v(
-                                              _vm._s(item) + "\n                            "
-                                          )
-                                      ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                      "div",
-                                      {staticClass: "col-8 text-dark text-right"},
-                                      [_vm._v(_vm._s(_vm.item_infos.items[index]))]
-                                  )
-                              ])
-                          ]
-                      )
+                [
+                    _c(
+                        "div",
+                        {
+                            staticClass:
+                                "item-info col-12 flex-total-center bg-success rounded-top mb-3",
+                            class:
+                                _vm.monitor_target <= 30
+                                    ? "bg-danger"
+                                    : _vm.monitor_target > 60
+                                    ? "bg-success"
+                                    : "bg-warning"
+                        },
+                        [
+                            _vm._v(
+                                "\n            " +
+                                _vm._s(_vm.item_infos.names[_vm.target_name]) +
+                                "\n        "
+                            )
+                        ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                        "div",
+                        {staticClass: " col-10 monitor-item-show row float-left"},
+                        _vm._l(_vm.monitor_items, function (item, index) {
+                            return _c("div", {staticClass: "col-4"}, [
+                                _c("div", {staticClass: "text-center"}, [
+                                    _vm._v(_vm._s(_vm.item_infos.items[index]))
+                                ]),
+                                _vm._v(" "),
+                                _c("div", {staticClass: "text-center", attrs: {id: index}})
+                            ])
+                        }),
+                        0
+                    ),
+                    _vm._v(" "),
+                    _c("div", {staticClass: "col-2"}, [
+                        _c(
+                            "div",
+                            {staticClass: "row no-gutters bg-white rounded my-3 shadow"},
+                            [
+                                _c(
+                                    "span",
+                                    {
+                                        staticClass:
+                                            "weights-style col-4 text-dark border border-success flex-total-center "
+                                    },
+                                    [_vm._v("權重")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                    "span",
+                                    {
+                                        staticClass:
+                                            "items-style col-8 text-dark border border-info flex-total-center"
+                                    },
+                                    [_vm._v("項目")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                    "div",
+                                    {
+                                        staticClass:
+                      "col-12 monitor-item-list row text-dark no-gutters  border border-dark"
+                                    },
+                                    _vm._l(_vm.monitor_items, function (item, index) {
+                                        return _c(
+                                            "div",
+                                            {
+                                                staticClass: "col-12  flex-total-center border-bottom "
+                                            },
+                                            [
+                                                _c(
+                                                    "div",
+                                                    {staticClass: "row item-list-count w-100"},
+                                                    [
+                                                        _c(
+                                                            "div",
+                                                            {
+                                                                staticClass:
+                                                                    "col-4 text-dark text-center  border-right flex-total-center"
+                                                            },
+                                                            [
+                                                                _vm._v(
+                                                                    _vm._s(item) +
+                                                                    "\n                            "
+                                                                )
+                                                            ]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                            "div",
+                                                            {
+                                                                staticClass:
+                                                                    "col-8 text-dark text-right flex-total-center"
+                                                            },
+                                                            [
+                                                                _vm._v(
+                                                                    "\n                                " +
+                                                                    _vm._s(_vm.item_infos.items[index]) +
+                                                                    "\n                            "
+                                                                )
+                                                            ]
+                                                        )
+                                                    ]
+                                                )
+                                            ]
+                                        )
                   }),
                   0
-              ),
-                            _vm._v(" "),
-                            _c("div", {staticClass: "col-12 border border-dark "}, [
-                                _c("div", {staticClass: "row no-gutters flex-total-center"}, [
-                                    _vm._m(0),
-                                    _vm._v(" "),
+                                ),
+                                _vm._v(" "),
+                                _c("div", {staticClass: "col-12 border border-dark "}, [
                                     _c(
                                         "div",
-                                        {staticClass: "col-10 text-dark flex-total-center"},
+                                        {staticClass: "row no-gutters flex-total-center"},
                                         [
-                                            _vm._v(
-                                                "\n                            綜合指數：\n                            "
-                                            ),
-                                            _c("div", {staticClass: "text-small"}, [
-                                                _vm._v(_vm._s(_vm.monitor_target))
-                      ])
-                    ]
-                  )
+                                            _c("div", {staticClass: "col-2 flex-total-center"}, [
+                                                _c("i", {
+                                                    staticClass: "fa fa-cog",
+                                                    attrs: {
+                                                        "aria-hidden": "true",
+                                                        "data-toggle": "modal",
+                                                        "data-target": "#weight_Modal_" + _vm.target_name
+                                                    }
+                                                })
+                                            ]),
+                                            _vm._v(" "),
+                                            _c(
+                                                "div",
+                                                {staticClass: "col-10 text-dark flex-total-center"},
+                                                [
+                                                    _vm._v(
+                                                        "\n                            綜合指數：\n                            "
+                                                    ),
+                                                    _c("div", {staticClass: "text-small"}, [
+                                                        _vm._v(_vm._s(_vm.monitor_target))
+                                                    ])
+                                                ]
+                                            )
+                                        ]
+                                    )
+                                ])
+                            ]
+                        )
+                    ])
+                ]
+            ),
+            _vm._v(" "),
+            _c("weights-modal", {
+                attrs: {
+                    type: _vm.target_name,
+                    title: _vm.item_infos.names[_vm.target_name],
+                    items: _vm.monitor_items,
+                    ch_name: _vm.item_infos.items,
+                    itemsThreshold: _vm.item_value
+                }
+            })
+        ],
+        1
+    )
+}
+        var staticRenderFns = []
+        render._withStripped = true
+
+
+        /***/
+    }),
+
+    /***/
+    "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true&":
+    /*!***************************************************************************************************************************************************************************************************************************!*\
+      !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true& ***!
+      \***************************************************************************************************************************************************************************************************************************/
+    /*! exports provided: render, staticRenderFns */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony export (binding) */
+        __webpack_require__.d(__webpack_exports__, "render", function () {
+            return render;
+        });
+        /* harmony export (binding) */
+        __webpack_require__.d(__webpack_exports__, "staticRenderFns", function () {
+            return staticRenderFns;
+        });
+        var render = function () {
+            var _vm = this
+            var _h = _vm.$createElement
+            var _c = _vm._self._c || _h
+            return _c(
+                "div",
+                {
+                    staticClass: "modal fade",
+                    attrs: {
+                        id: "weight_Modal_" + _vm.type,
+                        tabindex: "-1",
+                        role: "dialog",
+                        "aria-labelledby": "weight_Modal_" + _vm.type + "Label",
+                        "aria-hidden": "true"
+                    }
+                },
+                [
+                    _c("div", {staticClass: "modal-dialog", attrs: {role: "document"}}, [
+                        _c("div", {staticClass: "modal-content"}, [
+                            _c("div", {staticClass: "modal-header"}, [
+                                _c(
+                                    "h5",
+                                    {
+                                        staticClass: "modal-title",
+                                        attrs: {id: "weight_Modal_" + _vm.type + "Label"}
+                                    },
+                                    [_vm._v(_vm._s(_vm.title))]
+                                ),
+                                _vm._v(" "),
+                                _vm._m(0)
+                            ]),
+                            _vm._v(" "),
+                            _c("form", {attrs: {action: "", method: ""}}, [
+                                _c(
+                                    "div",
+                                    {staticClass: "modal-body row no-gutters text-center "},
+                                    [
+                                        _c("div", {staticClass: "col-4  border border-info"}, [
+                                            _vm._v("感測名稱")
+                                        ]),
+                                        _vm._v(" "),
+                                        _c(
+                                            "div",
+                                            {
+                                                staticClass: "col-4  border-top border-bottom border-info"
+                                            },
+                                            [_vm._v("權重")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("div", {staticClass: "col-4  border  border-info"}, [
+                                            _vm._v("極限值")
+                                        ]),
+                                        _vm._v(" "),
+                                        _vm._l(_vm.use_items, function (item, key) {
+                                            return _c(
+                                                "div",
+                                                {staticClass: "col-12 row no-gutters text-center"},
+                                                [
+                                                    _c(
+                                                        "div",
+                                                        {
+                                                            staticClass:
+                                                                "col-4 border border-top-0 border-right-0 flex-total-center"
+                                                        },
+                                                        [
+                                                            _vm._v(
+                                                                " " +
+                                                                _vm._s(_vm.ch_name[key]) +
+                                                                "\n                        "
+                                                            )
+                                                        ]
+                                                    ),
+                                                    _vm._v(" "),
+                                                    _c("input", {
+                                                        directives: [
+                                                            {
+                                                                name: "model",
+                                                                rawName: "v-model",
+                                                                value: _vm.use_items[key],
+                                                                expression: "use_items[key]"
+                                                            }
+                                                        ],
+                                                        staticClass:
+                                                            "col-4 border border-top-0 border-right-0 flex-total-center text-center",
+                                                        attrs: {
+                                                            type: "text",
+                                                            oninput: "value=value.replace(/[^\\d]/g,'')"
+                                                        },
+                                                        domProps: {value: _vm.use_items[key]},
+                                                        on: {
+                                                            change: function ($event) {
+                                                                _vm.edit = false
+                                                            },
+                                                            input: function ($event) {
+                                                                if ($event.target.composing) {
+                                                                    return
+                                                                }
+                                                                _vm.$set(_vm.use_items, key, $event.target.value)
+                                                            }
+                                                        }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                        "div",
+                                                        {
+                                                            staticClass:
+                                                                "col-4 border border-top-0 border-right-0 row no-gutters"
+                                                        },
+                                                        [
+                                                            _c("div", {staticClass: "col-12 row no-gutters"}, [
+                                                                _c(
+                                                                    "div",
+                                                                    {
+                                                                        staticClass: "col-4 border-right border-bottom"
+                                                                    },
+                                                                    [_vm._v("max")]
+                                                                ),
+                                                                _vm._v(" "),
+                                                                _c(
+                                                                    "div",
+                                                                    {
+                                                                        staticClass: "col-8 border-right border-bottom "
+                                                                    },
+                                                                    [_vm._v(_vm._s(_vm.use_threshold))]
+                                                                )
+                                                            ]),
+                                                            _vm._v(" "),
+                                                            _vm._m(1, true)
+                                                        ]
+                                                    )
+                                                ]
+                                            )
+                                        })
+                                    ],
+                                    2
+                                ),
+                                _vm._v(" "),
+                                _c("div", {staticClass: "modal-footer"}, [
+                                    _c(
+                                        "button",
+                                        {
+                                            staticClass: "btn btn-secondary",
+                                            attrs: {type: "button", "data-dismiss": "modal"},
+                                            on: {
+                                                click: function ($event) {
+                                                    return _vm.resetData()
+                                                }
+                                            }
+                                        },
+                                        [_vm._v("關閉\n                    ")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                        "button",
+                                        {
+                                            staticClass: "btn btn-primary",
+                                            attrs: {type: "button"},
+                                            on: {
+                                                click: function ($event) {
+                                                    return _vm.submitData()
+                                                }
+                                            }
+                                        },
+                                        [_vm._v(_vm._s(_vm.edit ? "更新" : "設定"))]
+                                    )
                                 ])
                             ])
-                        ]
-                    )
-                ])
-            ]
-        )
-    ])
-}
+                        ])
+                    ])
+                ]
+            )
+        }
         var staticRenderFns = [
             function () {
                 var _vm = this
                 var _h = _vm.$createElement
                 var _c = _vm._self._c || _h
-                return _c("div", {staticClass: "col-2 flex-total-center"}, [
-                    _c("i", {staticClass: "fa fa-cog", attrs: {"aria-hidden": "true"}})
+                return _c(
+                    "button",
+                    {
+                        staticClass: "close",
+                        attrs: {
+                            type: "button",
+                            "data-dismiss": "modal",
+                            "aria-label": "Close"
+                        }
+                    },
+                    [_c("span", {attrs: {"aria-hidden": "true"}}, [_vm._v("×")])]
+                )
+            },
+            function () {
+                var _vm = this
+                var _h = _vm.$createElement
+                var _c = _vm._self._c || _h
+                return _c("div", {staticClass: "col-12 row no-gutters"}, [
+                    _c("div", {staticClass: "col-4 border-right"}, [_vm._v("min")]),
+                    _vm._v(" "),
+                    _c("div", {staticClass: "col-8 border-right"}, [_vm._v("123")])
                 ])
             }
         ]
@@ -81159,6 +81584,7 @@ Vue.component('config-place', __webpack_require__(/*! ./components/ConfigPlace.v
 Vue.component('prog-items', __webpack_require__(/*! ./components/progItems.vue */ "./resources/js/components/progItems.vue")["default"]);
 Vue.component('monitor-items-show', __webpack_require__(/*! ./components/MonitorItemsShow.vue */ "./resources/js/components/MonitorItemsShow.vue")["default"]);
 Vue.component('former-info-config', __webpack_require__(/*! ./components/FormerInfoConfig.vue */ "./resources/js/components/FormerInfoConfig.vue")["default"]);
+        Vue.component('weights-modal', __webpack_require__(/*! ./components/WeightsModal.vue */ "./resources/js/components/WeightsModal.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -81625,8 +82051,92 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MonitorItemsShow_vue_vue_type_template_id_26f9a78e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+        /***/
+    }),
 
-/***/ }),
+    /***/
+    "./resources/js/components/WeightsModal.vue":
+    /*!**************************************************!*\
+      !*** ./resources/js/components/WeightsModal.vue ***!
+      \**************************************************/
+    /*! exports provided: default */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var _WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true& */ "./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true&");
+        /* harmony import */
+        var _WeightsModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./WeightsModal.vue?vue&type=script&lang=js& */ "./resources/js/components/WeightsModal.vue?vue&type=script&lang=js&");
+        /* empty/unused harmony star reexport *//* harmony import */
+        var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+        /* normalize component */
+
+        var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+            _WeightsModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+            _WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+            _WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+            false,
+            null,
+            "bd2a6546",
+            null
+        )
+
+        /* hot reload */
+        if (false) {
+            var api;
+        }
+        component.options.__file = "resources/js/components/WeightsModal.vue"
+        /* harmony default export */
+        __webpack_exports__["default"] = (component.exports);
+
+        /***/
+    }),
+
+    /***/
+    "./resources/js/components/WeightsModal.vue?vue&type=script&lang=js&":
+    /*!***************************************************************************!*\
+      !*** ./resources/js/components/WeightsModal.vue?vue&type=script&lang=js& ***!
+      \***************************************************************************/
+    /*! exports provided: default */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./WeightsModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WeightsModal.vue?vue&type=script&lang=js&");
+        /* empty/unused harmony star reexport */ /* harmony default export */
+        __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+        /***/
+    }),
+
+    /***/
+    "./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true&":
+    /*!*********************************************************************************************!*\
+      !*** ./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true& ***!
+      \*********************************************************************************************/
+    /*! exports provided: render, staticRenderFns */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true&");
+        /* harmony reexport (safe) */
+        __webpack_require__.d(__webpack_exports__, "render", function () {
+            return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"];
+        });
+
+        /* harmony reexport (safe) */
+        __webpack_require__.d(__webpack_exports__, "staticRenderFns", function () {
+            return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"];
+        });
+
+
+        /***/ }),
 
 /***/ "./resources/js/components/progItems.vue":
 /*!***********************************************!*\
