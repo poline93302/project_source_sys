@@ -25,11 +25,18 @@
                             @endif
                     >
                 </div>
+
                 <div class="btn-group float-right">
                     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#registerModal">註冊
                     </button>
                     <button type="button" class="btn btn-primary" onclick="loginInfoCheck();">登入</button>
                 </div>
+                @if ($errors->any())
+                    @foreach ($errors->all() as $error)
+                        <p class="error-text text-center w-100">{{ $error }}</p>
+                    @endforeach
+                @endif
+
             </form>
         </div>
     </div>
@@ -67,6 +74,7 @@
                     </div>
                     <div class="btn-group float-right">
                         <button type="reset" class="btn btn-warning">清除</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">關閉</button>
                         <button type="button" class="btn btn-primary" onclick="registerInfoCheck()">送出</button>
                     </div>
                 </form>

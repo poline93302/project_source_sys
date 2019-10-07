@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Contracts\Session\Session;
+use Dotenv\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -34,7 +35,7 @@ class FormerInfoController extends Controller
             Session(['username' => Auth::user()['username']]);
             return redirect()->to(route('monitor_homepage'));
         } else {
-            return $message = '請輸入正確帳號密碼';
+            return back()->withErrors(['登入資訊錯誤']);
         }
     }
 
@@ -47,6 +48,10 @@ class FormerInfoController extends Controller
 
     public function register(Request $req)
     {
+
+        $check = UserFormer::where(['username' => $req['register_username']])->first();
+        if (isset($check)) return back()->withErrors(['此帳號已存在']);
+
         UserFormer::create([
             'name' => $req['register_name'],
             'username' => $req['register_username'],
