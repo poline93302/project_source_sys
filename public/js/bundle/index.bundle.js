@@ -1965,6 +1965,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2001,14 +2031,6 @@ __webpack_require__.r(__webpack_exports__);
                 Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Make_Circle"])(self.hex_draw[i]);
             }
         });
-    },
-      textWeights: function textWeights() {
-          var pCollapse = '';
-
-          if (this.hex_values[0]) {
-              pCollapse = "\n                    ".concat(this.item_id[0], " :  \u6C34\u91CF : ").concat(this.hex_values[0].water_level, " \u6C34\u9178\u9E7C\u503C : ").concat(this.hex_values[0].water_ph, " \u571F\u58E4\u6FD5\u5EA6 : ").concat(this.hex_values[0].water_soil, "\n                    ").concat(this.item_id[1], "  :  \u4EAE\u5EA6 : ").concat(this.hex_values[0].water_level, "\n                    ").concat(this.item_id[2], " : \u4E00\u6C27\u5316\u78B3 : ").concat(this.hex_values[0].air_cp, " \u6EAB\u5EA6 : ").concat(this.hex_values[0].air_hun, " \u7532\u70F7 : ").concat(this.hex_values[0].air_ph4, " \u6FD5\u5EA6 : ").concat(this.hex_values[0].air_tem, "\n                    ").concat(this.item_id[3], " : \u7D2F\u7A4D\u96E8\u91CF : ").concat(this.hex_values[0].weather_rainAccumulation, " \u98A8\u901F : ").concat(this.hex_values[0].weather_windSpeed, " \u98A8\u5411 : ").concat(this.hex_values[0].weather_windWay, "\n                    ");
-              return pCollapse;
-          }
     }
   },
   data: function data() {
@@ -2016,6 +2038,26 @@ __webpack_require__.r(__webpack_exports__);
       hex_values: [],
       //六角形ID
         monitor_id: ['monitor-air', 'monitor-weather', 'monitor-water', 'monitor-light'],
+        //感測器順序
+        sensorOrder: {
+            'air': ['air_cp', 'air_hun', 'air_ph4', 'air_tem'],
+            'light': ['light_lux'],
+            'water': ['water_level', 'water_ph', 'water_soil'],
+            'weather': ['weather_rainAccumulation', 'weather_windSpeed', 'weather_windWay']
+        },
+        sensor_ch: {
+            'water_level': '水位',
+            'water_ph': '水PH',
+            'water_soil': '土壤濕度',
+            'light_lux': '亮度',
+            'air_cp': '一氧化碳',
+            'air_ph4': '甲烷',
+            'air_hun': '濕度',
+            'air_tem': '溫度',
+            'weather_windWay': '風向',
+            'weather_windSpeed': '風速',
+            'weather_rainAccumulation': '累積雨量'
+        },
         item_id: ['空氣健康指數', '氣候健康指數', '水健康指數', '光健康指數'],
         en_item_id: ['air', 'weather', 'water', 'light'],
       //hex_draw 得到數值
@@ -68215,10 +68257,10 @@ var render = function() {
     "div",
     {
       staticClass:
-        "container sensor-part border border-light rounded my-5 shadow"
+          "container sensor-part border border-light rounded mt-5 shadow"
     },
     [
-      _c("div", { staticClass: "row my-3 no-gutters text-center" }, [
+        _c("div", {staticClass: "row mt-3 no-gutters text-center"}, [
         _c("div", { staticClass: "col-12 mb-3 form-header" }, [
           _c("div", { staticClass: "row " }, [
             _c("div", { staticClass: "col-3 form-title text-left" }, [
@@ -68257,11 +68299,97 @@ var render = function() {
                 },
                 [
                     _c("div", {staticClass: "card card-body collapse-item"}, [
-                        _c("span", {}, [_vm._v("權重對應表 ")]),
-                        _vm._v(" "),
-                        _c("div", [
-                            _vm._v(_vm._s((_vm.innerHTML = _vm.textWeights())))
-                        ])
+                        _vm.hex_values[0]
+                            ? _c("div", {staticClass: "container"}, [
+                                _c(
+                                    "div",
+                                    {
+                                        staticClass: "row text-center flex-total-center"
+                                    },
+                                    [
+                                        _c(
+                                            "div",
+                                            {staticClass: "col-12 border border-info"},
+                                            [_vm._v("權重對應表")]
+                                        ),
+                                        _vm._v(" "),
+                                        _vm._m(0),
+                                        _vm._v(" "),
+                                        _c(
+                                            "div",
+                                            {staticClass: "col-12 border border-top-0"},
+                                            _vm._l(_vm.en_item_id, function (item, index) {
+                                                return _c(
+                                                    "div",
+                                                    {staticClass: "row text-center p-0 "},
+                                                    [
+                                                        _c(
+                                                            "div",
+                                                            {
+                                                                staticClass:
+                                                                    "col-4 border-right flex-total-center border-top py-2"
+                                                            },
+                                                            [
+                                                                _vm._v(
+                                                                    "\n                                                " +
+                                                                    _vm._s(_vm.item_id[index]) +
+                                                                    "\n                                            "
+                                                                )
+                                                            ]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                            "div",
+                                                            {staticClass: "col-4 border-right "},
+                                                            _vm._l(_vm.sensorOrder[item], function (
+                                                                it
+                                                            ) {
+                                                                return _c(
+                                                                    "div",
+                                                                    {staticClass: "border-top py-2"},
+                                                                    [
+                                                                        _vm._v(
+                                                                            "\n                                                    " +
+                                                                            _vm._s(_vm.sensor_ch[it]) +
+                                                                            "\n                                                "
+                                                                        )
+                                                                    ]
+                                                                )
+                                                            }),
+                                                            0
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                            "div",
+                                                            {staticClass: "col-4"},
+                                                            _vm._l(_vm.sensorOrder[item], function (
+                                                                it
+                                                            ) {
+                                                                return _c(
+                                                                    "div",
+                                                                    {staticClass: "border-top py-2"},
+                                                                    [
+                                                                        _vm._v(
+                                                                            "\n                                                    " +
+                                                                            _vm._s(
+                                                                                _vm.hex_values[0][it]
+                                                                            ) +
+                                                                            "\n                                                "
+                                                                        )
+                                                                    ]
+                                                                )
+                                                            }),
+                                                            0
+                                                        )
+                                                    ]
+                                                )
+                                            }),
+                                            0
+                                        )
+                                    ]
+                                )
+                            ])
+                            : _vm._e()
                   ])
                 ]
               )
@@ -68277,7 +68405,7 @@ var render = function() {
                   "div",
                   {
                     staticClass:
-                      "col-3 mt-3 h-100 d-flex justify-content-center  align-items-center"
+                        "col-3 mt-3 h-100 flex-total-center text-center"
                   },
                   [
                       _c(
@@ -68294,7 +68422,7 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "col-12 h-75" }, [_vm._v(" ")]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-12  text-right" }, [
+                _c("div", {staticClass: "col-12 text-right"}, [
                 _c("a", { attrs: { href: _vm.url_path } }, [
                   _c("div", { staticClass: "go-monitor" })
                 ])
@@ -68307,7 +68435,28 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = []
+        var staticRenderFns = [
+            function () {
+                var _vm = this
+                var _h = _vm.$createElement
+                var _c = _vm._self._c || _h
+                return _c("div", {staticClass: "col-12 border border-info p-0"}, [
+                    _c("div", {staticClass: "row no-gutters"}, [
+                        _c("div", {staticClass: "col-4 border-info border-right"}, [
+                            _vm._v("健康名稱")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", {staticClass: "col-4 border-info border-right"}, [
+                            _vm._v("感測名稱")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", {staticClass: "col-4 border-info border-right"}, [
+                            _vm._v("權重")
+                        ])
+                    ])
+                ])
+            }
+        ]
 render._withStripped = true
 
 
