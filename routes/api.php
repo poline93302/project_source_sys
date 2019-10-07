@@ -13,6 +13,26 @@ use Illuminate\Http\Request;
 |
 */
 
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['prefix' => 'numerical'], function () {
+    Route::post('/target', 'apiController@numberTarget')->name('api.get.number.target');
+    Route::post('/findNow', 'apiController@getNowData')->name('api.get.item.number');
+    Route::post('/critical', 'apiController@sensorChangeData')->name('api.get.item.critical');
+});
+
+Route::group(['prefix' => 'config'], function () {
+    Route::post('/create', 'FormerConfigController@create')->name('api.post.config.create');
+    Route::post('/update', 'FormerConfigController@update')->name('api.post.config.update');
+    Route::post('/switch', 'FormerConfigController@switch')->name('api.post.config.switch');
+    Route::post('/delete', 'FormerConfigController@delete')->name('api.post.config.delete');
+    Route::post('/updateWeightsThreshold', 'FormerConfigController@updateWeightsThreshold')->name('api.post.weight.threshold.update');
+    Route::get('/test', 'FormerConfigController@switch');
+});
+
+
+
+

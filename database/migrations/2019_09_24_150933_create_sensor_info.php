@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateSensorInfo extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('userFormer', function (Blueprint $table) {
+        Schema::create('sensor_info', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('username');
-            $table->string('password');
-            $table->string('email');
-            $table->timestamps();
+            $table->string('former');
+            $table->string('farmland');
+            $table->string('sensor');
+            $table->integer('max');
+            $table->integer('min');
         });
     }
 
@@ -30,6 +30,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('userFormer');
+        Schema::dropIfExists('sensor_info');
     }
 }
