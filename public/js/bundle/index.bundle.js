@@ -2351,6 +2351,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 
@@ -2373,11 +2375,11 @@ __webpack_require__.r(__webpack_exports__);
             'type': this.target_name
         }).then(function (res) {
             lodash__WEBPACK_IMPORTED_MODULE_1___default.a.forEach(res.data, function (item) {
-                self.item_value[item.sensor] = {
+                self.$set(self.item_value, [self.item_infos.sensor[item.sensor]], {
                     'max': item.max,
                     'min': item.min,
                     'value': item.value
-                };
+                });
             });
         })["catch"](function (err) {
             console.log(err);
@@ -2389,7 +2391,7 @@ __webpack_require__.r(__webpack_exports__);
           var self = this;
 
           lodash__WEBPACK_IMPORTED_MODULE_1___default.a.forEach(this.item_value, function (id, key) {
-              self.draw_Info[key] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](self.item_infos.sensor[key], id['value'], id['max'], id['min']);
+              self.draw_Info[key] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](key, id['value'], id['max'], id['min']);
               Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Make_Circle"])(self.draw_Info[key]);
           });
     }
@@ -2508,6 +2510,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
         /* harmony default export */
         __webpack_exports__["default"] = ({
@@ -2517,11 +2529,15 @@ __webpack_require__.r(__webpack_exports__);
                 title: String,
                 items: Object,
                 itemsThreshold: Object,
-                ch_name: Object
+                ch_name: Object,
+                sensor_name: Object,
+                name: String,
+                farmland: Number
             },
             methods: {
                 resetData: function resetData() {
                     this.use_items = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.items);
+                    this.use_thresholds = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.itemsThreshold);
                 },
                 submitData: function submitData() {
                     var self = this;
@@ -2533,6 +2549,7 @@ __webpack_require__.r(__webpack_exports__);
 
                     var sensor_name = [];
                     var alert_str = '您輸入的數值錯誤是否願意以[';
+                    var form = document.getElementById('form' + this.type);
 
                     if (!this.edit) {
                         //建立新的陣列
@@ -2581,25 +2598,36 @@ __webpack_require__.r(__webpack_exports__);
 
                         this.edit = true;
                     } else {
-                        console.log('update');
+                        form.submit(); // console.log(form);
                     }
                 }
             },
             data: function data() {
                 return {
-                    use_items: {},
-                    use_threshold: {},
                     // 是否編輯過
-                    edit: true
+                    edit: true,
+                    sensorName: [],
+                    use_items: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.items),
+                    use_thresholds: {},
+                    url_update: '../../../api/config/updateWeightsThreshold'
                 };
             },
+            watch: {
+                itemsThreshold: function itemsThreshold() {
+                    this.use_thresholds = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.itemsThreshold);
+                }
+            },
             mounted: function mounted() {
-                this.use_items = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.items);
-                this.use_threshold = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.itemsThreshold);
+                var self = this; //進行記憶數值之順序
+
+                lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(Object.keys(this.use_items), function (item) {
+                    self.sensorName.push(lodash__WEBPACK_IMPORTED_MODULE_0___default.a.findKey(self.sensor_name, lodash__WEBPACK_IMPORTED_MODULE_0___default.a.partial(lodash__WEBPACK_IMPORTED_MODULE_0___default.a.isEqual, item)), item);
+                });
             }
         });
 
-        /***/ }),
+        /***/
+    }),
 
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/progItems.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************************************************!*\
@@ -69043,11 +69071,14 @@ var render = function() {
             _vm._v(" "),
             _c("weights-modal", {
                 attrs: {
+                    name: _vm.name,
+                    farmland: _vm.farmland,
                     type: _vm.target_name,
                     title: _vm.item_infos.names[_vm.target_name],
                     items: _vm.monitor_items,
+                    itemsThreshold: _vm.item_value,
                     ch_name: _vm.item_infos.items,
-                    itemsThreshold: _vm.item_value
+                    sensor_name: _vm.item_infos.sensor
                 }
             })
         ],
@@ -69111,141 +69142,294 @@ var render = function() {
                                 _vm._m(0)
                             ]),
                             _vm._v(" "),
-                            _c("form", {attrs: {action: "", method: ""}}, [
-                                _c(
-                                    "div",
-                                    {staticClass: "modal-body row no-gutters text-center "},
-                                    [
-                                        _c("div", {staticClass: "col-4  border border-info"}, [
-                                            _vm._v("感測名稱")
-                                        ]),
-                                        _vm._v(" "),
-                                        _c(
-                                            "div",
+                            _c(
+                                "form",
+                                {
+                                    attrs: {
+                                        action: _vm.url_update,
+                                        method: "post",
+                                        id: "form" + _vm.type
+                                    }
+                                },
+                                [
+                                    _c("input", {
+                                        directives: [
                                             {
-                                                staticClass: "col-4  border-top border-bottom border-info"
-                                            },
-                                            [_vm._v("權重")]
-                                        ),
-                                        _vm._v(" "),
-                                        _c("div", {staticClass: "col-4  border  border-info"}, [
-                                            _vm._v("極限值")
-                                        ]),
-                                        _vm._v(" "),
-                                        _vm._l(_vm.use_items, function (item, key) {
-                                            return _c(
+                                                name: "model",
+                                                rawName: "v-model",
+                                                value: _vm.sensorName,
+                                                expression: "sensorName"
+                                            }
+                                        ],
+                                        attrs: {type: "hidden", name: "order"},
+                                        domProps: {value: _vm.sensorName},
+                                        on: {
+                                            input: function ($event) {
+                                                if ($event.target.composing) {
+                                                    return
+                                                }
+                                                _vm.sensorName = $event.target.value
+                                            }
+                                        }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                        directives: [
+                                            {
+                                                name: "model",
+                                                rawName: "v-model",
+                                                value: _vm.name,
+                                                expression: "name"
+                                            }
+                                        ],
+                                        attrs: {type: "hidden", name: "name"},
+                                        domProps: {value: _vm.name},
+                                        on: {
+                                            input: function ($event) {
+                                                if ($event.target.composing) {
+                                                    return
+                                                }
+                                                _vm.name = $event.target.value
+                                            }
+                                        }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                        directives: [
+                                            {
+                                                name: "model",
+                                                rawName: "v-model",
+                                                value: _vm.farmland,
+                                                expression: "farmland"
+                                            }
+                                        ],
+                                        attrs: {type: "hidden", name: "farmland"},
+                                        domProps: {value: _vm.farmland},
+                                        on: {
+                                            input: function ($event) {
+                                                if ($event.target.composing) {
+                                                    return
+                                                }
+                                                _vm.farmland = $event.target.value
+                                            }
+                                        }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                        "div",
+                                        {staticClass: "modal-body row no-gutters text-center "},
+                                        [
+                                            _c("div", {staticClass: "col-4  border border-info"}, [
+                                                _vm._v("感測名稱")
+                                            ]),
+                                            _vm._v(" "),
+                                            _c(
                                                 "div",
-                                                {staticClass: "col-12 row no-gutters text-center"},
-                                                [
-                                                    _c(
-                                                        "div",
-                                                        {
-                                                            staticClass:
-                                                                "col-4 border border-top-0 border-right-0 flex-total-center"
-                                                        },
-                                                        [
-                                                            _vm._v(
-                                                                " " +
-                                                                _vm._s(_vm.ch_name[key]) +
-                                                                "\n                        "
-                                                            )
-                                                        ]
-                                                    ),
-                                                    _vm._v(" "),
-                                                    _c("input", {
-                                                        directives: [
+                                                {
+                                                    staticClass: "col-4  border-top border-bottom border-info"
+                                                },
+                                                [_vm._v("權重")]
+                                            ),
+                                            _vm._v(" "),
+                                            _c("div", {staticClass: "col-4  border  border-info"}, [
+                                                _vm._v("極限值")
+                                            ]),
+                                            _vm._v(" "),
+                                            _vm._l(_vm.use_items, function (item, key) {
+                                                return _c(
+                                                    "div",
+                                                    {staticClass: "col-12 row no-gutters text-center"},
+                                                    [
+                                                        _c(
+                                                            "div",
                                                             {
-                                                                name: "model",
-                                                                rawName: "v-model",
-                                                                value: _vm.use_items[key],
-                                                                expression: "use_items[key]"
-                                                            }
-                                                        ],
-                                                        staticClass:
-                                                            "col-4 border border-top-0 border-right-0 flex-total-center text-center",
-                                                        attrs: {
-                                                            type: "text",
-                                                            oninput: "value=value.replace(/[^\\d]/g,'')"
-                                                        },
-                                                        domProps: {value: _vm.use_items[key]},
-                                                        on: {
-                                                            change: function ($event) {
-                                                                _vm.edit = false
+                                                                staticClass:
+                                                                    "col-4 border border-top-0 border-right-0 flex-total-center"
                                                             },
-                                                            input: function ($event) {
-                                                                if ($event.target.composing) {
-                                                                    return
+                                                            [
+                                                                _vm._v(
+                                                                    " " +
+                                                                    _vm._s(_vm.ch_name[key]) +
+                                                                    "\n                        "
+                                                                )
+                                                            ]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c("input", {
+                                                            directives: [
+                                                                {
+                                                                    name: "model",
+                                                                    rawName: "v-model",
+                                                                    value: _vm.use_items[key],
+                                                                    expression: "use_items[key]"
                                                                 }
-                                                                _vm.$set(_vm.use_items, key, $event.target.value)
-                                                            }
-                                                        }
-                                                    }),
-                                                    _vm._v(" "),
-                                                    _c(
-                                                        "div",
-                                                        {
+                                                            ],
                                                             staticClass:
-                                                                "col-4 border border-top-0 border-right-0 row no-gutters"
-                                                        },
-                                                        [
-                                                            _c("div", {staticClass: "col-12 row no-gutters"}, [
+                                                                "col-4 border border-top-0 border-right-0 flex-total-center text-center",
+                                                            attrs: {
+                                                                type: "text",
+                                                                name: "weights_" + key,
+                                                                oninput: "value=value.replace(/[^\\d]/g,'')"
+                                                            },
+                                                            domProps: {value: _vm.use_items[key]},
+                                                            on: {
+                                                                change: function ($event) {
+                                                                    _vm.edit = false
+                                                                },
+                                                                input: function ($event) {
+                                                                    if ($event.target.composing) {
+                                                                        return
+                                                                    }
+                                                                    _vm.$set(_vm.use_items, key, $event.target.value)
+                                                                }
+                                                            }
+                                                        }),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                            "div",
+                                                            {
+                                                                staticClass:
+                                                                    "col-4 border border-top-0 border-right-0 row no-gutters"
+                                                            },
+                                                            [
                                                                 _c(
                                                                     "div",
-                                                                    {
-                                                                        staticClass: "col-4 border-right border-bottom"
-                                                                    },
-                                                                    [_vm._v("max")]
+                                                                    {staticClass: "col-12 row no-gutters"},
+                                                                    [
+                                                                        _c(
+                                                                            "div",
+                                                                            {
+                                                                                staticClass:
+                                                                                    "col-4 border-right border-bottom"
+                                                                            },
+                                                                            [_vm._v("max")]
+                                                                        ),
+                                                                        _vm._v(" "),
+                                                                        _vm.use_thresholds[key]
+                                                                            ? _c("input", {
+                                                                                directives: [
+                                                                                    {
+                                                                                        name: "model",
+                                                                                        rawName: "v-model",
+                                                                                        value: _vm.use_thresholds[key].max,
+                                                                                        expression: " use_thresholds[key].max"
+                                                                                    }
+                                                                                ],
+                                                                                staticClass:
+                                                                                    "col-8 border border-top-0 border-left-0 text-center ",
+                                                                                attrs: {
+                                                                                    type: "text",
+                                                                                    name: "max_" + key,
+                                                                                    oninput:
+                                                                                        "value=value.replace(/[^\\d]/g,'')"
+                                                                                },
+                                                                                domProps: {
+                                                                                    value: _vm.use_thresholds[key].max
+                                                                                },
+                                                                                on: {
+                                                                                    input: function ($event) {
+                                                                                        if ($event.target.composing) {
+                                                                                            return
+                                                                                        }
+                                                                                        _vm.$set(
+                                                                                            _vm.use_thresholds[key],
+                                                                                            "max",
+                                                                                            $event.target.value
+                                                                                        )
+                                                                                    }
+                                                                                }
+                                                                            })
+                                                                            : _vm._e()
+                                                                    ]
                                                                 ),
                                                                 _vm._v(" "),
                                                                 _c(
                                                                     "div",
-                                                                    {
-                                                                        staticClass: "col-8 border-right border-bottom "
-                                                                    },
-                                                                    [_vm._v(_vm._s(_vm.use_threshold))]
+                                                                    {staticClass: "col-12 row no-gutters"},
+                                                                    [
+                                                                        _c(
+                                                                            "div",
+                                                                            {staticClass: "col-4 border-right"},
+                                                                            [_vm._v("min")]
+                                                                        ),
+                                                                        _vm._v(" "),
+                                                                        _vm.use_thresholds[key]
+                                                                            ? _c("input", {
+                                                                                directives: [
+                                                                                    {
+                                                                                        name: "model",
+                                                                                        rawName: "v-model",
+                                                                                        value: _vm.use_thresholds[key].min,
+                                                                                        expression: " use_thresholds[key].min"
+                                                                                    }
+                                                                                ],
+                                                                                staticClass:
+                                                                                    "col-8 border-right text-center border",
+                                                                                attrs: {
+                                                                                    type: "text",
+                                                                                    name: "min_" + key,
+                                                                                    oninput:
+                                                                                        "value=value.replace(/[^\\d]/g,'')"
+                                                                                },
+                                                                                domProps: {
+                                                                                    value: _vm.use_thresholds[key].min
+                                                                                },
+                                                                                on: {
+                                                                                    input: function ($event) {
+                                                                                        if ($event.target.composing) {
+                                                                                            return
+                                                                                        }
+                                                                                        _vm.$set(
+                                                                                            _vm.use_thresholds[key],
+                                                                                            "min",
+                                                                                            $event.target.value
+                                                                                        )
+                                                                                    }
+                                                                                }
+                                                                            })
+                                                                            : _vm._e()
+                                                                    ]
                                                                 )
-                                                            ]),
-                                                            _vm._v(" "),
-                                                            _vm._m(1, true)
-                                                        ]
-                                                    )
-                                                ]
-                                            )
-                                        })
-                                    ],
-                                    2
-                                ),
-                                _vm._v(" "),
-                                _c("div", {staticClass: "modal-footer"}, [
-                                    _c(
-                                        "button",
-                                        {
-                                            staticClass: "btn btn-secondary",
-                                            attrs: {type: "button", "data-dismiss": "modal"},
-                                            on: {
-                                                click: function ($event) {
-                                                    return _vm.resetData()
-                                                }
-                                            }
-                                        },
-                                        [_vm._v("關閉\n                    ")]
+                                                            ]
+                                                        )
+                                                    ]
+                                                )
+                                            })
+                                        ],
+                                        2
                                     ),
                                     _vm._v(" "),
-                                    _c(
-                                        "button",
-                                        {
-                                            staticClass: "btn btn-primary",
-                                            attrs: {type: "button"},
-                                            on: {
-                                                click: function ($event) {
-                                                    return _vm.submitData()
+                                    _c("div", {staticClass: "modal-footer"}, [
+                                        _c(
+                                            "button",
+                                            {
+                                                staticClass: "btn btn-secondary",
+                                                attrs: {type: "button", "data-dismiss": "modal"},
+                                                on: {
+                                                    click: function ($event) {
+                                                        return _vm.resetData()
+                                                    }
                                                 }
-                                            }
-                                        },
-                                        [_vm._v(_vm._s(_vm.edit ? "更新" : "設定"))]
-                                    )
-                                ])
-                            ])
+                                            },
+                                            [_vm._v("關閉\n                    ")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                            "button",
+                                            {
+                                                staticClass: "btn btn-primary",
+                                                attrs: {type: "button"},
+                                                on: {
+                                                    click: function ($event) {
+                                                        return _vm.submitData()
+                                                    }
+                                                }
+                                            },
+                                            [_vm._v(_vm._s(_vm.edit ? "更新" : "設定"))]
+                                        )
+                                    ])
+                                ]
+                            )
                         ])
                     ])
                 ]
@@ -69268,16 +69452,6 @@ var render = function() {
                     },
                     [_c("span", {attrs: {"aria-hidden": "true"}}, [_vm._v("×")])]
                 )
-            },
-            function () {
-                var _vm = this
-                var _h = _vm.$createElement
-                var _c = _vm._self._c || _h
-                return _c("div", {staticClass: "col-12 row no-gutters"}, [
-                    _c("div", {staticClass: "col-4 border-right"}, [_vm._v("min")]),
-                    _vm._v(" "),
-                    _c("div", {staticClass: "col-8 border-right"}, [_vm._v("123")])
-                ])
             }
         ]
 render._withStripped = true
@@ -82136,7 +82310,8 @@ __webpack_require__.r(__webpack_exports__);
         });
 
 
-        /***/ }),
+        /***/
+    }),
 
 /***/ "./resources/js/components/progItems.vue":
 /*!***********************************************!*\

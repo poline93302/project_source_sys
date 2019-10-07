@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\SensorInfo;
 use Illuminate\Http\Request;
-use App\FormerInfo;
+use App\SensorInfo;
+use App\Weights;
 use App\FormerConfig;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,7 +20,45 @@ class FormerConfigController extends Controller
         $this->info = $api;
     }
 
-    //農夫設定值
+//  更新感測器臨界值與權重
+    public function updateWeightsThreshold(Request $req)
+    {
+//      內容
+        $content = ['name', 'weights', 'max', 'min'];
+//      感測器排列 偶數為"AI1" 基數為名稱
+        $sensorOrder = explode(",", ($req['order']));
+//      計算幾個個數
+        $sensorCount = count($sensorOrder);
+        $sensorName = [];
+        $sensorInfo = [];
+
+//      以sensor.name =['name'=>'AI1','weights'=>'10','max'=>200,'min'=>10]的模式進行切割
+        for ($j = 0; $j < $sensorCount; $j += 2) {
+            array_push($sensorName, $sensorOrder[$j + 1]);
+            $sensorInfo[$sensorOrder[$j + 1]] = [
+                //name
+                $content[0] => $sensorOrder[$j],
+                //weights
+                $content[1] => $req->input($content[1] . '_' . $sensorOrder[$j + 1]),
+                //max
+                $content[2] => $req->input($content[2] . '_' . $sensorOrder[$j + 1]),
+                //min
+                $content[3] => $req->input($content[3] . '_' . $sensorOrder[$j + 1]),
+            ];
+        }
+//
+        foreach ($sensorName as $item) {
+//          update with weights
+            Weights::where(['formerName' => $req['name'], 'farmland' => $req['farmland']])->update([$item => $sensorInfo[$item]['weights']]);
+//          update with max & min
+            SensorInfo::where(['former' => $req['name'], 'farmland' => $req['farmland'], 'sensor' => $sensorInfo[$item]['name']])->update(['max' => $sensorInfo[$item]['max'], 'min' => $sensorInfo[$item]['min']]);
+        }
+//        dd($req->all());
+
+        return redirect()->to(route('monitor_former_config', ['form_crop' => $req['farmland']]));
+    }
+
+// 農夫設定監控值 新增
     public function create(Request $req)
     {
         FormerConfig::create([
@@ -33,6 +71,7 @@ class FormerConfigController extends Controller
         return response()->json('create_ok');
     }
 
+// 農夫設定監控值 刪除
     public function delete(Request $req)
     {
         FormerConfig::where([
@@ -44,6 +83,7 @@ class FormerConfigController extends Controller
         return response()->json('delete_ok');
     }
 
+// 農夫設定監控值 更新
     public function update(Request $req)
     {
         FormerConfig::where([
@@ -58,6 +98,7 @@ class FormerConfigController extends Controller
         return response()->json('update_ok');
     }
 
+// 農夫設定監控值 改變開關
     public function switch(Request $req)
     {
 //        $req = ['former' => '0000', 'farmland' => 0, 'sensor' => 'WA1', 'switch' => true, 'value' => 60];
@@ -72,7 +113,8 @@ class FormerConfigController extends Controller
         return response()->json('switch_ok');
     }
 
-    public function sensorChangeData($former = '0000', $farmland = 0)
+//  抓取感測器臨界值
+    public function sensorChangeData($former, $farmland)
     {
         $sensorInfo = SensorInfo::Where(['former' => $former, 'farmland' => $farmland])->get();
         $data = [];
@@ -83,8 +125,11 @@ class FormerConfigController extends Controller
         return $data;
     }
 
-    public function show($farmland = 0)
+//  回傳該農夫的設定值
+    public function show($farmland)
     {
+        if (is_null(Auth::user())) return redirect()->to(route('former_homepage'));
+
         $former = Auth::user()['username'];
 
         $request = new Request();

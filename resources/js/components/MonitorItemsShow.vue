@@ -45,8 +45,10 @@
                 </div>
             </div>
         </div>
-        <weights-modal :type="target_name" :title="item_infos.names[target_name]" :items="monitor_items"
-                       :ch_name="item_infos.items" :itemsThreshold="item_value"></weights-modal>
+        <weights-modal :name="name" :farmland="farmland"
+                       :type="target_name" :title="item_infos.names[target_name]"
+                       :items="monitor_items" :itemsThreshold="item_value"
+                       :ch_name="item_infos.items" :sensor_name="item_infos.sensor"></weights-modal>
     </div>
 </template>
 
@@ -74,7 +76,11 @@
                     'type': this.target_name,
                 }).then(function (res) {
                     _.forEach(res.data, function (item) {
-                        self.item_value[item.sensor] = {'max': item.max, 'min': item.min, 'value': item.value};
+                        self.$set(self.item_value, [self.item_infos.sensor[item.sensor]], {
+                            'max': item.max,
+                            'min': item.min,
+                            'value': item.value
+                        });
                     });
                 }).catch(function (err) {
                     console.log(err);
@@ -85,7 +91,7 @@
             finish_draw() {
                 let self = this;
                 _.forEach(this.item_value, function (id, key) {
-                    self.draw_Info[key] = new Draw_Info(self.item_infos.sensor[key], id['value'], id['max'], id['min']);
+                    self.draw_Info[key] = new Draw_Info(key, id['value'], id['max'], id['min']);
                     Make_Circle(self.draw_Info[key]);
                 });
             }

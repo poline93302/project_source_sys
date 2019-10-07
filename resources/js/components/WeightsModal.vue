@@ -9,7 +9,10 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="" method="">
+                <form :action="url_update" method="post" :id="'form'+type">
+                    <input type="hidden" v-model="sensorName" name="order">
+                    <input type="hidden" v-model="name" name="name">
+                    <input type="hidden" v-model="farmland" name="farmland">
                     <div class="modal-body row no-gutters text-center ">
                         <div class="col-4  border border-info">感測名稱</div>
                         <div class="col-4  border-top border-bottom border-info">權重</div>
@@ -17,18 +20,25 @@
                         <div v-for="(item,key) in use_items" class="col-12 row no-gutters text-center">
                             <div class="col-4 border border-top-0 border-right-0 flex-total-center"> {{ch_name[key]}}
                             </div>
-                            <input type="text"
+
+                            <input type="text" :name="'weights_'+key"
                                    class="col-4 border border-top-0 border-right-0 flex-total-center text-center"
                                    v-model="use_items[key]" @change="edit=false"
                                    oninput="value=value.replace(/[^\d]/g,'')">
                             <div class="col-4 border border-top-0 border-right-0 row no-gutters">
                                 <div class="col-12 row no-gutters">
                                     <div class="col-4 border-right border-bottom">max</div>
-                                    <div class="col-8 border-right border-bottom ">{{use_threshold}}</div>
+                                    <input type="text" :name="'max_'+key"
+                                           class="col-8 border border-top-0 border-left-0 text-center "
+                                           v-if="use_thresholds[key]" v-model=" use_thresholds[key].max"
+                                           oninput="value=value.replace(/[^\d]/g,'')">
                                 </div>
                                 <div class="col-12 row no-gutters">
                                     <div class="col-4 border-right">min</div>
-                                    <div class="col-8 border-right">123</div>
+                                    <input type="text" :name="'min_'+key"
+                                           class="col-8 border-right text-center border"
+                                           v-if="use_thresholds[key]" v-model=" use_thresholds[key].min"
+                                           oninput="value=value.replace(/[^\d]/g,'')">
                                 </div>
                             </div>
                         </div>
@@ -55,11 +65,16 @@
             items: Object,
             itemsThreshold: Object,
             ch_name: Object,
+            sensor_name: Object,
+            name: String,
+            farmland: Number,
         },
         methods: {
             resetData() {
                 this.use_items = _.cloneDeep(this.items);
+                this.use_thresholds = _.cloneDeep(this.itemsThreshold);
             },
+
             submitData() {
                 let self = this;
                 let upTotal = 0;
@@ -71,6 +86,8 @@
                 let sensor_name = [];
 
                 let alert_str = '您輸入的數值錯誤是否願意以[';
+
+                let form = document.getElementById('form' + this.type);
 
                 if (!this.edit) {
                     //建立新的陣列
@@ -117,24 +134,36 @@
                     }
                     this.edit = true;
                 } else {
-                    console.log('update');
+                    form.submit();
+                    // console.log(form);
                 }
 
 
             },
+
         },
         data() {
             return {
-                use_items: {},
-                use_threshold: {},
                 // 是否編輯過
                 edit: true,
+                sensorName: [],
+                use_items: _.cloneDeep(this.items),
+                use_thresholds: {},
+                url_update: '../../../api/config/updateWeightsThreshold',
+            }
+        },
+        watch: {
+            itemsThreshold() {
+                this.use_thresholds = _.cloneDeep(this.itemsThreshold);
             }
         },
         mounted() {
-            this.use_items = _.cloneDeep(this.items);
-            this.use_threshold = _.cloneDeep(this.itemsThreshold);
-        },
+            let self = this;
+            //進行記憶數值之順序
+            _.forEach(Object.keys(this.use_items), function (item) {
+                self.sensorName.push(_.findKey(self.sensor_name, _.partial(_.isEqual, item)), item);
+            });
+        }
     }
 </script>
 

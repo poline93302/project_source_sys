@@ -29,6 +29,7 @@ Route::group(['prefix' => 'config'], function () {
     Route::post('/update', 'FormerConfigController@update')->name('api.post.config.update');
     Route::post('/switch', 'FormerConfigController@switch')->name('api.post.config.switch');
     Route::post('/delete', 'FormerConfigController@delete')->name('api.post.config.delete');
+    Route::post('/updateWeightsThreshold', 'FormerConfigController@updateWeightsThreshold')->name('api.post.weight.threshold.update');
     Route::get('/test', 'FormerConfigController@switch');
 });
 

@@ -26,17 +26,17 @@ class apiController extends Controller
         $WeatherData = $this->weatherData($req['name'], $req['farmland']);
 
         $target = [
-            'air' => $this->confirmationPercentage($req['name'], $req['farmland'], 'AI1', $weights['air_hun'], $AirData['AI1'])
+            'air' => round($this->confirmationPercentage($req['name'], $req['farmland'], 'AI1', $weights['air_hun'], $AirData['AI1'])
                 + $this->confirmationPercentage($req['name'], $req['farmland'], 'AI2', $weights['air_cp'], $AirData['AI2'])
                 + $this->confirmationPercentage($req['name'], $req['farmland'], 'AI3', $weights['air_ph4'], $AirData['AI3'])
-                + $this->confirmationPercentage($req['name'], $req['farmland'], 'AI4', $weights['air_tem'], $AirData['AI4']),
-            'water' => $this->confirmationPercentage($req['name'], $req['farmland'], 'WA1', $weights['water_level'], $WaterData["WA1"])
+                + $this->confirmationPercentage($req['name'], $req['farmland'], 'AI4', $weights['air_tem'], $AirData['AI4'])),
+            'water' => round($this->confirmationPercentage($req['name'], $req['farmland'], 'WA1', $weights['water_level'], $WaterData["WA1"])
                 + $this->confirmationPercentage($req['name'], $req['farmland'], 'WA2', $weights['water_ph'], $WaterData['WA2'])
-                + $this->confirmationPercentage($req['name'], $req['farmland'], 'WA3', $weights['water_soil'], $WaterData['WA3']),
-            'light' => $this->confirmationPercentage($req['name'], $req['farmland'], 'LIG', $weights['light_lux'], $LightData["LIG"]),
-            'weather' => $this->confirmationPercentage($req['name'], $req['farmland'], 'WE1', $weights['weather_rainAccumulation'], $WeatherData['WE1'])
+                + $this->confirmationPercentage($req['name'], $req['farmland'], 'WA3', $weights['water_soil'], $WaterData['WA3'])),
+            'light' => round($this->confirmationPercentage($req['name'], $req['farmland'], 'LIG', $weights['light_lux'], $LightData["LIG"])),
+            'weather' => round($this->confirmationPercentage($req['name'], $req['farmland'], 'WE1', $weights['weather_rainAccumulation'], $WeatherData['WE1'])
                 + $this->confirmationPercentage($req['name'], $req['farmland'], 'WE2', $weights['weather_windSpeed'], $WeatherData['WE2'])
-                + $this->confirmationPercentage($req['name'], $req['farmland'], 'WE3', $weights['weather_windWay'], $WeatherData['WE3'])
+                + $this->confirmationPercentage($req['name'], $req['farmland'], 'WE3', $weights['weather_windWay'], $WeatherData['WE3']))
         ];
         return response()->json(['weights' => $weights, 'target' => $target]);
     }

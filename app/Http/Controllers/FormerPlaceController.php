@@ -161,6 +161,7 @@ class FormerPlaceController extends Controller
         /*      input : form(def null) & former & form_crop(def null) req->form(為url抓取職) req->crop(為url抓取職)
                 output : this form's monitor(water,air,sun,weather,name,crop)
         */
+        if (is_null(Auth::user())) return redirect()->to(route('former_homepage'));
 //      抓取當下農夫
         $former = Auth::user()['username'];
         $formerName = Auth::user()['name'];

@@ -11,4 +11,5 @@ class SensorInfo extends Authenticatable
     protected $table = 'sensorInfo';
     //
     protected $guarded = [];
+    public $timestamps = false;
 }
