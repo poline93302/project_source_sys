@@ -18,13 +18,18 @@ class apiController extends Controller
 //  抓取大數據
     public function numberTarget(Request $req)
     {
+
         $weights = $this->weightsData($req['name'], $req['farmland']);
+
+        if (is_null($weights)) return response()->json('Please');
 
         $AirData = $this->airData($req['name'], $req['farmland']);
         $WaterData = $this->waterData($req['name'], $req['farmland']);
         $LightData = $this->lightData($req['name'], $req['farmland']);
         $WeatherData = $this->weatherData($req['name'], $req['farmland']);
 
+//        $res = count($weights) . count($AirData) . count($WaterData) . count($LightData) . count($WeatherData);
+//        if ($res !== 0) return 'nodata';
         $target = [
             'air' => round($this->confirmationPercentage($req['name'], $req['farmland'], 'AI1', $weights['air_hun'], $AirData['AI1'])
                 + $this->confirmationPercentage($req['name'], $req['farmland'], 'AI2', $weights['air_cp'], $AirData['AI2'])
@@ -48,6 +53,8 @@ class apiController extends Controller
         $sensorInfo = [];
         $value = [];
         $time = 0;
+
+        if (is_null($req['type'])) return response()->json('Please');
 
         if ($req['type'] === 'air') $value = $this->airData($req['name'], $req['farmland']);
         if ($req['type'] === 'light') $value = $this->lightData($req['name'], $req['farmland']);

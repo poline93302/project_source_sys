@@ -171,7 +171,6 @@ class FormerPlaceController extends Controller
 
 //      抓取該農夫的所有田
         $selectFormer = FormerInfo::where('former', $former)->orderBy('form', 'DESC')->get();
-
 //      提供select進行查詢用
         $formList = $this->selectShow(0, 0, $selectFormer);
         $resList = $this->selectShow($formQueryIndicator, $cropQueryIndicator, $selectFormer);
@@ -186,22 +185,24 @@ class FormerPlaceController extends Controller
         $count = 0;
 //      For Indicator computing get 2(form&crop) : 1(form) : 0(all)
         ($formIndicator || $cropIndicator) ? ($formIndicator && $cropIndicator) ? $Indicator = 2 : $Indicator = 1 : $Indicator = 0;
-
+//      id => farmland
         if ($Indicator === 0) {
             //      進行拆解
             foreach ($resList as $i => $item) {
                 // 組合農場與農地 #array#
-                $formList[$i][0] = $item['form'] . '_' . $item['crop'];
-                $formList[$i][1] = $item['address'];
-                $formList[$i][2] = $item['id'];
+                $formList[$i][0] = $item['form'];
+                $formList[$i][1] = $item['crop'];
+                $formList[$i][2] = $item['address'];
+                $formList[$i][3] = $item['id'];
             }
         } elseif ($Indicator === 1) {
             foreach ($resList as $item) {
                 // 組合農場與農地 #array#
                 if ($item['form'] === $formIndicator) {
-                    $formList[$count][0] = $item['form'] . '_' . $item['crop'];
-                    $formList[$count][1] = $item['address'];
-                    $formList[$count][2] = $item['id'];
+                    $formList[$count][0] = $item['form'];
+                    $formList[$count][1] = $item['crop'];
+                    $formList[$count][2] = $item['address'];
+                    $formList[$count][3] = $item['id'];
                     $count++;
                 }
             }
@@ -209,9 +210,10 @@ class FormerPlaceController extends Controller
             foreach ($resList as $item) {
                 // 組合農場與農地 #array#
                 if ($item['form'] === $formIndicator && $item['crop'] === $cropIndicator) {
-                    $formList[$count][0] = $item['form'] . '_' . $item['crop'];
-                    $formList[$count][1] = $item['address'];
-                    $formList[$count][2] = $item['id'];
+                    $formList[$count][0] = $item['form'];
+                    $formList[$count][1] = $item['crop'];
+                    $formList[$count][2] = $item['address'];
+                    $formList[$count][3] = $item['id'];
                     $count++;
                 }
             }

@@ -1697,10 +1697,8 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-        /* harmony import */
-        var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-        /* harmony import */
-        var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -1787,122 +1785,122 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ConfigPlace",
-            props: {
-                back_url: '',
-                config_infos: Array,
-                name_critical: {},
-                api_url: Array,
-                former_name: ''
-            },
+  props: {
+    back_url: '',
+    config_infos: Array,
+    name_critical: {},
+    api_url: Array,
+    former_name: ''
+  },
   data: function data() {
     return {
-        value_items: ['rounded-left', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-right'],
-        Config_Infos: _.cloneDeep(this.config_infos),
-        ch_name: {
-            "WA1": '水位感測器',
-            "WA2": '水PH感測器',
-            "AI1": '溫度感測器',
-            "AI3": '甲烷感測器',
-            "LIG": '光線感測器',
-            "WA3": '土壤濕度感測器',
-            "AI2": '相對濕度感測器',
-            "AI4": '一氧化碳感測器'
-        },
-        items: ['WA1', 'WA2', 'WA3', 'AI1', 'AI2', 'AI3', 'AI4', 'LIG']
+      value_items: ['rounded-left', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-right'],
+      Config_Infos: _.cloneDeep(this.config_infos),
+      ch_name: {
+        "WA1": '水位感測器',
+        "WA2": '水PH感測器',
+        "AI1": '溫度感測器',
+        "AI3": '甲烷感測器',
+        "LIG": '光線感測器',
+        "WA3": '土壤濕度感測器',
+        "AI2": '相對濕度感測器',
+        "AI4": '一氧化碳感測器'
+      },
+      items: ['WA1', 'WA2', 'WA3', 'AI1', 'AI2', 'AI3', 'AI4', 'LIG']
     };
   },
   methods: {
-      //新增Array
+    //新增Array
     add_Configs: function add_Configs() {
       this.Config_Infos.push({
         id: this.Config_Infos.length,
-          sensor: null,
+        sensor: null,
         "switch": false,
-          farmland: 0,
-          former: '',
-          value: 0,
-          control: false
+        farmland: 0,
+        former: '',
+        value: 0,
+        control: false
       });
     },
-      //中英文轉換
+    //中英文轉換
     change_chi: function change_chi(name) {
       //先進行切割 後放入物件 撈出
-        return this.ch_name[name];
+      return this.ch_name[name];
     },
-      //用以emit進行更改數值
+    //用以emit進行更改數值
     set_value: function set_value(number, index) {
       //設定數值
-        this.$set(this.Config_Infos[index], 'value', number);
+      this.$set(this.Config_Infos[index], 'value', number);
     },
-      //針對新增的Config進行 設定value
-      sensorGet: function sensorGet(id) {
-          var value = document.getElementById('select_sensor_name');
-          this.Config_Infos[id].sensor = value.value;
-      },
-      deleteConfig: function deleteConfig(index) {
-          var self = this;
+    //針對新增的Config進行 設定value
+    sensorGet: function sensorGet(id) {
+      var value = document.getElementById('select_sensor_name');
+      this.Config_Infos[id].sensor = value.value;
+    },
+    deleteConfig: function deleteConfig(index) {
+      var self = this;
 
-          if (confirm('確定刪除')) {
-              axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(self.api_url[1], {
-                  'former': self.former_name,
-                  'farmland': self.Config_Infos[index].farmland,
-                  'sensor': self.Config_Infos[index].sensor
-              }).then(function (res) {
-                  console.log(res.data);
-              })["catch"](function (err) {
-                  console.log(err);
-              })["finally"](function () {
-                  self.$delete(self.Config_Infos, index);
-              });
+      if (confirm('確定刪除')) {
+        axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(self.api_url[1], {
+          'former': self.former_name,
+          'farmland': self.Config_Infos[index].farmland,
+          'sensor': self.Config_Infos[index].sensor
+        }).then(function (res) {
+          console.log(res.data);
+        })["catch"](function (err) {
+          console.log(err);
+        })["finally"](function () {
+          self.$delete(self.Config_Infos, index);
+        });
       }
 
-          this.Config_Infos[index].control ? this.items.push(this.Config_Infos[index].sensor) : "";
-          this.items.sort();
-      },
-      updateCreateConfig: function updateCreateConfig(index) {
-          var api = this.Config_Infos[index].control ? this.api_url[2] : this.api_url[0];
-          var self = this;
-          axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(api, {
-              'former': this.former_name,
-              'farmland': this.Config_Infos[index].farmland,
-              'sensor': this.Config_Infos[index].sensor,
-              'switch': this.Config_Infos[index]["switch"],
-              'value': this.Config_Infos[index].value
-          }).then(function (res) {
-              console.log(res.data);
-          })["catch"](function (err) {
-              console.log(err);
-          })["finally"](function () {
-              alert('新增/更新成功');
-          });
-          this.items.splice(this.items.indexOf(this.Config_Infos[index].sensor), 1);
-          this.$set(this.Config_Infos[index], 'control', true);
-      },
-      updateSwitch: function updateSwitch(index) {
-          var self = this;
-          axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(this.api_url[3], {
-              'former': self.former_name,
-              'farmland': this.Config_Infos[index].farmland,
-              'sensor': this.Config_Infos[index].sensor,
-              'switch': this.Config_Infos[index]["switch"]
-          }).then(function (res) {
-              console.log(res.data);
-          })["catch"](function (err) {
-              console.log(err);
-          });
-      },
-      searchSensor: function searchSensor() {
-          var number;
-          var self = this;
+      this.Config_Infos[index].control ? this.items.push(this.Config_Infos[index].sensor) : "";
+      this.items.sort();
+    },
+    updateCreateConfig: function updateCreateConfig(index) {
+      var api = this.Config_Infos[index].control ? this.api_url[2] : this.api_url[0];
+      var self = this;
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(api, {
+        'former': this.former_name,
+        'farmland': this.Config_Infos[index].farmland,
+        'sensor': this.Config_Infos[index].sensor,
+        'switch': this.Config_Infos[index]["switch"],
+        'value': this.Config_Infos[index].value
+      }).then(function (res) {
+        console.log(res.data);
+      })["catch"](function (err) {
+        console.log(err);
+      })["finally"](function () {
+        alert('新增/更新成功');
+      });
+      this.items.splice(this.items.indexOf(this.Config_Infos[index].sensor), 1);
+      this.$set(this.Config_Infos[index], 'control', true);
+    },
+    updateSwitch: function updateSwitch(index) {
+      var self = this;
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(this.api_url[3], {
+        'former': self.former_name,
+        'farmland': this.Config_Infos[index].farmland,
+        'sensor': this.Config_Infos[index].sensor,
+        'switch': this.Config_Infos[index]["switch"]
+      }).then(function (res) {
+        console.log(res.data);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    searchSensor: function searchSensor() {
+      var number;
+      var self = this;
 
-          _.forEach(this.Config_Infos, function (item) {
-              number = self.items.indexOf(item.sensor);
-              self.items.splice(number, 1);
-          });
-      }
+      _.forEach(this.Config_Infos, function (item) {
+        number = self.items.indexOf(item.sensor);
+        self.items.splice(number, 1);
+      });
+    }
   },
-            mounted: function mounted() {
-                this.searchSensor();
+  mounted: function mounted() {
+    this.searchSensor();
   }
 });
 
@@ -1920,10 +1918,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Active/Sketchpad */ "./resources/js/Active/Sketchpad.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
-        /* harmony import */
-        var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-        /* harmony import */
-        var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+//
+//
+//
 //
 //
 //
@@ -2002,70 +2001,67 @@ __webpack_require__.r(__webpack_exports__);
   name: "conitor-exponent",
   props: {
     form_crop: String,
-      config_number: 0,
-      url_api_target: '',
-      url_path: '',
-      name: ''
+    config_number: 0,
+    url_api_target: '',
+    url_path: '',
+    name: ''
   },
   methods: {
     count_off: function count_off(id) {
-        console.log(this.monitor_id[id]);
       return this.monitor_id[id] + '-' + this.config_number;
     },
     getValue: function getValue() {
       // hex_value
-        var info = [];
-        var self = this;
-        info = this.form_crop.split('_');
-        axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api_target, {
-            'name': this.name,
-            'farmland': this.config_number
-        }).then(function (res) {
-            //weights =>[0] 權重 [1]大權重
-            self.hex_values = [res.data.weights, res.data.target];
-        })["catch"](function (err) {
-            console.log('ERROR' + err);
-        })["finally"](function () {
-            for (var i = 0; i < 4; i++) {
-                self.hex_draw[i] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](self.monitor_id[i] + '-' + self.config_number, self.hex_values[1][self.en_item_id[i]], 100, 0);
-                Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Make_Circle"])(self.hex_draw[i]);
-            }
-        });
+      var self = this;
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api_target, {
+        'name': this.name,
+        'farmland': this.config_number
+      }).then(function (res) {
+        //weights =>[0] 權重 [1]大權重
+        if (res.data !== 'Please') self.hex_values = [res.data.weights, res.data.target];
+      })["catch"](function (err) {
+        console.log('ERROR' + err);
+      })["finally"](function () {
+        for (var i = 0; i < 4; i++) {
+          self.hex_draw[i] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](self.monitor_id[i] + '-' + self.config_number, self.hex_values[1][self.en_item_id[i]], 100, 0);
+          Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Make_Circle"])(self.hex_draw[i]);
+        }
+      });
     }
   },
   data: function data() {
     return {
       hex_values: [],
       //六角形ID
-        monitor_id: ['monitor-air', 'monitor-weather', 'monitor-water', 'monitor-light'],
-        //感測器順序
-        sensorOrder: {
-            'air': ['air_cp', 'air_hun', 'air_ph4', 'air_tem'],
-            'light': ['light_lux'],
-            'water': ['water_level', 'water_ph', 'water_soil'],
-            'weather': ['weather_rainAccumulation', 'weather_windSpeed', 'weather_windWay']
-        },
-        sensor_ch: {
-            'water_level': '水位',
-            'water_ph': '水PH',
-            'water_soil': '土壤濕度',
-            'light_lux': '亮度',
-            'air_cp': '一氧化碳',
-            'air_ph4': '甲烷',
-            'air_hun': '濕度',
-            'air_tem': '溫度',
-            'weather_windWay': '風向',
-            'weather_windSpeed': '風速',
-            'weather_rainAccumulation': '累積雨量'
-        },
-        item_id: ['空氣健康指數', '氣候健康指數', '水健康指數', '光健康指數'],
-        en_item_id: ['air', 'weather', 'water', 'light'],
+      monitor_id: ['monitor-air', 'monitor-weather', 'monitor-water', 'monitor-light'],
+      //感測器順序
+      sensorOrder: {
+        'air': ['air_cp', 'air_hun', 'air_ph4', 'air_tem'],
+        'light': ['light_lux'],
+        'water': ['water_level', 'water_ph', 'water_soil'],
+        'weather': ['weather_rainAccumulation', 'weather_windSpeed', 'weather_windWay']
+      },
+      sensor_ch: {
+        'water_level': '水位',
+        'water_ph': '水PH',
+        'water_soil': '土壤濕度',
+        'light_lux': '亮度',
+        'air_cp': '一氧化碳',
+        'air_ph4': '甲烷',
+        'air_hun': '濕度',
+        'air_tem': '溫度',
+        'weather_windWay': '風向',
+        'weather_windSpeed': '風速',
+        'weather_rainAccumulation': '累積雨量'
+      },
+      item_id: ['空氣健康指數', '氣候健康指數', '水健康指數', '光健康指數'],
+      en_item_id: ['air', 'weather', 'water', 'light'],
       //hex_draw 得到數值
-        hex_draw: {},
-        register: true
+      hex_draw: {},
+      register: true
     };
   },
-            mounted: function mounted() {
+  mounted: function mounted() {
     setTimeout(this.getValue(), 3600);
   }
 });
@@ -2114,6 +2110,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2218,6 +2216,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "FormerInfoConfig",
   props: {
@@ -2227,101 +2226,168 @@ __webpack_require__.r(__webpack_exports__);
     route: String
   },
   methods: {
-    addForm: function addForm() {
-      this.sortOutData[0].push(['', '']);
-    },
-    //id 為 DOM ID
-    deleteForm: function deleteForm(id) {
-      var deleteValue = document.getElementById('update-FormName-' + id);
+    //新增農場/農田
+    addItems: function addItems(grad) {
+      var formlen = this.forms.length;
+      var croplen = this.crops.length;
 
-      if (window.confirm('確定刪除嗎？若確認的話會將相關農地“刪除”')) {
-        this.sortOutData[0].splice(id, 1); //
-
-        this.stepToInter.push('delete_Form_' + deleteValue.value + "_");
+      if (grad === 'form') {
+        //一次新增一層
+        if (this.forms[formlen - 1][0] !== '') {
+          this.forms.push(['', '', formlen]);
+          this.formsCopyKey.push(['', '', formlen]);
+          this.stepsCount++;
+        }
+      } else {
+        if (this.crops[croplen - 1][0] !== '') {
+          this.crops.push(['', '', 'New']);
+        }
       }
     },
-    addCrop: function addCrop() {
-      this.sortOutData[1].push('');
-    },
-    deleteCrop: function deleteCrop(id, fontId) {
-      this.stepToInter.push('delete_Crop_' + id + "_");
-      this.sortOutData[1].splice(fontId, 1);
-    },
-    reFormCrop: function reFormCrop(id, sqlId) {
-      var formName = document.getElementById('select-FormData-' + id);
-      var cropName = document.getElementById('select-CropData-' + id);
-      this.$set(this.sortOutData[1], id, formName.value + '|' + cropName.value + '|' + sqlId);
-      this.stepToInter.push('Crop_Form_' + id + '_' + sqlId);
-    },
-    cutFormCrop: function cutFormCrop() {
+    //刪除農場/農田 N
+    deleteItems: function deleteItems(grad, index) {
       var self = this;
-      var formCrop = [];
-      var formStatus = '';
 
-      _.forEach(this.formcrop, function (value, index) {
-        //value[0]農作物 value[1]農場地址
-        formCrop[index] = value[0].split('_');
-        self.cropName.push(formCrop[index]);
+      if (grad === 'form') {
+        //將相關的crops 刪除
+        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.crops, function (item, indexCrops) {
+          if (self.forms[index][0] === item[0]) {
+            console.log(index);
+            console.log('form', item[0]);
+            console.log('crops', self.forms[index][0]);
+            self.crops.splice(indexCrops, 1, '');
+          }
+        }); //將農場刪除
+        // this.forms.splice(index, 1);
+        //將農場標記同時刪除
+        //steps相關刪除
+        // this.steps.splice(this.steps.indexOf(this.formsKey[index]), 1);
+        // this.formsCopyKey.splice(index, 1);
+        // this.formsKey.splice(index, 1);
+        // this.stepsCount--;
 
-        if (formStatus !== formCrop[index][0]) {
-          self.formName[0].push(formCrop[index][0]);
-          self.formName[1].push(value[1]);
-          formStatus = formCrop[index][0];
-        }
-      });
-
-      this.createFlash();
+      } else {
+        this.crops.splice(index, 1);
+      }
     },
-    resetAny: function resetAny() {
-      this.sortOutData = [[], []];
-      this.createFlash();
-    },
-    createFlash: function createFlash() {
+    //重設所有數字
+    resetValue: function resetValue() {
       var self = this;
+      var formsStatue = [];
+      var addressStatue = [];
+      var formsItem = [];
+      var addressItem = [];
       this.formerName = this.formername;
       this.formerEmail = this.formeremail;
+      this.forms = [];
+      this.crops = [];
+      this.steps = [];
+      this.stepsStatus = [];
+      this.finishSteps = [];
+      this.formsKey = [];
+      this.formsCopyKey = [];
+      this.cropsKey = [];
 
-      for (var i = 0; i < this.formName[0].length; i++) {
-        self.sortOutData[0].push([this.formName[0][i], this.formName[1][i]]);
+      lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(this.formcrop, function (item) {
+        formsStatue.push(item[0]);
+        addressStatue.push(item[2]);
+        self.crops.push([item[0], item[1], item[3]]);
+        self.cropsKey.push([item[0], item[1], item[3]]);
+      });
+
+      formsItem = Array.from(new Set(formsStatue));
+      addressItem = Array.from(new Set(addressStatue));
+
+      for (var i = 0; i < formsItem.length; i++) {
+        this.forms.push([formsItem[i], addressItem[i], i]);
+        this.formsKey.push(formsItem[i]);
+        this.formsCopyKey.push([formsItem[i], addressItem[i], i]);
       }
 
-      for (var _i = 0; _i < this.cropName.length; _i++) {
-        self.sortOutData[1].push(this.cropName[_i][0] + '|' + this.cropName[_i][1] + "|" + this.formcrop[_i][2]);
-      }
+      this.stepsCount = this.formsKey.length - 1;
     },
-    //查詢更改部分 id 為更改數值的DOM_ID original原本要被更改的數值
-    searchUpdate: function searchUpdate(id, original, way) {
-      this.stepToInter.push(way + "_" + original + "_" + id);
-    },
+    //送出確認
     lostCheck: function lostCheck() {
-      var updateFormerInfo = document.getElementById('updateFormerInfo');
-      this.repeat = Array.from(new Set(this.stepToInter));
-      updateFormerInfo.elements.temporary.value = this.repeat; // console.log();
-      // if (confirm('確定送出')) {
+      //針對所有crops form 查看是否有不合法的地方
+      console.log('submit');
+    }
+  },
+  watch: {
+    crops: {
+      deep: true,
+      handler: function handler(values) {
+        var self = this;
+        var stepRepeat = [];
 
-      updateFormerInfo.submit(); // }
+        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(values, function (items, index) {
+          if (JSON.stringify(items) !== JSON.stringify(self.cropsKey[index])) {
+            stepRepeat.push(items[2] + '_' + index);
+          }
+        });
+
+        this.stepsCrop = Array.from(new Set(stepRepeat));
+      }
+    },
+    forms: {
+      deep: true,
+      handler: function handler(value) {
+        var self = this;
+        var checkStatus = [];
+        {
+          //原因 forms 為 所有農場集合體 所以透過 forEach 抓出
+          lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(value, function (item, index) {
+            //item[] => 0 農場名稱 1 地址 2順序
+            if (item[0] === '') {
+              //判斷item是否為新加入的 y=>將formKey加入create_id
+              self.formsKey.push('create');
+            } else if (JSON.stringify(item) !== JSON.stringify(self.formsCopyKey[index])) {
+              //當 數值改變 確認是否改變時
+              //記錄更改的狀態名稱
+              self.stepsStatus.push(self.formsKey[item[2]] + '_' + item[2]); //將相關的 crops 進行更改名稱
+
+              lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.crops, function (cropItem) {
+                if (cropItem[0] === self.formsCopyKey[index][0]) {
+                  cropItem[0] = item[0];
+                }
+              }); //更新最高數值
+
+
+              self.formsCopyKey[index][0] = item[0];
+            }
+          });
+
+          lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(Array.from(new Set(self.stepsStatus)), function (item) {
+            if (item) {
+              checkStatus.push(item);
+              self.steps.push(item);
+            }
+          });
+
+          this.steps = Array.from(new Set(checkStatus));
+        }
+        this.steps.sort();
+      }
     }
   },
   data: function data() {
     return {
-      //重複者刪除 [0]名稱[1]地址
-      formName: [[], []],
-      //所有數值進行增加
-      cropName: [],
-      //記下前端步驟
-      stepToInter: [],
-      //最後結果送出
-      repeat: [],
-      //進行運算[0][0]formName [0][1]Address [1]cropName
-      sortOutData: [[], []],
+      forms: [],
+      formsKey: [],
+      formsCopyKey: [],
+      crops: [],
+      cropsKey: [],
       //農夫名稱
       formerName: '',
       formerEmail: '',
+      steps: [],
+      stepsCrop: [],
+      stepsCount: 0,
+      stepsStatus: [],
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
   },
   created: function created() {
-    this.cutFormCrop();
+    this.resetValue();
   }
 });
 
@@ -2401,111 +2467,107 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "MonitorItemsShow",
   props: {
-      monitor_target: Number,
-      monitor_items: Object,
-      target_name: String,
-      url_api: '',
-      name: String,
-      farmland: Number
+    monitor_target: Number,
+    monitor_items: Object,
+    target_name: String,
+    url_api: '',
+    name: String,
+    farmland: Number
   },
   methods: {
     get_value: function get_value() {
-        var self = this;
-        axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api, {
-            'name': this.name,
-            'farmland': this.farmland,
-            'type': this.target_name
-        }).then(function (res) {
-            lodash__WEBPACK_IMPORTED_MODULE_1___default.a.forEach(res.data, function (item) {
-                self.$set(self.item_value, [self.item_infos.sensor[item.sensor]], {
-                    'max': item.max,
-                    'min': item.min,
-                    'value': item.value
-                });
-            });
-        })["catch"](function (err) {
-            console.log(err);
-        })["finally"](function () {
-            self.finish_draw();
-        });
-    },
-      finish_draw: function finish_draw() {
-          var self = this;
-
-          lodash__WEBPACK_IMPORTED_MODULE_1___default.a.forEach(this.item_value, function (id, key) {
-              self.draw_Info[key] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](key, id['value'], id['max'], id['min']);
-              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Make_Circle"])(self.draw_Info[key]);
+      var self = this;
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api, {
+        'name': this.name,
+        'farmland': this.farmland,
+        'type': this.target_name
+      }).then(function (res) {
+        lodash__WEBPACK_IMPORTED_MODULE_1___default.a.forEach(res.data, function (item) {
+          self.$set(self.item_value, [self.item_infos.sensor[item.sensor]], {
+            'max': item.max,
+            'min': item.min,
+            'value': item.value
           });
+        });
+      })["catch"](function (err) {
+        console.log(err);
+      })["finally"](function () {
+        self.finish_draw();
+      });
+    },
+    finish_draw: function finish_draw() {
+      var self = this;
+
+      lodash__WEBPACK_IMPORTED_MODULE_1___default.a.forEach(this.item_value, function (id, key) {
+        self.draw_Info[key] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Draw_Info"](key, id['value'], id['max'], id['min']);
+        Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_0__["Make_Circle"])(self.draw_Info[key]);
+      });
     }
   },
   data: function data() {
     return {
       item_infos: {
-          classes: {
-              'water': 'monitor-item-water',
-              'light': 'monitor-item-light',
-              'air': 'monitor-item-air',
-              'weather': 'monitor-item-weather'
-          },
-          names: {
-              'water': '水健康指數',
-              'light': '燈泡健康指數',
-              'air': '空氣健康指數',
-              'weather': '氣候健康指數'
-          },
-          sensor: {
-              "AI1": 'air_cp',
-              "AI2": 'air_ph4',
-              "AI3": 'air_hun',
-              "AI4": 'air_tem',
-              "WA1": 'water_level',
-              "WA2": 'water_ph',
-              "WA3": 'water_soil',
-              "LIG": 'light_lux',
-              "WE1": 'weather_windWay',
-              "WE2": 'weather_windSpeed',
-              "WE3": 'weather_rainAccumulation'
-          },
-          items: {
-              'water_level': '水位',
-              'water_ph': '水PH',
-              'water_soil': '土壤濕度',
-              'light_lux': '亮度',
-              'air_cp': '一氧化碳',
-              'air_ph4': '甲烷',
-              'air_hun': '濕度',
-              'air_tem': '溫度',
-              'weather_windWay': '風向',
-              'weather_windSpeed': '風速',
-              'weather_rainAccumulation': '累積雨量'
-          }
+        classes: {
+          'water': 'monitor-item-water',
+          'light': 'monitor-item-light',
+          'air': 'monitor-item-air',
+          'weather': 'monitor-item-weather'
+        },
+        names: {
+          'water': '水健康指數',
+          'light': '燈泡健康指數',
+          'air': '空氣健康指數',
+          'weather': '氣候健康指數'
+        },
+        sensor: {
+          "AI1": 'air_cp',
+          "AI2": 'air_ph4',
+          "AI3": 'air_hun',
+          "AI4": 'air_tem',
+          "WA1": 'water_level',
+          "WA2": 'water_ph',
+          "WA3": 'water_soil',
+          "LIG": 'light_lux',
+          "WE1": 'weather_windWay',
+          "WE2": 'weather_windSpeed',
+          "WE3": 'weather_rainAccumulation'
+        },
+        items: {
+          'water_level': '水位',
+          'water_ph': '水PH',
+          'water_soil': '土壤濕度',
+          'light_lux': '亮度',
+          'air_cp': '一氧化碳',
+          'air_ph4': '甲烷',
+          'air_hun': '濕度',
+          'air_tem': '溫度',
+          'weather_windWay': '風向',
+          'weather_windSpeed': '風速',
+          'weather_rainAccumulation': '累積雨量'
+        }
       },
-        item_value: {},
-        draw_Info: {}
+      item_value: {},
+      draw_Info: {}
     };
   },
   mounted: function mounted() {
-      this.get_value(); // setTimeout(, 3600);
+    this.get_value(); // setTimeout(, 3600);
   }
 });
 
-        /***/
-    }),
+/***/ }),
 
-    /***/
-    "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WeightsModal.vue?vue&type=script&lang=js&":
-    /*!***********************************************************************************************************************************************************************!*\
-      !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/WeightsModal.vue?vue&type=script&lang=js& ***!
-      \***********************************************************************************************************************************************************************/
-    /*! exports provided: default */
-    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WeightsModal.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/WeightsModal.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-        "use strict";
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony import */
-        var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-        /* harmony import */
-        var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2563,113 +2625,111 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
-        /* harmony default export */
-        __webpack_exports__["default"] = ({
-            name: "WeightsModal",
-            props: {
-                type: String,
-                title: String,
-                items: Object,
-                itemsThreshold: Object,
-                ch_name: Object,
-                sensor_name: Object,
-                name: String,
-                farmland: Number
-            },
-            methods: {
-                resetData: function resetData() {
-                    this.use_items = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.items);
-                    this.use_thresholds = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.itemsThreshold);
-                },
-                submitData: function submitData() {
-                    var self = this;
-                    var upTotal = 0;
-                    var total = 0;
-                    var count = 0; // 改變後的數值
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "WeightsModal",
+  props: {
+    type: String,
+    title: String,
+    items: Object,
+    itemsThreshold: Object,
+    ch_name: Object,
+    sensor_name: Object,
+    name: String,
+    farmland: Number
+  },
+  methods: {
+    resetData: function resetData() {
+      this.use_items = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.items);
+      this.use_thresholds = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.itemsThreshold);
+    },
+    submitData: function submitData() {
+      var self = this;
+      var upTotal = 0;
+      var total = 0;
+      var count = 0; // 改變後的數值
 
-                    var changeNumber = []; // 存放sensor之順序
+      var changeNumber = []; // 存放sensor之順序
 
-                    var sensor_name = [];
-                    var alert_str = '您輸入的數值錯誤是否願意以[';
-                    var form = document.getElementById('form' + this.type);
+      var sensor_name = [];
+      var alert_str = '您輸入的數值錯誤是否願意以[';
+      var form = document.getElementById('form' + this.type);
 
-                    if (!this.edit) {
-                        //建立新的陣列
-                        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(this.use_items, function (value, key) {
-                            sensor_name.push(key);
-                            changeNumber.push(value);
-                        }); //計算最佳數直
-
-
-                        do {
-                            upTotal = total;
-                            total = 0; //     //計算總和
-
-                            lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(changeNumber, function (value) {
-                                total += Number(value);
-                            });
-
-                            for (var i = 0; i < changeNumber.length; i++) {
-                                changeNumber[i] = Math.round(changeNumber[i] / total * 10000 / 100);
-                            } //  判斷計算是否總和為無窮 連續兩為無窮數 進行最大值++
+      if (!this.edit) {
+        //建立新的陣列
+        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(this.use_items, function (value, key) {
+          sensor_name.push(key);
+          changeNumber.push(value);
+        }); //計算最佳數直
 
 
-                            if (upTotal === total) count++; // 確認最大值
+        do {
+          upTotal = total;
+          total = 0; //     //計算總和
 
-                            if (count > 2) {
-                                changeNumber.sort();
-                                changeNumber[changeNumber.length - 1] += Math.abs(upTotal - 100);
-                                break;
-                            }
-                        } while (total !== 100); // //設定顯示資訊之的數值
+          lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(changeNumber, function (value) {
+            total += Number(value);
+          });
 
-
-                        for (var _i = 0; _i < sensor_name.length; _i++) {
-                            alert_str += self.ch_name[sensor_name[_i]] + ' = ' + changeNumber[_i] + "%";
-                            _i !== sensor_name.length - 1 ? alert_str += ', ' : alert_str += ']';
-                        } // //設定權重上拉下降後的數值
+          for (var i = 0; i < changeNumber.length; i++) {
+            changeNumber[i] = Math.round(changeNumber[i] / total * 10000 / 100);
+          } //  判斷計算是否總和為無窮 連續兩為無窮數 進行最大值++
 
 
-                        if (confirm(alert_str)) {
-                            for (var _i2 = 0; _i2 < changeNumber.length; _i2++) {
-                                this.$set(this.use_items, sensor_name[_i2], changeNumber[_i2]);
-                            }
-                        } else {
-                            this.resetData();
-                        }
+          if (upTotal === total) count++; // 確認最大值
 
-                        this.edit = true;
-                    } else {
-                        form.submit(); // console.log(form);
-                    }
-                }
-            },
-            data: function data() {
-                return {
-                    // 是否編輯過
-                    edit: true,
-                    sensorName: [],
-                    use_items: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.items),
-                    use_thresholds: {},
-                    url_update: '../../../api/config/updateWeightsThreshold'
-                };
-            },
-            watch: {
-                itemsThreshold: function itemsThreshold() {
-                    this.use_thresholds = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.itemsThreshold);
-                }
-            },
-            mounted: function mounted() {
-                var self = this; //進行記憶數值之順序
+          if (count > 2) {
+            changeNumber.sort();
+            changeNumber[changeNumber.length - 1] += Math.abs(upTotal - 100);
+            break;
+          }
+        } while (total !== 100); // //設定顯示資訊之的數值
 
-                lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(Object.keys(this.use_items), function (item) {
-                    self.sensorName.push(lodash__WEBPACK_IMPORTED_MODULE_0___default.a.findKey(self.sensor_name, lodash__WEBPACK_IMPORTED_MODULE_0___default.a.partial(lodash__WEBPACK_IMPORTED_MODULE_0___default.a.isEqual, item)), item);
-                });
-            }
-        });
 
-        /***/
-    }),
+        for (var _i = 0; _i < sensor_name.length; _i++) {
+          alert_str += self.ch_name[sensor_name[_i]] + ' = ' + changeNumber[_i] + "%";
+          _i !== sensor_name.length - 1 ? alert_str += ', ' : alert_str += ']';
+        } // //設定權重上拉下降後的數值
+
+
+        if (confirm(alert_str)) {
+          for (var _i2 = 0; _i2 < changeNumber.length; _i2++) {
+            this.$set(this.use_items, sensor_name[_i2], changeNumber[_i2]);
+          }
+        } else {
+          this.resetData();
+        }
+
+        this.edit = true;
+      } else {
+        form.submit(); // console.log(form);
+      }
+    }
+  },
+  data: function data() {
+    return {
+      // 是否編輯過
+      edit: true,
+      sensorName: [],
+      use_items: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.items),
+      use_thresholds: {},
+      url_update: '../../../api/config/updateWeightsThreshold'
+    };
+  },
+  watch: {
+    itemsThreshold: function itemsThreshold() {
+      this.use_thresholds = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(this.itemsThreshold);
+    }
+  },
+  mounted: function mounted() {
+    var self = this; //進行記憶數值之順序
+
+    lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(Object.keys(this.use_items), function (item) {
+      self.sensorName.push(lodash__WEBPACK_IMPORTED_MODULE_0___default.a.findKey(self.sensor_name, lodash__WEBPACK_IMPORTED_MODULE_0___default.a.partial(lodash__WEBPACK_IMPORTED_MODULE_0___default.a.isEqual, item)), item);
+    });
+  }
+});
+
+/***/ }),
 
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/progItems.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************************************************!*\
@@ -2689,41 +2749,41 @@ var process_max = 25;
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "progItems",
   props: {
-      config_value: Number,
-      config_index: Number,
-      config_sensor: '',
-      config_critical: Object
+    config_value: Number,
+    config_index: Number,
+    config_sensor: '',
+    config_critical: Object
   },
   methods: {
     //建立li
     create_li: function create_li(value) {
-        //li隔數
-        var process_max = 25; //數值的總範圍
+      //li隔數
+      var process_max = 25; //數值的總範圍
 
-        var ran = this.config_critical[this.config_sensor].max - this.config_critical[this.config_sensor].min; //計算一個li數值為多少
+      var ran = this.config_critical[this.config_sensor].max - this.config_critical[this.config_sensor].min; //計算一個li數值為多少
 
-        var wegi = ran / process_max; //一個為多少
+      var wegi = ran / process_max; //一個為多少
 
-        var smallRan = Math.floor(25 / 3) * wegi; //顏色this.config_critical[this.config_sensor].min
+      var smallRan = Math.floor(25 / 3) * wegi; //顏色this.config_critical[this.config_sensor].min
 
-        var bg_color = ['bg-danger', 'bg-warning', 'bg-success', 'bg-success', 'bg-light']; //計算第幾個li為終點
+      var bg_color = ['bg-danger', 'bg-warning', 'bg-success', 'bg-success', 'bg-light']; //計算第幾個li為終點
 
-        var manyPoint = Math.floor((value - this.config_critical[this.config_sensor].min) / wegi);
-        console.log(smallRan); //計算li
+      var manyPoint = Math.floor((value - this.config_critical[this.config_sensor].min) / wegi);
+      console.log(smallRan); //計算li
 
       for (var i = 0; i < process_max; i++) {
-          this.li_str += "<li class=\"border blk ".concat(i <= manyPoint ? bg_color[Math.floor((value - this.config_critical[this.config_sensor].min) / smallRan)] : bg_color[4], " ").concat(i === 0 ? 'rounded-left' : i === process_max - 1 ? 'rounded-right' : 'rounded-0', "\" id=\"blk-").concat(this.config_index, "-").concat(i, "\"></li>");
+        this.li_str += "<li class=\"border blk ".concat(i <= manyPoint ? bg_color[Math.floor((value - this.config_critical[this.config_sensor].min) / smallRan)] : bg_color[4], " ").concat(i === 0 ? 'rounded-left' : i === process_max - 1 ? 'rounded-right' : 'rounded-0', "\" id=\"blk-").concat(this.config_index, "-").concat(i, "\"></li>");
       }
 
       this.add_listener();
     },
     //呼叫 father change
-      trigger_set: function trigger_set(id) {
-          var ran = this.config_critical[this.config_sensor].max - this.config_critical[this.config_sensor].min;
-          var wegi = ran / process_max;
-          var changeValue = wegi * id + this.config_critical[this.config_sensor].min;
-          console.log(changeValue);
-          this.$emit('update_value', changeValue, this.config_index);
+    trigger_set: function trigger_set(id) {
+      var ran = this.config_critical[this.config_sensor].max - this.config_critical[this.config_sensor].min;
+      var wegi = ran / process_max;
+      var changeValue = wegi * id + this.config_critical[this.config_sensor].min;
+      console.log(changeValue);
+      this.$emit('update_value', changeValue, this.config_index);
     },
     //加入聆聽事件
     add_listener: function add_listener() {
@@ -7219,7 +7279,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-        exports.push([module.i, "\n.close_box[data-v-64531f4a] {\n    display: none;\n}\nlabel[data-v-64531f4a] {\n    margin: 0;\n    height: 1rem;\n}\nul[data-v-64531f4a] {\n    list-style-type: none;\n    margin: 0;\n}\n#get-li-part ul[data-v-64531f4a], li[data-v-64531f4a] {\n    float: left;\n}\n#get-li-part li[data-v-64531f4a] {\n    margin-right: 0.25rem;\n}\n.scroll-range > span[data-v-64531f4a] {\n    font-size: 0.5rem !important;\n}\n.btn-cancel[data-v-64531f4a] {\n    width: 4rem;\n    background-color: #1f6fb2;\n}\n.btn-create[data-v-64531f4a] {\n    width: 4rem;\n    background-color: #113049;\n}\n.switch_box[data-v-64531f4a] {\n    display: inline-block;\n    width: 2rem;\n    height: 1.3rem;\n    border-radius: 100px;\n    background-color: gainsboro;\n}\n.switch_box .switch_btn[data-v-64531f4a] {\n    display: inline-block;\n    width: 1rem;\n    height: 1rem;\n    border-radius: 50%;\n    background-color: white;\n}\n.check_box[data-v-64531f4a] {\n    position: absolute;\n    opacity: 0;\n}\n.check_box:checked + .switch_box .switch_btn[data-v-64531f4a] {\n    margin-left: 1rem;\n}\n.check_box:checked + .switch_box[data-v-64531f4a] {\n    background-color: #5cd08d;\n}\n.sensor_choice[data-v-64531f4a] {\n    width: 10rem;\n    color: #000;\n}\n.value-height[data-v-64531f4a] {\n    height: 2.5rem;\n}\n.text-small[data-v-64531f4a] {\n    font-size: 0.5rem;\n}\n.symbol-w-h[data-v-64531f4a]:before {\n    height: 1rem;\n    width: 1rem;\n}\n", ""]);
+exports.push([module.i, "\n.close_box[data-v-64531f4a] {\n    display: none;\n}\nlabel[data-v-64531f4a] {\n    margin: 0;\n    height: 1rem;\n}\nul[data-v-64531f4a] {\n    list-style-type: none;\n    margin: 0;\n}\n#get-li-part ul[data-v-64531f4a], li[data-v-64531f4a] {\n    float: left;\n}\n#get-li-part li[data-v-64531f4a] {\n    margin-right: 0.25rem;\n}\n.scroll-range > span[data-v-64531f4a] {\n    font-size: 0.5rem !important;\n}\n.btn-cancel[data-v-64531f4a] {\n    width: 4rem;\n    background-color: #1f6fb2;\n}\n.btn-create[data-v-64531f4a] {\n    width: 4rem;\n    background-color: #113049;\n}\n.switch_box[data-v-64531f4a] {\n    display: inline-block;\n    width: 2rem;\n    height: 1.3rem;\n    border-radius: 100px;\n    background-color: gainsboro;\n}\n.switch_box .switch_btn[data-v-64531f4a] {\n    display: inline-block;\n    width: 1rem;\n    height: 1rem;\n    border-radius: 50%;\n    background-color: white;\n}\n.check_box[data-v-64531f4a] {\n    position: absolute;\n    opacity: 0;\n}\n.check_box:checked + .switch_box .switch_btn[data-v-64531f4a] {\n    margin-left: 1rem;\n}\n.check_box:checked + .switch_box[data-v-64531f4a] {\n    background-color: #5cd08d;\n}\n.sensor_choice[data-v-64531f4a] {\n    width: 10rem;\n    color: #000;\n}\n.value-height[data-v-64531f4a] {\n    height: 2.5rem;\n}\n.text-small[data-v-64531f4a] {\n    font-size: 0.5rem;\n}\n.symbol-w-h[data-v-64531f4a]:before {\n    height: 1rem;\n    width: 1rem;\n}\n", ""]);
 
 // exports
 
@@ -7238,7 +7298,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.go-monitor[data-v-6bd9bef8] {\n    position: absolute;\n    top: 0;\n    right: 0;\n    border-color: transparent #e5c72f transparent transparent;\n    border-style: solid solid solid solid;\n    border-width: 1.5rem 1.5rem 0 0;\n    height: 0;\n    width: 0;\n}\n", ""]);
+exports.push([module.i, "\n.go-monitor[data-v-6bd9bef8] {\n    position: absolute;\n    bottom: 0;\n    right: 0;\n    border-color: transparent #59ff00 transparent transparent;\n    border-style: solid solid solid solid;\n    border-width: 1.5rem 1.5rem 0 0;\n    height: 0;\n    width: 0;\n}\n.text-notice[data-v-6bd9bef8] {\n    font-size: 0.5rem !important;\n}\n", ""]);
 
 // exports
 
@@ -7257,7 +7317,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-        exports.push([module.i, "\n.weights-style[data-v-26f9a78e] {\n    border-radius: 0.25rem 0 0 0;\n}\n.items-style[data-v-26f9a78e] {\n    border-radius: 0 0.25rem 0 0;\n}\n.item-info[data-v-26f9a78e] {\n    height: 1.5rem;\n}\n.text-small[data-v-26f9a78e] {\n    font-size: 0.8rem;\n}\n", ""]);
+exports.push([module.i, "\n.weights-style[data-v-26f9a78e] {\n    border-radius: 0.25rem 0 0 0;\n}\n.items-style[data-v-26f9a78e] {\n    border-radius: 0 0.25rem 0 0;\n}\n.item-info[data-v-26f9a78e] {\n    height: 1.5rem;\n}\n.text-small[data-v-26f9a78e] {\n    font-size: 0.8rem;\n}\n", ""]);
 
 // exports
 
@@ -67918,308 +67978,308 @@ var render = function() {
   return _c("div", { staticClass: "row my-3 monitor-configs" }, [
     _c(
       "div",
-        {staticClass: "col-12"},
-        _vm._l(_vm.Config_Infos, function (Config_Info, index) {
-            return _c(
-                "div",
-                {
-                    staticClass: "config-place border my-3 rounded",
-                    class: Config_Info.switch ? "shadow" : ""
-                },
-                [
+      { staticClass: "col-12" },
+      _vm._l(_vm.Config_Infos, function(Config_Info, index) {
+        return _c(
+          "div",
+          {
+            staticClass: "config-place border my-3 rounded",
+            class: Config_Info.switch ? "shadow" : ""
+          },
+          [
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-12 my-3" }, [
-                  _c(
-                      "div",
-                      {staticClass: "row mx-2 rounded-top bg-info value-height"},
-                      [
-                          _c("div", {staticClass: "col-4 flex-total-left"}, [
-                              !Config_Info.sensor
-                                  ? _c("div", {staticClass: "flex-total-left"}, [
-                                      _c("label", {
-                                          attrs: {for: "select_sensor_name"}
-                                      }),
-                                      _vm._v(" "),
-                                      _c(
-                                          "select",
-                                          {
-                                              staticClass: "sensor_choice",
-                                              attrs: {id: "select_sensor_name"},
-                                              on: {
-                                                  change: function ($event) {
-                                                      return _vm.sensorGet(index)
-                                                  }
-                                              }
-                                          },
-                                          [
-                                              _c("option", {attrs: {value: "null"}}, [
-                                                  _vm._v("請選擇")
-                                              ]),
-                                              _vm._v(" "),
-                                              _vm._l(_vm.items, function (item) {
-                                                  return _c(
-                                                      "option",
-                                                      {domProps: {value: item}},
-                                                      [_vm._v(_vm._s(_vm.ch_name[item]))]
-                                                  )
-                                              })
-                                          ],
-                                          2
-                                      )
-                                  ])
-                                  : _c(
-                                  "div",
-                                  {staticClass: "flex-total-left text-light"},
-                                  [
-                                      _vm._v(
-                                          "\n                                " +
-                                          _vm._s(_vm.change_chi(Config_Info.sensor)) +
-                                          "\n                            "
-                                      )
-                                  ]
-                                  )
-                          ]),
-                          _vm._v(" "),
-                          _c("div", {staticClass: "col-4"}),
-                          _vm._v(" "),
-                          _c(
-                              "div",
+                _c(
+                  "div",
+                  { staticClass: "row mx-2 rounded-top bg-info value-height" },
+                  [
+                    _c("div", { staticClass: "col-4 flex-total-left" }, [
+                      !Config_Info.sensor
+                        ? _c("div", { staticClass: "flex-total-left" }, [
+                            _c("label", {
+                              attrs: { for: "select_sensor_name" }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "select",
                               {
-                                  staticClass:
-                                      "col-4 justify-content-end d-flex align-items-center"
+                                staticClass: "sensor_choice",
+                                attrs: { id: "select_sensor_name" },
+                                on: {
+                                  change: function($event) {
+                                    return _vm.sensorGet(index)
+                                  }
+                                }
                               },
                               [
-                                  _c("i", {
-                                      staticClass: "fa fa-trash",
-                                      attrs: {"aria-hidden": "true"},
-                                      on: {
-                                          click: function ($event) {
-                                              return _vm.deleteConfig(index)
-                                          }
-                                      }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("label", {staticClass: "mx-2"}, [
-                                      _c("input", {
-                                          directives: [
-                                              {
-                                                  name: "model",
-                                                  rawName: "v-model",
-                                                  value: Config_Info.switch,
-                                                  expression: "Config_Info.switch"
-                                              }
-                                          ],
-                                          staticClass: "check_box d-none",
-                                          attrs: {
-                                              type: "checkbox",
-                                              name: "switch_config",
-                                              id: "switch_control"
-                                          },
-                                          domProps: {
-                                              checked: Array.isArray(Config_Info.switch)
-                                                  ? _vm._i(Config_Info.switch, null) > -1
-                                                  : Config_Info.switch
-                                          },
-                                          on: {
-                                              change: [
-                                                  function ($event) {
-                                                      var $$a = Config_Info.switch,
-                                                          $$el = $event.target,
-                                                          $$c = $$el.checked ? true : false
-                                                      if (Array.isArray($$a)) {
-                                                          var $$v = null,
-                                                              $$i = _vm._i($$a, $$v)
-                                                          if ($$el.checked) {
-                                                              $$i < 0 &&
-                                                              _vm.$set(
-                                                                  Config_Info,
-                                                                  "switch",
-                                                                  $$a.concat([$$v])
-                                                              )
-                                                          } else {
-                                                              $$i > -1 &&
-                                                              _vm.$set(
-                                                                  Config_Info,
-                                                                  "switch",
-                                                                  $$a
-                                                                      .slice(0, $$i)
-                                                                      .concat($$a.slice($$i + 1))
-                                                              )
-                                                          }
-                                                      } else {
-                                                          _vm.$set(Config_Info, "switch", $$c)
-                                                      }
-                                                  },
-                                                  function ($event) {
-                                                      return _vm.updateSwitch(index)
-                                                  }
-                                              ]
-                                          }
-                                      }),
-                                      _vm._v(" "),
-                                      _vm._m(0, true)
-                                  ]),
-                                  _vm._v(" "),
-                                  _c(
-                                      "a",
-                                      {
-                                          attrs: {
-                                              "data-toggle": "collapse",
-                                              href: "#collapseUseful" + index,
-                                              "aria-expanded": "false",
-                                              "aria-controls": "collapseUseful"
-                                          }
-                                      },
-                                      [
-                                          _c("i", {
-                                              staticClass: "fa fa-sort-desc",
-                                              attrs: {"aria-hidden": "true"}
-                                          })
-                                      ]
+                                _c("option", { attrs: { value: "null" } }, [
+                                  _vm._v("請選擇")
+                                ]),
+                                _vm._v(" "),
+                                _vm._l(_vm.items, function(item) {
+                                  return _c(
+                                    "option",
+                                    { domProps: { value: item } },
+                                    [_vm._v(_vm._s(_vm.ch_name[item]))]
                                   )
-                              ]
+                                })
+                              ],
+                              2
+                            )
+                          ])
+                        : _c(
+                            "div",
+                            { staticClass: "flex-total-left text-light" },
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(_vm.change_chi(Config_Info.sensor)) +
+                                  "\n                            "
+                              )
+                            ]
                           )
-                      ]
-                  ),
-                  _vm._v(" "),
-                  _c(
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-4" }),
+                    _vm._v(" "),
+                    _c(
                       "div",
                       {
-                          key: "config-part" + index,
-                          staticClass:
-                              "mx-2 son-partflex-total-center border rounded-bottom collapse",
-                          class: Config_Info.control ? "" : "show",
-                          attrs: {id: "collapseUseful" + index}
+                        staticClass:
+                          "col-4 justify-content-end d-flex align-items-center"
                       },
                       [
-                          _c("div", {staticClass: "row flex-total-center mt-3"}, [
-                              Config_Info.sensor
-                                  ? _c(
-                                  "div",
-                                  {
-                                      staticClass: "col-12 mb-3 row flex-total-center"
-                                  },
-                                  [
-                                      _c(
-                                          "div",
-                                          {staticClass: "col-6"},
-                                          [
-                                              _c("prog-items", {
-                                                  staticClass: "value-config value-height",
-                                                  attrs: {
-                                                      config_value: Config_Info.value,
-                                                      config_index: index,
-                                                      config_sensor: Config_Info.sensor,
-                                                      config_critical: _vm.name_critical
-                                                  },
-                                                  on: {update_value: _vm.set_value}
-                                              })
-                                          ],
-                                          1
-                                      ),
-                                      _vm._v(" "),
-                                      _c("div", {staticClass: "col-2"}, [
-                                          _c(
-                                              "span",
-                                              {staticClass: "text-secondary text-small"},
-                                              [
-                                                  _vm._v(
-                                                      "\n                                        該範圍  " +
-                                                      _vm._s(
-                                                          _vm.name_critical[Config_Info.sensor]
-                                                              .min
-                                                      ) +
-                                                      " ~ " +
-                                                      _vm._s(
-                                                          _vm.name_critical[Config_Info.sensor]
-                                                              .max
-                                                      ) +
-                                                      "\n                                    "
-                                                  )
-                                              ]
-                                          )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c(
-                                          "div",
-                                          {staticClass: "col-1 flex-total-center"},
-                                          [
-                                              _vm._v(
-                                                  "\n                                    " +
-                                                  _vm._s(Config_Info.value) +
-                                                  "\n                                "
-                                              )
-                                          ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                          "div",
-                                          {staticClass: "col-3 flex-total-right"},
-                                          [
-                                              _c(
-                                                  "button",
-                                                  {
-                                                      staticClass:
-                                                          "btn-create flex-total-center rounded text-white",
-                                                      on: {
-                                                          click: function ($event) {
-                                                              return _vm.updateCreateConfig(index)
-                                                          }
-                                                      }
-                                                  },
-                                                  [
-                                                      _vm._v(
-                                                          "\n                                        " +
-                                                          _vm._s(
-                                                              Config_Info.control
-                                                                  ? "修改"
-                                                                  : "新增"
-                                                          ) +
-                                                          "\n                                    "
-                                                      )
-                                                  ]
-                                              )
-                                          ]
-                                      )
-                                  ]
-                                  )
-                                  : _c(
-                                  "div",
-                                  {
-                                      staticClass:
-                                          "col-12 flex-total-center my-3 text-secondary"
-                                  },
-                                  [_vm._v("請選擇感測器")]
-                                  )
-                          ])
+                        _c("i", {
+                          staticClass: "fa fa-trash",
+                          attrs: { "aria-hidden": "true" },
+                          on: {
+                            click: function($event) {
+                              return _vm.deleteConfig(index)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("label", { staticClass: "mx-2" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: Config_Info.switch,
+                                expression: "Config_Info.switch"
+                              }
+                            ],
+                            staticClass: "check_box d-none",
+                            attrs: {
+                              type: "checkbox",
+                              name: "switch_config",
+                              id: "switch_control"
+                            },
+                            domProps: {
+                              checked: Array.isArray(Config_Info.switch)
+                                ? _vm._i(Config_Info.switch, null) > -1
+                                : Config_Info.switch
+                            },
+                            on: {
+                              change: [
+                                function($event) {
+                                  var $$a = Config_Info.switch,
+                                    $$el = $event.target,
+                                    $$c = $$el.checked ? true : false
+                                  if (Array.isArray($$a)) {
+                                    var $$v = null,
+                                      $$i = _vm._i($$a, $$v)
+                                    if ($$el.checked) {
+                                      $$i < 0 &&
+                                        _vm.$set(
+                                          Config_Info,
+                                          "switch",
+                                          $$a.concat([$$v])
+                                        )
+                                    } else {
+                                      $$i > -1 &&
+                                        _vm.$set(
+                                          Config_Info,
+                                          "switch",
+                                          $$a
+                                            .slice(0, $$i)
+                                            .concat($$a.slice($$i + 1))
+                                        )
+                                    }
+                                  } else {
+                                    _vm.$set(Config_Info, "switch", $$c)
+                                  }
+                                },
+                                function($event) {
+                                  return _vm.updateSwitch(index)
+                                }
+                              ]
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm._m(0, true)
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            attrs: {
+                              "data-toggle": "collapse",
+                              href: "#collapseUseful" + index,
+                              "aria-expanded": "false",
+                              "aria-controls": "collapseUseful"
+                            }
+                          },
+                          [
+                            _c("i", {
+                              staticClass: "fa fa-sort-desc",
+                              attrs: { "aria-hidden": "true" }
+                            })
+                          ]
+                        )
                       ]
-                  )
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    key: "config-part" + index,
+                    staticClass:
+                      "mx-2 son-partflex-total-center border rounded-bottom collapse",
+                    class: Config_Info.control ? "" : "show",
+                    attrs: { id: "collapseUseful" + index }
+                  },
+                  [
+                    _c("div", { staticClass: "row flex-total-center mt-3" }, [
+                      Config_Info.sensor
+                        ? _c(
+                            "div",
+                            {
+                              staticClass: "col-12 mb-3 row flex-total-center"
+                            },
+                            [
+                              _c(
+                                "div",
+                                { staticClass: "col-6" },
+                                [
+                                  _c("prog-items", {
+                                    staticClass: "value-config value-height",
+                                    attrs: {
+                                      config_value: Config_Info.value,
+                                      config_index: index,
+                                      config_sensor: Config_Info.sensor,
+                                      config_critical: _vm.name_critical
+                                    },
+                                    on: { update_value: _vm.set_value }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-2" }, [
+                                _c(
+                                  "span",
+                                  { staticClass: "text-secondary text-small" },
+                                  [
+                                    _vm._v(
+                                      "\n                                        該範圍  " +
+                                        _vm._s(
+                                          _vm.name_critical[Config_Info.sensor]
+                                            .min
+                                        ) +
+                                        " ~ " +
+                                        _vm._s(
+                                          _vm.name_critical[Config_Info.sensor]
+                                            .max
+                                        ) +
+                                        "\n                                    "
+                                    )
+                                  ]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "col-1 flex-total-center" },
+                                [
+                                  _vm._v(
+                                    "\n                                    " +
+                                      _vm._s(Config_Info.value) +
+                                      "\n                                "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "col-3 flex-total-right" },
+                                [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn-create flex-total-center rounded text-white",
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.updateCreateConfig(index)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                        " +
+                                          _vm._s(
+                                            Config_Info.control
+                                              ? "修改"
+                                              : "新增"
+                                          ) +
+                                          "\n                                    "
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        : _c(
+                            "div",
+                            {
+                              staticClass:
+                                "col-12 flex-total-center my-3 text-secondary"
+                            },
+                            [_vm._v("請選擇感測器")]
+                          )
+                    ])
+                  ]
+                )
               ])
             ])
-                ]
-            )
-        }),
-        0
+          ]
+        )
+      }),
+      0
     ),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-12 d-flex justify-content-between px-3" }, [
+      _c("a", { attrs: { href: _vm.back_url } }, [
+        _c("i", {
+          staticClass: "fa fa-reply",
+          attrs: { "aria-hidden": "true" }
+        })
+      ]),
       _vm._v(" "),
-      _c("div", {staticClass: "col-12 d-flex justify-content-between px-3"}, [
-          _c("a", {attrs: {href: _vm.back_url}}, [
-              _c("i", {
-                  staticClass: "fa fa-reply",
-                  attrs: {"aria-hidden": "true"}
-              })
-          ]),
-          _vm._v(" "),
-          _c("i", {
-              staticClass: "fa fa-plus monitor-item-name mb-3",
-              attrs: {"aria-hidden": "true"},
-              on: {
-                  click: function ($event) {
-                      return _vm.add_Configs()
-                  }
-              }
-          })
-      ])
+      _c("i", {
+        staticClass: "fa fa-plus monitor-item-name mb-3",
+        attrs: { "aria-hidden": "true" },
+        on: {
+          click: function($event) {
+            return _vm.add_Configs()
+          }
+        }
+      })
+    ])
   ])
 }
 var staticRenderFns = [
@@ -68257,10 +68317,10 @@ var render = function() {
     "div",
     {
       staticClass:
-          "container sensor-part border border-light rounded mt-5 shadow"
+        "container sensor-part border border-light rounded mt-5 shadow"
     },
     [
-        _c("div", {staticClass: "row mt-3 no-gutters text-center"}, [
+      _c("div", { staticClass: "row mt-3 no-gutters text-center" }, [
         _c("div", { staticClass: "col-12 mb-3 form-header" }, [
           _c("div", { staticClass: "row " }, [
             _c("div", { staticClass: "col-3 form-title text-left" }, [
@@ -68298,98 +68358,114 @@ var render = function() {
                   attrs: { id: "replyCollapse" + _vm.config_number }
                 },
                 [
-                    _c("div", {staticClass: "card card-body collapse-item"}, [
-                        _vm.hex_values[0]
-                            ? _c("div", {staticClass: "container"}, [
-                                _c(
+                  _c("div", { staticClass: "card card-body collapse-item" }, [
+                    _vm.hex_values[0]
+                      ? _c("div", { staticClass: "container" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "row text-center flex-total-center"
+                            },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "col-12 border border-info border-bottom-0 pt-2"
+                                },
+                                [_vm._v("權重對應表")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "col-12 text-notice text-secondary border border-info border-top-0 pb-2"
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                        (若需要更改請至農場監控畫面進行更改)\n                                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _vm._m(0),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "col-12 border border-top-0" },
+                                _vm._l(_vm.en_item_id, function(item, index) {
+                                  return _c(
                                     "div",
-                                    {
-                                        staticClass: "row text-center flex-total-center"
-                                    },
+                                    { staticClass: "row text-center p-0 " },
                                     [
-                                        _c(
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass:
+                                            "col-4 border-right flex-total-center border-top py-2"
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                                " +
+                                              _vm._s(_vm.item_id[index]) +
+                                              "\n                                            "
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        { staticClass: "col-4 border-right " },
+                                        _vm._l(_vm.sensorOrder[item], function(
+                                          it
+                                        ) {
+                                          return _c(
                                             "div",
-                                            {staticClass: "col-12 border border-info"},
-                                            [_vm._v("權重對應表")]
-                                        ),
-                                        _vm._v(" "),
-                                        _vm._m(0),
-                                        _vm._v(" "),
-                                        _c(
+                                            { staticClass: "border-top py-2" },
+                                            [
+                                              _vm._v(
+                                                "\n                                                    " +
+                                                  _vm._s(_vm.sensor_ch[it]) +
+                                                  "\n                                                "
+                                              )
+                                            ]
+                                          )
+                                        }),
+                                        0
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        { staticClass: "col-4" },
+                                        _vm._l(_vm.sensorOrder[item], function(
+                                          it
+                                        ) {
+                                          return _c(
                                             "div",
-                                            {staticClass: "col-12 border border-top-0"},
-                                            _vm._l(_vm.en_item_id, function (item, index) {
-                                                return _c(
-                                                    "div",
-                                                    {staticClass: "row text-center p-0 "},
-                                                    [
-                                                        _c(
-                                                            "div",
-                                                            {
-                                                                staticClass:
-                                                                    "col-4 border-right flex-total-center border-top py-2"
-                                                            },
-                                                            [
-                                                                _vm._v(
-                                                                    "\n                                                " +
-                                                                    _vm._s(_vm.item_id[index]) +
-                                                                    "\n                                            "
-                                                                )
-                                                            ]
-                                                        ),
-                                                        _vm._v(" "),
-                                                        _c(
-                                                            "div",
-                                                            {staticClass: "col-4 border-right "},
-                                                            _vm._l(_vm.sensorOrder[item], function (
-                                                                it
-                                                            ) {
-                                                                return _c(
-                                                                    "div",
-                                                                    {staticClass: "border-top py-2"},
-                                                                    [
-                                                                        _vm._v(
-                                                                            "\n                                                    " +
-                                                                            _vm._s(_vm.sensor_ch[it]) +
-                                                                            "\n                                                "
-                                                                        )
-                                                                    ]
-                                                                )
-                                                            }),
-                                                            0
-                                                        ),
-                                                        _vm._v(" "),
-                                                        _c(
-                                                            "div",
-                                                            {staticClass: "col-4"},
-                                                            _vm._l(_vm.sensorOrder[item], function (
-                                                                it
-                                                            ) {
-                                                                return _c(
-                                                                    "div",
-                                                                    {staticClass: "border-top py-2"},
-                                                                    [
-                                                                        _vm._v(
-                                                                            "\n                                                    " +
-                                                                            _vm._s(
-                                                                                _vm.hex_values[0][it]
-                                                                            ) +
-                                                                            "\n                                                "
-                                                                        )
-                                                                    ]
-                                                                )
-                                                            }),
-                                                            0
-                                                        )
-                                                    ]
-                                                )
-                                            }),
-                                            0
-                                        )
+                                            { staticClass: "border-top py-2" },
+                                            [
+                                              _vm._v(
+                                                "\n                                                    " +
+                                                  _vm._s(
+                                                    _vm.hex_values[0][it]
+                                                  ) +
+                                                  "\n                                                "
+                                              )
+                                            ]
+                                          )
+                                        }),
+                                        0
+                                      )
                                     ]
-                                )
-                            ])
-                            : _vm._e()
+                                  )
+                                }),
+                                0
+                              )
+                            ]
+                          )
+                        ])
+                      : _vm._e()
                   ])
                 ]
               )
@@ -68400,29 +68476,29 @@ var render = function() {
             "div",
             { staticClass: "row no-gutters" },
             [
-                _vm._l(_vm.hex_values[1], function (hex_value, item, key) {
+              _vm._l(_vm.hex_values[1], function(hex_value, item, key) {
                 return _c(
                   "div",
                   {
                     staticClass:
-                        "col-3 mt-3 h-100 flex-total-center text-center"
+                      "col-3 mt-3 h-100 flex-total-center text-center"
                   },
                   [
-                      _c(
-                          "div",
-                          {
-                              staticClass: "monitor-items",
-                              attrs: {id: _vm.count_off(key)}
-                          },
-                          [_c("div", [_vm._v(_vm._s(_vm.item_id[key]))])]
-                      )
+                    _c(
+                      "div",
+                      {
+                        staticClass: "monitor-items",
+                        attrs: { id: _vm.count_off(key) }
+                      },
+                      [_c("div", [_vm._v(_vm._s(_vm.item_id[key]))])]
+                    )
                   ]
                 )
               }),
               _vm._v(" "),
               _c("div", { staticClass: "col-12 h-75" }, [_vm._v(" ")]),
               _vm._v(" "),
-                _c("div", {staticClass: "col-12 text-right"}, [
+              _c("div", { staticClass: "col-12 text-right" }, [
                 _c("a", { attrs: { href: _vm.url_path } }, [
                   _c("div", { staticClass: "go-monitor" })
                 ])
@@ -68435,28 +68511,28 @@ var render = function() {
     ]
   )
 }
-        var staticRenderFns = [
-            function () {
-                var _vm = this
-                var _h = _vm.$createElement
-                var _c = _vm._self._c || _h
-                return _c("div", {staticClass: "col-12 border border-info p-0"}, [
-                    _c("div", {staticClass: "row no-gutters"}, [
-                        _c("div", {staticClass: "col-4 border-info border-right"}, [
-                            _vm._v("健康名稱")
-                        ]),
-                        _vm._v(" "),
-                        _c("div", {staticClass: "col-4 border-info border-right"}, [
-                            _vm._v("感測名稱")
-                        ]),
-                        _vm._v(" "),
-                        _c("div", {staticClass: "col-4 border-info border-right"}, [
-                            _vm._v("權重")
-                        ])
-                    ])
-                ])
-            }
-        ]
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-12 border border-info p-0" }, [
+      _c("div", { staticClass: "row no-gutters" }, [
+        _c("div", { staticClass: "col-4 border-info border-right" }, [
+          _vm._v("健康名稱")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-4 border-info border-right" }, [
+          _vm._v("感測名稱")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-4 border-info border-right" }, [
+          _vm._v("權重")
+        ])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -68540,7 +68616,34 @@ var render = function() {
     [
       _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
         _c("div", { staticClass: "modal-content" }, [
-          _vm._m(0),
+          _c("div", { staticClass: "modal-header" }, [
+            _c(
+              "h5",
+              {
+                staticClass: "modal-title",
+                attrs: { id: "exampleModalLabel" }
+              },
+              [_vm._v("農夫農場資訊")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "close",
+                attrs: {
+                  type: "button",
+                  "data-dismiss": "modal",
+                  "aria-label": "Close"
+                },
+                on: {
+                  click: function($event) {
+                    return _vm.resetValue()
+                  }
+                }
+              },
+              [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+            )
+          ]),
           _vm._v(" "),
           _c(
             "form",
@@ -68553,8 +68656,24 @@ var render = function() {
             },
             [
               _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.csrf,
+                    expression: "csrf"
+                  }
+                ],
                 attrs: { type: "hidden", name: "_token" },
-                domProps: { value: _vm.csrf }
+                domProps: { value: _vm.csrf },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.csrf = $event.target.value
+                  }
+                }
               }),
               _vm._v(" "),
               _c("input", {
@@ -68562,18 +68681,39 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.repeat,
-                    expression: "repeat"
+                    value: _vm.steps.toString,
+                    expression: "steps.toString"
                   }
                 ],
                 attrs: { type: "hidden", name: "temporary" },
-                domProps: { value: _vm.repeat },
+                domProps: { value: _vm.steps.toString },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.repeat = $event.target.value
+                    _vm.$set(_vm.steps, "toString", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.stepsCrop.toString,
+                    expression: "stepsCrop.toString"
+                  }
+                ],
+                attrs: { type: "hidden", name: "temporary" },
+                domProps: { value: _vm.stepsCrop.toString },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.stepsCrop, "toString", $event.target.value)
                   }
                 }
               }),
@@ -68602,13 +68742,6 @@ var render = function() {
                         },
                         domProps: { value: _vm.formerName },
                         on: {
-                          change: function($event) {
-                            return _vm.searchUpdate(
-                              "updateFormerName",
-                              _vm.formername,
-                              "Info"
-                            )
-                          },
                           input: function($event) {
                             if ($event.target.composing) {
                               return
@@ -68640,13 +68773,6 @@ var render = function() {
                         },
                         domProps: { value: _vm.formerEmail },
                         on: {
-                          change: function($event) {
-                            return _vm.searchUpdate(
-                              "updateFormerEmail",
-                              _vm.formeremail,
-                              "Info"
-                            )
-                          },
                           input: function($event) {
                             if ($event.target.composing) {
                               return
@@ -68660,7 +68786,7 @@ var render = function() {
                     _c(
                       "div",
                       { staticClass: "col-12 my-3" },
-                      _vm._l(_vm.sortOutData[0], function(thisFormName, index) {
+                      _vm._l(_vm.forms, function(item, index) {
                         return _c(
                           "div",
                           { staticClass: "row no-gutters my-2" },
@@ -68680,19 +68806,14 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                        農場\n                                        "
+                                    "\n                                            農場\n                                            "
                                   ),
                                   _c("i", {
                                     staticClass: "fa fa-plus",
                                     attrs: { "aria-hidden": "true" },
                                     on: {
                                       click: function($event) {
-                                        return _vm.addForm(
-                                          "update-FormName-" +
-                                            _vm.sortOutData[0].length,
-                                          "update-FormEmail-" +
-                                            _vm.sortOutData[0].length
-                                        )
+                                        return _vm.addItems("form")
                                       }
                                     }
                                   })
@@ -68706,8 +68827,8 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: thisFormName[0],
-                                    expression: "thisFormName[0]"
+                                    value: item[0],
+                                    expression: "item[0]"
                                   }
                                 ],
                                 staticClass: "col-6 w-100",
@@ -68717,24 +68838,13 @@ var render = function() {
                                   name: "update-FormName-" + index,
                                   id: "update-FormName-" + index
                                 },
-                                domProps: { value: thisFormName[0] },
+                                domProps: { value: item[0] },
                                 on: {
-                                  change: function($event) {
-                                    return _vm.searchUpdate(
-                                      "update-FormName-" + index,
-                                      _vm.formName[0][index],
-                                      "Form"
-                                    )
-                                  },
                                   input: function($event) {
                                     if ($event.target.composing) {
                                       return
                                     }
-                                    _vm.$set(
-                                      thisFormName,
-                                      0,
-                                      $event.target.value
-                                    )
+                                    _vm.$set(item, 0, $event.target.value)
                                   }
                                 }
                               }),
@@ -68744,34 +68854,24 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: thisFormName[1],
-                                    expression: "thisFormName[1]"
+                                    value: item[1],
+                                    expression: "item[1]"
                                   }
                                 ],
                                 staticClass: "col-6 w-100",
                                 attrs: {
                                   type: "text",
                                   placeholder: "請輸入農場地址",
-                                  name: "update-FormAddress-" + index
+                                  name: "update-FormAddress-" + index,
+                                  id: "update-FormAddress-" + index
                                 },
-                                domProps: { value: thisFormName[1] },
+                                domProps: { value: item[1] },
                                 on: {
-                                  change: function($event) {
-                                    return _vm.searchUpdate(
-                                      "update-FormAddress-" + index,
-                                      thisFormName[0],
-                                      "Form"
-                                    )
-                                  },
                                   input: function($event) {
                                     if ($event.target.composing) {
                                       return
                                     }
-                                    _vm.$set(
-                                      thisFormName,
-                                      1,
-                                      $event.target.value
-                                    )
+                                    _vm.$set(item, 1, $event.target.value)
                                   }
                                 }
                               })
@@ -68786,7 +68886,7 @@ var render = function() {
                                   attrs: { "aria-hidden": "true" },
                                   on: {
                                     click: function($event) {
-                                      return _vm.deleteForm(index)
+                                      return _vm.deleteItems("form", index)
                                     }
                                   }
                                 })
@@ -68801,7 +68901,7 @@ var render = function() {
                     _c(
                       "div",
                       { staticClass: "col-12" },
-                      _vm._l(_vm.sortOutData[1], function(Crop, index) {
+                      _vm._l(_vm.crops, function(Crop, index) {
                         return _c(
                           "div",
                           { staticClass: "row no-gutters my-2" },
@@ -68821,14 +68921,14 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                        農田\n                                        "
+                                    "\n                                            農田\n                                            "
                                   ),
                                   _c("i", {
                                     staticClass: "fa fa-plus",
                                     attrs: { "aria-hidden": "true" },
                                     on: {
                                       click: function($event) {
-                                        return _vm.addCrop()
+                                        return _vm.addItems("crop")
                                       }
                                     }
                                   })
@@ -68846,8 +68946,8 @@ var render = function() {
                                         {
                                           name: "model",
                                           rawName: "v-model",
-                                          value: Crop.split("|")[0],
-                                          expression: "(Crop.split('|'))[0]"
+                                          value: Crop[0],
+                                          expression: "Crop[0]"
                                         }
                                       ],
                                       staticClass: "w-100 h-100",
@@ -68856,47 +68956,52 @@ var render = function() {
                                         id: "select-FormData-" + index
                                       },
                                       on: {
-                                        change: [
-                                          function($event) {
-                                            var $$selectedVal = Array.prototype.filter
-                                              .call(
-                                                $event.target.options,
-                                                function(o) {
-                                                  return o.selected
-                                                }
-                                              )
-                                              .map(function(o) {
-                                                var val =
-                                                  "_value" in o
-                                                    ? o._value
-                                                    : o.value
-                                                return val
-                                              })
-                                            _vm.$set(
-                                              Crop.split("|"),
-                                              0,
-                                              $event.target.multiple
-                                                ? $$selectedVal
-                                                : $$selectedVal[0]
+                                        change: function($event) {
+                                          var $$selectedVal = Array.prototype.filter
+                                            .call(
+                                              $event.target.options,
+                                              function(o) {
+                                                return o.selected
+                                              }
                                             )
-                                          },
-                                          function($event) {
-                                            _vm.reFormCrop(
-                                              index,
-                                              Crop.split("|")[2]
-                                            )
-                                          }
-                                        ]
+                                            .map(function(o) {
+                                              var val =
+                                                "_value" in o
+                                                  ? o._value
+                                                  : o.value
+                                              return val
+                                            })
+                                          _vm.$set(
+                                            Crop,
+                                            0,
+                                            $event.target.multiple
+                                              ? $$selectedVal
+                                              : $$selectedVal[0]
+                                          )
+                                        }
                                       }
                                     },
-                                    _vm._l(_vm.sortOutData[0], function(form) {
-                                      return _c("option", [
-                                        _vm._v(
-                                          "\n                                                        " +
-                                            _vm._s(form[0]) +
-                                            "\n                                                    "
-                                        )
-                                      ])
+                                    _vm._l(_vm.forms, function(form) {
+                                      return _c(
+                                        "option",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: form[0] !== "",
+                                              expression: "form[0]!==''"
+                                            }
+                                          ]
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                                        " +
+                                              _vm._s(form[0]) +
+                                              "\n                                                    "
+                                          )
+                                        ]
+                                      )
                                     }),
                                     0
                                   )
@@ -68908,34 +69013,24 @@ var render = function() {
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                        value: Crop.split("|")[1],
-                                        expression: "(Crop.split('|'))[1]"
+                                        value: Crop[1],
+                                        expression: "Crop[1]"
                                       }
                                     ],
                                     staticClass: "w-100",
                                     attrs: {
                                       type: "text",
                                       id: "select-CropData-" + index,
-                                      placeholder: "請輸入農作物",
-                                      name: "selectCropData" + index
+                                      name: "selectCropData" + index,
+                                      placeholder: "請輸入農作物"
                                     },
-                                    domProps: { value: Crop.split("|")[1] },
+                                    domProps: { value: Crop[1] },
                                     on: {
-                                      change: function($event) {
-                                        _vm.reFormCrop(
-                                          index,
-                                          Crop.split("|")[2]
-                                        )
-                                      },
                                       input: function($event) {
                                         if ($event.target.composing) {
                                           return
                                         }
-                                        _vm.$set(
-                                          Crop.split("|"),
-                                          1,
-                                          $event.target.value
-                                        )
+                                        _vm.$set(Crop, 1, $event.target.value)
                                       }
                                     }
                                   })
@@ -68952,7 +69047,7 @@ var render = function() {
                                   attrs: { "aria-hidden": "true" },
                                   on: {
                                     click: function($event) {
-                                      _vm.deleteCrop(Crop.split("|")[2], index)
+                                      return _vm.deleteItems("crop", index)
                                     }
                                   }
                                 })
@@ -68975,7 +69070,7 @@ var render = function() {
                     attrs: { type: "button", "data-dismiss": "modal" },
                     on: {
                       click: function($event) {
-                        return _vm.resetAny()
+                        return _vm.resetValue()
                       }
                     }
                   },
@@ -69003,33 +69098,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c(
-        "h5",
-        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
-        [_vm._v("農夫農場資訊")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -69051,558 +69120,551 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-    return _c(
+  return _c(
+    "div",
+    { staticClass: "border w-100 p-2 my-2 shadow" },
+    [
+      _c(
         "div",
-        {staticClass: "border w-100 p-2 my-2 shadow"},
+        {
+          staticClass: "row border no-gutters m-3 monitor-item rounded-top ",
+          class: [
+            _vm.monitor_target <= 30
+              ? "border-danger"
+              : _vm.monitor_target > 60
+              ? "border-success"
+              : "border-warning",
+            _vm.item_infos.classes[_vm.target_name]
+          ]
+        },
         [
+          _c(
+            "div",
+            {
+              staticClass:
+                "item-info col-12 flex-total-center bg-success rounded-top mb-3",
+              class:
+                _vm.monitor_target <= 30
+                  ? "bg-danger"
+                  : _vm.monitor_target > 60
+                  ? "bg-success"
+                  : "bg-warning"
+            },
+            [
+              _vm._v(
+                "\n            " +
+                  _vm._s(_vm.item_infos.names[_vm.target_name]) +
+                  "\n        "
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: " col-10 monitor-item-show row float-left" },
+            _vm._l(_vm.monitor_items, function(item, index) {
+              return _c("div", { staticClass: "col-4" }, [
+                _c("div", { staticClass: "text-center" }, [
+                  _vm._v(_vm._s(_vm.item_infos.items[index]))
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "text-center", attrs: { id: index } })
+              ])
+            }),
+            0
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-2" }, [
             _c(
-                "div",
-                {
-                    staticClass: "row border no-gutters m-3 monitor-item rounded-top ",
-                    class: [
-                        _vm.monitor_target <= 30
-                            ? "border-danger"
-                            : _vm.monitor_target > 60
-                            ? "border-success"
-                            : "border-warning",
-                        _vm.item_infos.classes[_vm.target_name]
-                    ]
-                },
-                [
-                    _c(
-                        "div",
-                        {
-                            staticClass:
-                                "item-info col-12 flex-total-center bg-success rounded-top mb-3",
-                            class:
-                                _vm.monitor_target <= 30
-                                    ? "bg-danger"
-                                    : _vm.monitor_target > 60
-                                    ? "bg-success"
-                                    : "bg-warning"
-                        },
-                        [
-                            _vm._v(
-                                "\n            " +
-                                _vm._s(_vm.item_infos.names[_vm.target_name]) +
-                                "\n        "
-                            )
-                        ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                        "div",
-                        {staticClass: " col-10 monitor-item-show row float-left"},
-                        _vm._l(_vm.monitor_items, function (item, index) {
-                            return _c("div", {staticClass: "col-4"}, [
-                                _c("div", {staticClass: "text-center"}, [
-                                    _vm._v(_vm._s(_vm.item_infos.items[index]))
-                                ]),
-                                _vm._v(" "),
-                                _c("div", {staticClass: "text-center", attrs: {id: index}})
-                            ])
-                        }),
-                        0
-                    ),
-                    _vm._v(" "),
-                    _c("div", {staticClass: "col-2"}, [
-                        _c(
-                            "div",
-                            {staticClass: "row no-gutters bg-white rounded my-3 shadow"},
-                            [
-                                _c(
-                                    "span",
-                                    {
-                                        staticClass:
-                                            "weights-style col-4 text-dark border border-success flex-total-center "
-                                    },
-                                    [_vm._v("權重")]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                    "span",
-                                    {
-                                        staticClass:
-                                            "items-style col-8 text-dark border border-info flex-total-center"
-                                    },
-                                    [_vm._v("項目")]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                    "div",
-                                    {
-                                        staticClass:
+              "div",
+              { staticClass: "row no-gutters bg-white rounded my-3 shadow" },
+              [
+                _c(
+                  "span",
+                  {
+                    staticClass:
+                      "weights-style col-4 text-dark border border-success flex-total-center "
+                  },
+                  [_vm._v("權重")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "span",
+                  {
+                    staticClass:
+                      "items-style col-8 text-dark border border-info flex-total-center"
+                  },
+                  [_vm._v("項目")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
                       "col-12 monitor-item-list row text-dark no-gutters  border border-dark"
-                                    },
-                                    _vm._l(_vm.monitor_items, function (item, index) {
-                                        return _c(
-                                            "div",
-                                            {
-                                                staticClass: "col-12  flex-total-center border-bottom "
-                                            },
-                                            [
-                                                _c(
-                                                    "div",
-                                                    {staticClass: "row item-list-count w-100"},
-                                                    [
-                                                        _c(
-                                                            "div",
-                                                            {
-                                                                staticClass:
-                                                                    "col-4 text-dark text-center  border-right flex-total-center"
-                                                            },
-                                                            [
-                                                                _vm._v(
-                                                                    _vm._s(item) +
-                                                                    "\n                            "
-                                                                )
-                                                            ]
-                                                        ),
-                                                        _vm._v(" "),
-                                                        _c(
-                                                            "div",
-                                                            {
-                                                                staticClass:
-                                                                    "col-8 text-dark text-right flex-total-center"
-                                                            },
-                                                            [
-                                                                _vm._v(
-                                                                    "\n                                " +
-                                                                    _vm._s(_vm.item_infos.items[index]) +
-                                                                    "\n                            "
-                                                                )
-                                                            ]
-                                                        )
-                                                    ]
-                                                )
-                                            ]
-                                        )
-                  }),
-                  0
-                                ),
-                                _vm._v(" "),
-                                _c("div", {staticClass: "col-12 border border-dark "}, [
-                                    _c(
-                                        "div",
-                                        {staticClass: "row no-gutters flex-total-center"},
-                                        [
-                                            _c("div", {staticClass: "col-2 flex-total-center"}, [
-                                                _c("i", {
-                                                    staticClass: "fa fa-cog",
-                                                    attrs: {
-                                                        "aria-hidden": "true",
-                                                        "data-toggle": "modal",
-                                                        "data-target": "#weight_Modal_" + _vm.target_name
-                                                    }
-                                                })
-                                            ]),
-                                            _vm._v(" "),
-                                            _c(
-                                                "div",
-                                                {staticClass: "col-10 text-dark flex-total-center"},
-                                                [
-                                                    _vm._v(
-                                                        "\n                            綜合指數：\n                            "
-                                                    ),
-                                                    _c("div", {staticClass: "text-small"}, [
-                                                        _vm._v(_vm._s(_vm.monitor_target))
-                                                    ])
-                                                ]
-                                            )
-                                        ]
-                                    )
-                                ])
-                            ]
-                        )
-                    ])
-                ]
-            ),
-            _vm._v(" "),
-            _c("weights-modal", {
-                attrs: {
-                    name: _vm.name,
-                    farmland: _vm.farmland,
-                    type: _vm.target_name,
-                    title: _vm.item_infos.names[_vm.target_name],
-                    items: _vm.monitor_items,
-                    itemsThreshold: _vm.item_value,
-                    ch_name: _vm.item_infos.items,
-                    sensor_name: _vm.item_infos.sensor
-                }
-            })
-        ],
-        1
-    )
-}
-        var staticRenderFns = []
-        render._withStripped = true
-
-
-        /***/
-    }),
-
-    /***/
-    "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true&":
-    /*!***************************************************************************************************************************************************************************************************************************!*\
-      !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true& ***!
-      \***************************************************************************************************************************************************************************************************************************/
-    /*! exports provided: render, staticRenderFns */
-    /***/ (function (module, __webpack_exports__, __webpack_require__) {
-
-        "use strict";
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony export (binding) */
-        __webpack_require__.d(__webpack_exports__, "render", function () {
-            return render;
-        });
-        /* harmony export (binding) */
-        __webpack_require__.d(__webpack_exports__, "staticRenderFns", function () {
-            return staticRenderFns;
-        });
-        var render = function () {
-            var _vm = this
-            var _h = _vm.$createElement
-            var _c = _vm._self._c || _h
-            return _c(
-                "div",
-                {
-                    staticClass: "modal fade",
-                    attrs: {
-                        id: "weight_Modal_" + _vm.type,
-                        tabindex: "-1",
-                        role: "dialog",
-                        "aria-labelledby": "weight_Modal_" + _vm.type + "Label",
-                        "aria-hidden": "true"
-                    }
-                },
-                [
-                    _c("div", {staticClass: "modal-dialog", attrs: {role: "document"}}, [
-                        _c("div", {staticClass: "modal-content"}, [
-                            _c("div", {staticClass: "modal-header"}, [
-                                _c(
-                                    "h5",
-                                    {
-                                        staticClass: "modal-title",
-                                        attrs: {id: "weight_Modal_" + _vm.type + "Label"}
-                                    },
-                                    [_vm._v(_vm._s(_vm.title))]
-                                ),
-                                _vm._v(" "),
-                                _vm._m(0)
-                            ]),
+                  },
+                  _vm._l(_vm.monitor_items, function(item, index) {
+                    return _c(
+                      "div",
+                      {
+                        staticClass: "col-12  flex-total-center border-bottom "
+                      },
+                      [
+                        _c(
+                          "div",
+                          { staticClass: "row item-list-count w-100" },
+                          [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "col-4 text-dark text-center  border-right flex-total-center"
+                              },
+                              [
+                                _vm._v(
+                                  _vm._s(item) +
+                                    "\n                            "
+                                )
+                              ]
+                            ),
                             _vm._v(" "),
                             _c(
-                                "form",
-                                {
-                                    attrs: {
-                                        action: _vm.url_update,
-                                        method: "post",
-                                        id: "form" + _vm.type
-                                    }
-                                },
-                                [
-                                    _c("input", {
-                                        directives: [
-                                            {
-                                                name: "model",
-                                                rawName: "v-model",
-                                                value: _vm.sensorName,
-                                                expression: "sensorName"
-                                            }
-                                        ],
-                                        attrs: {type: "hidden", name: "order"},
-                                        domProps: {value: _vm.sensorName},
-                                        on: {
-                                            input: function ($event) {
-                                                if ($event.target.composing) {
-                                                    return
-                                                }
-                                                _vm.sensorName = $event.target.value
-                                            }
-                                        }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                        directives: [
-                                            {
-                                                name: "model",
-                                                rawName: "v-model",
-                                                value: _vm.name,
-                                                expression: "name"
-                                            }
-                                        ],
-                                        attrs: {type: "hidden", name: "name"},
-                                        domProps: {value: _vm.name},
-                                        on: {
-                                            input: function ($event) {
-                                                if ($event.target.composing) {
-                                                    return
-                                                }
-                                                _vm.name = $event.target.value
-                                            }
-                                        }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                        directives: [
-                                            {
-                                                name: "model",
-                                                rawName: "v-model",
-                                                value: _vm.farmland,
-                                                expression: "farmland"
-                                            }
-                                        ],
-                                        attrs: {type: "hidden", name: "farmland"},
-                                        domProps: {value: _vm.farmland},
-                                        on: {
-                                            input: function ($event) {
-                                                if ($event.target.composing) {
-                                                    return
-                                                }
-                                                _vm.farmland = $event.target.value
-                                            }
-                                        }
-                                    }),
-                                    _vm._v(" "),
-                                    _c(
-                                        "div",
-                                        {staticClass: "modal-body row no-gutters text-center "},
-                                        [
-                                            _c("div", {staticClass: "col-4  border border-info"}, [
-                                                _vm._v("感測名稱")
-                                            ]),
-                                            _vm._v(" "),
-                                            _c(
-                                                "div",
-                                                {
-                                                    staticClass: "col-4  border-top border-bottom border-info"
-                                                },
-                                                [_vm._v("權重")]
-                                            ),
-                                            _vm._v(" "),
-                                            _c("div", {staticClass: "col-4  border  border-info"}, [
-                                                _vm._v("極限值")
-                                            ]),
-                                            _vm._v(" "),
-                                            _vm._l(_vm.use_items, function (item, key) {
-                                                return _c(
-                                                    "div",
-                                                    {staticClass: "col-12 row no-gutters text-center"},
-                                                    [
-                                                        _c(
-                                                            "div",
-                                                            {
-                                                                staticClass:
-                                                                    "col-4 border border-top-0 border-right-0 flex-total-center"
-                                                            },
-                                                            [
-                                                                _vm._v(
-                                                                    " " +
-                                                                    _vm._s(_vm.ch_name[key]) +
-                                                                    "\n                        "
-                                                                )
-                                                            ]
-                                                        ),
-                                                        _vm._v(" "),
-                                                        _c("input", {
-                                                            directives: [
-                                                                {
-                                                                    name: "model",
-                                                                    rawName: "v-model",
-                                                                    value: _vm.use_items[key],
-                                                                    expression: "use_items[key]"
-                                                                }
-                                                            ],
-                                                            staticClass:
-                                                                "col-4 border border-top-0 border-right-0 flex-total-center text-center",
-                                                            attrs: {
-                                                                type: "text",
-                                                                name: "weights_" + key,
-                                                                oninput: "value=value.replace(/[^\\d]/g,'')"
-                                                            },
-                                                            domProps: {value: _vm.use_items[key]},
-                                                            on: {
-                                                                change: function ($event) {
-                                                                    _vm.edit = false
-                                                                },
-                                                                input: function ($event) {
-                                                                    if ($event.target.composing) {
-                                                                        return
-                                                                    }
-                                                                    _vm.$set(_vm.use_items, key, $event.target.value)
-                                                                }
-                                                            }
-                                                        }),
-                                                        _vm._v(" "),
-                                                        _c(
-                                                            "div",
-                                                            {
-                                                                staticClass:
-                                                                    "col-4 border border-top-0 border-right-0 row no-gutters"
-                                                            },
-                                                            [
-                                                                _c(
-                                                                    "div",
-                                                                    {staticClass: "col-12 row no-gutters"},
-                                                                    [
-                                                                        _c(
-                                                                            "div",
-                                                                            {
-                                                                                staticClass:
-                                                                                    "col-4 border-right border-bottom"
-                                                                            },
-                                                                            [_vm._v("max")]
-                                                                        ),
-                                                                        _vm._v(" "),
-                                                                        _vm.use_thresholds[key]
-                                                                            ? _c("input", {
-                                                                                directives: [
-                                                                                    {
-                                                                                        name: "model",
-                                                                                        rawName: "v-model",
-                                                                                        value: _vm.use_thresholds[key].max,
-                                                                                        expression: " use_thresholds[key].max"
-                                                                                    }
-                                                                                ],
-                                                                                staticClass:
-                                                                                    "col-8 border border-top-0 border-left-0 text-center ",
-                                                                                attrs: {
-                                                                                    type: "text",
-                                                                                    name: "max_" + key,
-                                                                                    oninput:
-                                                                                        "value=value.replace(/[^\\d]/g,'')"
-                                                                                },
-                                                                                domProps: {
-                                                                                    value: _vm.use_thresholds[key].max
-                                                                                },
-                                                                                on: {
-                                                                                    input: function ($event) {
-                                                                                        if ($event.target.composing) {
-                                                                                            return
-                                                                                        }
-                                                                                        _vm.$set(
-                                                                                            _vm.use_thresholds[key],
-                                                                                            "max",
-                                                                                            $event.target.value
-                                                                                        )
-                                                                                    }
-                                                                                }
-                                                                            })
-                                                                            : _vm._e()
-                                                                    ]
-                                                                ),
-                                                                _vm._v(" "),
-                                                                _c(
-                                                                    "div",
-                                                                    {staticClass: "col-12 row no-gutters"},
-                                                                    [
-                                                                        _c(
-                                                                            "div",
-                                                                            {staticClass: "col-4 border-right"},
-                                                                            [_vm._v("min")]
-                                                                        ),
-                                                                        _vm._v(" "),
-                                                                        _vm.use_thresholds[key]
-                                                                            ? _c("input", {
-                                                                                directives: [
-                                                                                    {
-                                                                                        name: "model",
-                                                                                        rawName: "v-model",
-                                                                                        value: _vm.use_thresholds[key].min,
-                                                                                        expression: " use_thresholds[key].min"
-                                                                                    }
-                                                                                ],
-                                                                                staticClass:
-                                                                                    "col-8 border-right text-center border",
-                                                                                attrs: {
-                                                                                    type: "text",
-                                                                                    name: "min_" + key,
-                                                                                    oninput:
-                                                                                        "value=value.replace(/[^\\d]/g,'')"
-                                                                                },
-                                                                                domProps: {
-                                                                                    value: _vm.use_thresholds[key].min
-                                                                                },
-                                                                                on: {
-                                                                                    input: function ($event) {
-                                                                                        if ($event.target.composing) {
-                                                                                            return
-                                                                                        }
-                                                                                        _vm.$set(
-                                                                                            _vm.use_thresholds[key],
-                                                                                            "min",
-                                                                                            $event.target.value
-                                                                                        )
-                                                                                    }
-                                                                                }
-                                                                            })
-                                                                            : _vm._e()
-                                                                    ]
-                                                                )
-                                                            ]
-                                                        )
-                                                    ]
-                                                )
-                                            })
-                                        ],
-                                        2
-                                    ),
-                                    _vm._v(" "),
-                                    _c("div", {staticClass: "modal-footer"}, [
-                                        _c(
-                                            "button",
-                                            {
-                                                staticClass: "btn btn-secondary",
-                                                attrs: {type: "button", "data-dismiss": "modal"},
-                                                on: {
-                                                    click: function ($event) {
-                                                        return _vm.resetData()
-                                                    }
-                                                }
-                                            },
-                                            [_vm._v("關閉\n                    ")]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                            "button",
-                                            {
-                                                staticClass: "btn btn-primary",
-                                                attrs: {type: "button"},
-                                                on: {
-                                                    click: function ($event) {
-                                                        return _vm.submitData()
-                                                    }
-                                                }
-                                            },
-                                            [_vm._v(_vm._s(_vm.edit ? "更新" : "設定"))]
-                                        )
-                                    ])
-                                ]
+                              "div",
+                              {
+                                staticClass:
+                                  "col-8 text-dark text-right flex-total-center"
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                " +
+                                    _vm._s(_vm.item_infos.items[index]) +
+                                    "\n                            "
+                                )
+                              ]
                             )
-                        ])
-                    ])
-                ]
+                          ]
+                        )
+                      ]
+                    )
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-12 border border-dark " }, [
+                  _c(
+                    "div",
+                    { staticClass: "row no-gutters flex-total-center" },
+                    [
+                      _c("div", { staticClass: "col-2 flex-total-center" }, [
+                        _c("i", {
+                          staticClass: "fa fa-cog",
+                          attrs: {
+                            "aria-hidden": "true",
+                            "data-toggle": "modal",
+                            "data-target": "#weight_Modal_" + _vm.target_name
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "col-10 text-dark flex-total-center" },
+                        [
+                          _vm._v(
+                            "\n                            綜合指數：\n                            "
+                          ),
+                          _c("div", { staticClass: "text-small" }, [
+                            _vm._v(_vm._s(_vm.monitor_target))
+                          ])
+                        ]
+                      )
+                    ]
+                  )
+                ])
+              ]
             )
-        }
-        var staticRenderFns = [
-            function () {
-                var _vm = this
-                var _h = _vm.$createElement
-                var _c = _vm._self._c || _h
-                return _c(
-                    "button",
-                    {
-                        staticClass: "close",
-                        attrs: {
-                            type: "button",
-                            "data-dismiss": "modal",
-                            "aria-label": "Close"
-                        }
-                    },
-                    [_c("span", {attrs: {"aria-hidden": "true"}}, [_vm._v("×")])]
-                )
-            }
+          ])
         ]
+      ),
+      _vm._v(" "),
+      _c("weights-modal", {
+        attrs: {
+          name: _vm.name,
+          farmland: _vm.farmland,
+          type: _vm.target_name,
+          title: _vm.item_infos.names[_vm.target_name],
+          items: _vm.monitor_items,
+          itemsThreshold: _vm.item_value,
+          ch_name: _vm.item_infos.items,
+          sensor_name: _vm.item_infos.sensor
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true&":
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true& ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade",
+      attrs: {
+        id: "weight_Modal_" + _vm.type,
+        tabindex: "-1",
+        role: "dialog",
+        "aria-labelledby": "weight_Modal_" + _vm.type + "Label",
+        "aria-hidden": "true"
+      }
+    },
+    [
+      _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
+        _c("div", { staticClass: "modal-content" }, [
+          _c("div", { staticClass: "modal-header" }, [
+            _c(
+              "h5",
+              {
+                staticClass: "modal-title",
+                attrs: { id: "weight_Modal_" + _vm.type + "Label" }
+              },
+              [_vm._v(_vm._s(_vm.title))]
+            ),
+            _vm._v(" "),
+            _vm._m(0)
+          ]),
+          _vm._v(" "),
+          _c(
+            "form",
+            {
+              attrs: {
+                action: _vm.url_update,
+                method: "post",
+                id: "form" + _vm.type
+              }
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.sensorName,
+                    expression: "sensorName"
+                  }
+                ],
+                attrs: { type: "hidden", name: "order" },
+                domProps: { value: _vm.sensorName },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.sensorName = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.name,
+                    expression: "name"
+                  }
+                ],
+                attrs: { type: "hidden", name: "name" },
+                domProps: { value: _vm.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.name = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.farmland,
+                    expression: "farmland"
+                  }
+                ],
+                attrs: { type: "hidden", name: "farmland" },
+                domProps: { value: _vm.farmland },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.farmland = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "modal-body row no-gutters text-center " },
+                [
+                  _c("div", { staticClass: "col-4  border border-info" }, [
+                    _vm._v("感測名稱")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "col-4  border-top border-bottom border-info"
+                    },
+                    [_vm._v("權重")]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-4  border  border-info" }, [
+                    _vm._v("設定值")
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.use_items, function(item, key) {
+                    return _c(
+                      "div",
+                      { staticClass: "col-12 row no-gutters text-center" },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "col-4 border border-top-0 border-right-0 flex-total-center"
+                          },
+                          [
+                            _vm._v(
+                              " " +
+                                _vm._s(_vm.ch_name[key]) +
+                                "\n                        "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.use_items[key],
+                              expression: "use_items[key]"
+                            }
+                          ],
+                          staticClass:
+                            "col-4 border border-top-0 border-right-0 flex-total-center text-center",
+                          attrs: {
+                            type: "text",
+                            name: "weights_" + key,
+                            oninput: "value=value.replace(/[^\\d]/g,'')"
+                          },
+                          domProps: { value: _vm.use_items[key] },
+                          on: {
+                            change: function($event) {
+                              _vm.edit = false
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.use_items, key, $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "col-4 border border-top-0 border-right-0 row no-gutters"
+                          },
+                          [
+                            _c(
+                              "div",
+                              { staticClass: "col-12 row no-gutters" },
+                              [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "col-4 border-right border-bottom"
+                                  },
+                                  [_vm._v("max")]
+                                ),
+                                _vm._v(" "),
+                                _vm.use_thresholds[key]
+                                  ? _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.use_thresholds[key].max,
+                                          expression: " use_thresholds[key].max"
+                                        }
+                                      ],
+                                      staticClass:
+                                        "col-8 border border-top-0 border-left-0 text-center ",
+                                      attrs: {
+                                        type: "text",
+                                        name: "max_" + key,
+                                        oninput:
+                                          "value=value.replace(/[^\\d]/g,'')"
+                                      },
+                                      domProps: {
+                                        value: _vm.use_thresholds[key].max
+                                      },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.$set(
+                                            _vm.use_thresholds[key],
+                                            "max",
+                                            $event.target.value
+                                          )
+                                        }
+                                      }
+                                    })
+                                  : _vm._e()
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "col-12 row no-gutters" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "col-4 border-right" },
+                                  [_vm._v("min")]
+                                ),
+                                _vm._v(" "),
+                                _vm.use_thresholds[key]
+                                  ? _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.use_thresholds[key].min,
+                                          expression: " use_thresholds[key].min"
+                                        }
+                                      ],
+                                      staticClass:
+                                        "col-8 border-right text-center border",
+                                      attrs: {
+                                        type: "text",
+                                        name: "min_" + key,
+                                        oninput:
+                                          "value=value.replace(/[^\\d]/g,'')"
+                                      },
+                                      domProps: {
+                                        value: _vm.use_thresholds[key].min
+                                      },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.$set(
+                                            _vm.use_thresholds[key],
+                                            "min",
+                                            $event.target.value
+                                          )
+                                        }
+                                      }
+                                    })
+                                  : _vm._e()
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  })
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" },
+                    on: {
+                      click: function($event) {
+                        return _vm.resetData()
+                      }
+                    }
+                  },
+                  [_vm._v("關閉\n                    ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.submitData()
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.edit ? "更新" : "設定"))]
+                )
+              ])
+            ]
+          )
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -69625,7 +69687,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("ul", {
-      staticClass: "col-12 h-scroll flex-total-center border rounded",
+    staticClass: "col-12 h-scroll flex-total-center border rounded",
     attrs: { id: "get-li-part" },
     domProps: { innerHTML: _vm._s(_vm.li_str) }
   })
@@ -81907,7 +81969,7 @@ Vue.component('config-place', __webpack_require__(/*! ./components/ConfigPlace.v
 Vue.component('prog-items', __webpack_require__(/*! ./components/progItems.vue */ "./resources/js/components/progItems.vue")["default"]);
 Vue.component('monitor-items-show', __webpack_require__(/*! ./components/MonitorItemsShow.vue */ "./resources/js/components/MonitorItemsShow.vue")["default"]);
 Vue.component('former-info-config', __webpack_require__(/*! ./components/FormerInfoConfig.vue */ "./resources/js/components/FormerInfoConfig.vue")["default"]);
-        Vue.component('weights-modal', __webpack_require__(/*! ./components/WeightsModal.vue */ "./resources/js/components/WeightsModal.vue")["default"]);
+Vue.component('weights-modal', __webpack_require__(/*! ./components/WeightsModal.vue */ "./resources/js/components/WeightsModal.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -82374,93 +82436,77 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MonitorItemsShow_vue_vue_type_template_id_26f9a78e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
-        /***/
-    }),
 
-    /***/
-    "./resources/js/components/WeightsModal.vue":
-    /*!**************************************************!*\
-      !*** ./resources/js/components/WeightsModal.vue ***!
-      \**************************************************/
-    /*! exports provided: default */
-    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+/***/ }),
 
-        "use strict";
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony import */
-        var _WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true& */ "./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true&");
-        /* harmony import */
-        var _WeightsModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./WeightsModal.vue?vue&type=script&lang=js& */ "./resources/js/components/WeightsModal.vue?vue&type=script&lang=js&");
-        /* empty/unused harmony star reexport *//* harmony import */
-        var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/***/ "./resources/js/components/WeightsModal.vue":
+/*!**************************************************!*\
+  !*** ./resources/js/components/WeightsModal.vue ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true& */ "./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true&");
+/* harmony import */ var _WeightsModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./WeightsModal.vue?vue&type=script&lang=js& */ "./resources/js/components/WeightsModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
-        /* normalize component */
-
-        var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-            _WeightsModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-            _WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-            _WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-            false,
-            null,
-            "bd2a6546",
-            null
-        )
-
-        /* hot reload */
-        if (false) {
-            var api;
-        }
-        component.options.__file = "resources/js/components/WeightsModal.vue"
-        /* harmony default export */
-        __webpack_exports__["default"] = (component.exports);
-
-        /***/
-    }),
-
-    /***/
-    "./resources/js/components/WeightsModal.vue?vue&type=script&lang=js&":
-    /*!***************************************************************************!*\
-      !*** ./resources/js/components/WeightsModal.vue?vue&type=script&lang=js& ***!
-      \***************************************************************************/
-    /*! exports provided: default */
-    /***/ (function (module, __webpack_exports__, __webpack_require__) {
-
-        "use strict";
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony import */
-        var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./WeightsModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WeightsModal.vue?vue&type=script&lang=js&");
-        /* empty/unused harmony star reexport */ /* harmony default export */
-        __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-        /***/
-    }),
-
-    /***/
-    "./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true&":
-    /*!*********************************************************************************************!*\
-      !*** ./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true& ***!
-      \*********************************************************************************************/
-    /*! exports provided: render, staticRenderFns */
-    /***/ (function (module, __webpack_exports__, __webpack_require__) {
-
-        "use strict";
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony import */
-        var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true&");
-        /* harmony reexport (safe) */
-        __webpack_require__.d(__webpack_exports__, "render", function () {
-            return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"];
-        });
-
-        /* harmony reexport (safe) */
-        __webpack_require__.d(__webpack_exports__, "staticRenderFns", function () {
-            return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"];
-        });
 
 
-        /***/
-    }),
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _WeightsModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "bd2a6546",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/WeightsModal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/WeightsModal.vue?vue&type=script&lang=js&":
+/*!***************************************************************************!*\
+  !*** ./resources/js/components/WeightsModal.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./WeightsModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WeightsModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true& ***!
+  \*********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WeightsModal.vue?vue&type=template&id=bd2a6546&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeightsModal_vue_vue_type_template_id_bd2a6546_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
 
 /***/ "./resources/js/components/progItems.vue":
 /*!***********************************************!*\

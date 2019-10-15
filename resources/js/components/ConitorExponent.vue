@@ -16,7 +16,10 @@
                             <div class="card card-body collapse-item">
                                 <div v-if="hex_values[0]" class="container">
                                     <div class="row text-center flex-total-center">
-                                        <div class="col-12 border border-info">權重對應表</div>
+                                        <div class="col-12 border border-info border-bottom-0 pt-2">權重對應表</div>
+                                        <div class="col-12 text-notice text-secondary border border-info border-top-0 pb-2">
+                                            (若需要更改請至農場監控畫面進行更改)
+                                        </div>
                                         <div class="col-12 border border-info p-0">
                                             <div class="row no-gutters">
                                                 <div class="col-4 border-info border-right">健康名稱</div>
@@ -85,21 +88,18 @@
         },
         methods: {
             count_off(id) {
-                console.log(this.monitor_id[id]);
                 return this.monitor_id[id] + '-' + this.config_number;
             },
             getValue() {
                 // hex_value
-                let info = [];
                 let self = this;
-                info = this.form_crop.split('_');
 
                 axios.post(this.url_api_target, {
                     'name': this.name,
                     'farmland': this.config_number,
                 }).then(function (res) {
                     //weights =>[0] 權重 [1]大權重
-                    self.hex_values = [res.data.weights, res.data.target];
+                    if (res.data !== 'Please') self.hex_values = [res.data.weights, res.data.target];
                 }).catch(function (err) {
                     console.log('ERROR' + err);
                 }).finally(function () {
@@ -153,12 +153,16 @@
 <style scoped>
     .go-monitor {
         position: absolute;
-        top: 0;
+        bottom: 0;
         right: 0;
-        border-color: transparent #e5c72f transparent transparent;
+        border-color: transparent #59ff00 transparent transparent;
         border-style: solid solid solid solid;
         border-width: 1.5rem 1.5rem 0 0;
         height: 0;
         width: 0;
+    }
+
+    .text-notice {
+        font-size: 0.5rem !important;
     }
 </style>

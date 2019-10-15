@@ -16,7 +16,7 @@
                     <div class="modal-body row no-gutters text-center ">
                         <div class="col-4  border border-info">感測名稱</div>
                         <div class="col-4  border-top border-bottom border-info">權重</div>
-                        <div class="col-4  border  border-info">極限值</div>
+                        <div class="col-4  border  border-info">設定值</div>
                         <div v-for="(item,key) in use_items" class="col-12 row no-gutters text-center">
                             <div class="col-4 border border-top-0 border-right-0 flex-total-center"> {{ch_name[key]}}
                             </div>
