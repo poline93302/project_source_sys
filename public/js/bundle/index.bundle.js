@@ -2068,6 +2068,34 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+    /***/
+    "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js&":
+    /*!******************************************************************************************************************************************************************************!*\
+      !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js& ***!
+      \******************************************************************************************************************************************************************************/
+    /*! exports provided: default */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+        /* harmony default export */
+        __webpack_exports__["default"] = ({
+            name: "ConitorExponentNull",
+            props: {
+                form_crop: String
+            }
+        });
+
+        /***/
+    }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
@@ -2216,173 +2244,224 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "FormerInfoConfig",
   props: {
     formername: String,
     formeremail: String,
-    formcrop: Array,
+      farms: Array,
+      crops: Array,
     route: String
   },
   methods: {
-    //新增農場/農田
+      //新增農場/農田 ps.一次新增一層
     addItems: function addItems(grad) {
-      var formlen = this.forms.length;
-      var croplen = this.crops.length;
+        var farmLen = this.Farms.length;
+        var cropLen = this.Crops.length;
 
-      if (grad === 'form') {
-        //一次新增一層
-        if (this.forms[formlen - 1][0] !== '') {
-          this.forms.push(['', '', formlen]);
-          this.formsCopyKey.push(['', '', formlen]);
-          this.stepsCount++;
+        if (grad === 'farm') {
+            this.editFarmControl = false;
+
+            if (this.Farms[farmLen - 1]['farm'] !== '') {
+                this.originalFarmCount++;
+                this.Farms.push({
+                    'id': this.originalFarmCount,
+                    'address': '',
+                    'farm': ''
+                });
+                this.FarmsKey.push({
+                    'id': this.originalFarmCount,
+                    'address': '',
+                    'farm': ''
+                });
         }
+
+            this.editFarmControl = true;
       } else {
-        if (this.crops[croplen - 1][0] !== '') {
-          this.crops.push(['', '', 'New']);
+            this.editCropControl = false;
+
+            if (this.Crops[cropLen - 1]['farm'] !== '') {
+                this.originalCropCount++;
+                this.Crops.push({
+                    'id': this.originalCropCount,
+                    'crop': '',
+                    'farm': ''
+                });
+                this.CropsKey.push({
+                    'id': this.originalCropCount,
+                    'crop': '',
+                    'farm': ''
+                });
         }
+
+            this.editCropControl = true;
       }
     },
-    //刪除農場/農田 N
+      //刪除農場/農田
     deleteItems: function deleteItems(grad, index) {
       var self = this;
+        var deleteCount = []; // 查看Farm資料庫中的id
 
-      if (grad === 'form') {
-        //將相關的crops 刪除
-        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.crops, function (item, indexCrops) {
-          if (self.forms[index][0] === item[0]) {
-            console.log(index);
-            console.log('form', item[0]);
-            console.log('crops', self.forms[index][0]);
-            self.crops.splice(indexCrops, 1, '');
-          }
-        }); //將農場刪除
-        // this.forms.splice(index, 1);
-        //將農場標記同時刪除
-        //steps相關刪除
-        // this.steps.splice(this.steps.indexOf(this.formsKey[index]), 1);
-        // this.formsCopyKey.splice(index, 1);
-        // this.formsKey.splice(index, 1);
-        // this.stepsCount--;
+        var statueFarmId = self.farms[self.farms.length - 1]['id']; // 查看Crop資料庫中的id
 
-      } else {
-        this.crops.splice(index, 1);
-      }
+        var statueCropId = self.crops[self.crops.length - 1]['id'];
+
+        if (grad === 'farm') {
+            if (confirm('若刪除農場，相關的農田也會一並刪除，確認是否刪除？')) {
+                //新增不進行 紀錄
+                if (statueFarmId >= self.Farms[index]['id']) {
+                    this.stepsDelete.push('Farm_' + this.Farms[index]['id']);
+                } //對要進行刪除的index 存
+
+
+                lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(this.Crops, function (item, cropIndex) {
+                    if (item['farm'] === self.Farms[index]['farm']) {
+                        deleteCount.push(cropIndex);
+                    }
+                });
+
+                deleteCount.sort();
+                deleteCount.reverse(); //對Crop 進行刪除
+
+                lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(deleteCount, function (number) {
+                    if (statueCropId >= self.Crops[index]['id']) self.stepsDelete.push('Crop_' + self.Crops[index]['id']);
+                    self.Crops.splice(number, 1);
+                });
+
+                this.CropsKey = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.Crops);
+                this.Farms.splice(index, 1);
+                this.FarmsKey.splice(index, 1);
+            }
+        } else {
+            if (statueCropId >= self.Crops[index]['id']) this.stepsDelete.push('Crop_' + this.Crops[index]['id']);
+            this.Crops.splice(index, 1);
+            this.CropsKey.splice(index, 1);
+        }
     },
     //重設所有數字
     resetValue: function resetValue() {
       var self = this;
-      var formsStatue = [];
-      var addressStatue = [];
-      var formsItem = [];
-      var addressItem = [];
-      this.formerName = this.formername;
-      this.formerEmail = this.formeremail;
-      this.forms = [];
-      this.crops = [];
-      this.steps = [];
-      this.stepsStatus = [];
-      this.finishSteps = [];
-      this.formsKey = [];
-      this.formsCopyKey = [];
-      this.cropsKey = [];
-
-      lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(this.formcrop, function (item) {
-        formsStatue.push(item[0]);
-        addressStatue.push(item[2]);
-        self.crops.push([item[0], item[1], item[3]]);
-        self.cropsKey.push([item[0], item[1], item[3]]);
-      });
-
-      formsItem = Array.from(new Set(formsStatue));
-      addressItem = Array.from(new Set(addressStatue));
-
-      for (var i = 0; i < formsItem.length; i++) {
-        this.forms.push([formsItem[i], addressItem[i], i]);
-        this.formsKey.push(formsItem[i]);
-        this.formsCopyKey.push([formsItem[i], addressItem[i], i]);
-      }
-
-      this.stepsCount = this.formsKey.length - 1;
+        this.FarmerName = this.formername;
+        this.FarmerEmail = this.formeremail;
+        this.Farms = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.farms);
+        this.Crops = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.crops);
+        this.FarmsKey = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.farms);
+        this.CropsKey = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.crops);
+        this.originalFarmCount = this.farms[this.farms.length - 1]['id'];
+        this.originalCropCount = this.crops[this.crops.length - 1]['id'];
+        this.stepsFarm = [];
+        this.stepsCrop = [];
+        this.stepsDelete = [];
     },
     //送出確認
     lostCheck: function lostCheck() {
-      //針對所有crops form 查看是否有不合法的地方
+        var formUpdate = document.getElementById('updateFormerInfo');
+        var self = this; //針對所有crops form 查看是否有不合法的地方 在
+        //為stepsFarm stepsCrop  加上 ＤＯＭ的index
+
+        var keyIndex = 0; //添加 DOM index
+
+        if (!this.formCheckRun) {
+            this.stepsFarm = this.stepsFarm.map(function (item) {
+                lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Farms, function (itemKey, indexKey) {
+                    if (itemKey['id'] === item) {
+                        keyIndex = indexKey;
+                    }
+                });
+
+                return item + '_' + keyIndex;
+            });
+            this.stepsCrop = this.stepsCrop.map(function (item) {
+                lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Crops, function (itemKey, indexKey) {
+                    if (itemKey['id'] === item) {
+                        keyIndex = indexKey;
+                    }
+                });
+
+                return item + '_' + keyIndex;
+            });
+            confirm('請再點選一次以確認更改') ? this.formCheckRun = true : this.formCheckRun = false;
+        } else {
+            formUpdate.submit();
+        }
+
       console.log('submit');
     }
   },
   watch: {
-    crops: {
+      Crops: {
       deep: true,
       handler: function handler(values) {
         var self = this;
-        var stepRepeat = [];
+          var stepsCache = [];
 
-        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(values, function (items, index) {
-          if (JSON.stringify(items) !== JSON.stringify(self.cropsKey[index])) {
-            stepRepeat.push(items[2] + '_' + index);
+          if (this.editCropControl) {
+              lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(values, function (items, index) {
+                  if (JSON.stringify(items) !== JSON.stringify(self.CropsKey[index])) {
+                      stepsCache.push(items['id']);
+                  }
+              });
+
+              self.stepsCrop = Array.from(new Set(stepsCache));
           }
-        });
-
-        this.stepsCrop = Array.from(new Set(stepRepeat));
       }
     },
-    forms: {
+      //當forms進行更改時
+      Farms: {
       deep: true,
+          immediate: true,
       handler: function handler(value) {
         var self = this;
-        var checkStatus = [];
-        {
+          var stepsCache = [];
+
+          if (this.editFarmControl) {
           //原因 forms 為 所有農場集合體 所以透過 forEach 抓出
           lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(value, function (item, index) {
-            //item[] => 0 農場名稱 1 地址 2順序
-            if (item[0] === '') {
-              //判斷item是否為新加入的 y=>將formKey加入create_id
-              self.formsKey.push('create');
-            } else if (JSON.stringify(item) !== JSON.stringify(self.formsCopyKey[index])) {
+              if (JSON.stringify(item) !== JSON.stringify(self.FarmsKey[index])) {
               //當 數值改變 確認是否改變時
-              //記錄更改的狀態名稱
-              self.stepsStatus.push(self.formsKey[item[2]] + '_' + item[2]); //將相關的 crops 進行更改名稱
+                  //推上更改ID
+                  stepsCache.push(item['id']); //將相關的 crops 進行更改名稱
 
-              lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.crops, function (cropItem) {
-                if (cropItem[0] === self.formsCopyKey[index][0]) {
-                  cropItem[0] = item[0];
+                  lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Crops, function (cropItem) {
+                      if (cropItem['farm'] === self.FarmsKey[index]['farm']) {
+                          cropItem['farm'] = item['farm'];
                 }
               }); //更新最高數值
 
 
-              self.formsCopyKey[index][0] = item[0];
+                  self.FarmsKey[index]['farm'] = item['farm'];
             }
           });
 
-          lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(Array.from(new Set(self.stepsStatus)), function (item) {
-            if (item) {
-              checkStatus.push(item);
-              self.steps.push(item);
-            }
-          });
-
-          this.steps = Array.from(new Set(checkStatus));
-        }
-        this.steps.sort();
+              self.stepsFarm = Array.from(new Set(stepsCache));
+          }
       }
     }
   },
   data: function data() {
     return {
-      forms: [],
-      formsKey: [],
-      formsCopyKey: [],
-      crops: [],
-      cropsKey: [],
+        Farms: [],
+        FarmsKey: [],
+        //
+        Crops: [],
+        CropsKey: [],
       //農夫名稱
-      formerName: '',
-      formerEmail: '',
-      steps: [],
+        FarmerName: '',
+        FarmerEmail: '',
+        //
+        stepsFarm: [],
       stepsCrop: [],
-      stepsCount: 0,
-      stepsStatus: [],
+        stepsDelete: [],
+        //
+        editFarmControl: true,
+        editCropControl: true,
+        //
+        originalFarmCount: 0,
+        originalCropCount: 0,
+        formCheckRun: false,
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
   },
@@ -68536,8 +68615,51 @@ var staticRenderFns = [
 render._withStripped = true
 
 
+        /***/
+    }),
 
-/***/ }),
+    /***/
+    "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true&":
+    /*!**********************************************************************************************************************************************************************************************************************************!*\
+      !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true& ***!
+      \**********************************************************************************************************************************************************************************************************************************/
+    /*! exports provided: render, staticRenderFns */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony export (binding) */
+        __webpack_require__.d(__webpack_exports__, "render", function () {
+            return render;
+        });
+        /* harmony export (binding) */
+        __webpack_require__.d(__webpack_exports__, "staticRenderFns", function () {
+            return staticRenderFns;
+        });
+        var render = function () {
+            var _vm = this
+            var _h = _vm.$createElement
+            var _c = _vm._self._c || _h
+            return _c(
+                "div",
+                {
+                    staticClass:
+                        "text-center container sensor-part border border-light rounded mt-5 shadow py-5"
+                },
+                [
+                    _c("div", {staticClass: "col-12"}, [
+                        _vm._v(" " + _vm._s(_vm.form_crop))
+                    ]),
+                    _vm._v(" "),
+                    _c("div", {staticClass: "col-12"}, [_vm._v("請通知客服已開通資訊")])
+                ]
+            )
+        }
+        var staticRenderFns = []
+        render._withStripped = true
+
+
+        /***/ }),
 
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&":
 /*!*******************************************************************************************************************************************************************************************************************!*\
@@ -68649,7 +68771,7 @@ var render = function() {
             "form",
             {
               attrs: {
-                method: "post",
+                  method: "get",
                 action: _vm.route,
                 id: "updateFormerInfo"
               }
@@ -68681,18 +68803,39 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.steps.toString,
-                    expression: "steps.toString"
+                      value: _vm.stepsDelete,
+                      expression: "stepsDelete"
                   }
                 ],
-                attrs: { type: "hidden", name: "temporary" },
-                domProps: { value: _vm.steps.toString },
+                  attrs: {type: "hidden", name: "temporaryDelete"},
+                  domProps: {value: _vm.stepsDelete},
+                  on: {
+                      input: function ($event) {
+                          if ($event.target.composing) {
+                              return
+                          }
+                          _vm.stepsDelete = $event.target.value
+                      }
+                  }
+              }),
+                _vm._v(" "),
+                _c("input", {
+                    directives: [
+                        {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.stepsFarm,
+                            expression: "stepsFarm"
+                  }
+                ],
+                    attrs: {type: "hidden", name: "temporaryForm"},
+                    domProps: {value: _vm.stepsFarm},
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(_vm.steps, "toString", $event.target.value)
+                      _vm.stepsFarm = $event.target.value
                   }
                 }
               }),
@@ -68702,18 +68845,18 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.stepsCrop.toString,
-                    expression: "stepsCrop.toString"
+                      value: _vm.stepsCrop,
+                      expression: "stepsCrop"
                   }
                 ],
-                attrs: { type: "hidden", name: "temporary" },
-                domProps: { value: _vm.stepsCrop.toString },
+                  attrs: {type: "hidden", name: "temporaryCrop"},
+                  domProps: {value: _vm.stepsCrop},
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(_vm.stepsCrop, "toString", $event.target.value)
+                      _vm.stepsCrop = $event.target.value
                   }
                 }
               }),
@@ -68731,8 +68874,8 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.formerName,
-                            expression: "formerName"
+                              value: _vm.FarmerName,
+                              expression: "FarmerName"
                           }
                         ],
                         attrs: {
@@ -68740,13 +68883,13 @@ var render = function() {
                           id: "formerInfoName",
                           name: "updateFormerName"
                         },
-                        domProps: { value: _vm.formerName },
+                          domProps: {value: _vm.FarmerName},
                         on: {
                           input: function($event) {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.formerName = $event.target.value
+                              _vm.FarmerName = $event.target.value
                           }
                         }
                       })
@@ -68762,8 +68905,8 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.formerEmail,
-                            expression: "formerEmail"
+                              value: _vm.FarmerEmail,
+                              expression: "FarmerEmail"
                           }
                         ],
                         attrs: {
@@ -68771,13 +68914,13 @@ var render = function() {
                           id: "formerInfoEmail",
                           name: "updateFormerEmail"
                         },
-                        domProps: { value: _vm.formerEmail },
+                          domProps: {value: _vm.FarmerEmail},
                         on: {
                           input: function($event) {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.formerEmail = $event.target.value
+                              _vm.FarmerEmail = $event.target.value
                           }
                         }
                       })
@@ -68786,7 +68929,7 @@ var render = function() {
                     _c(
                       "div",
                       { staticClass: "col-12 my-3" },
-                      _vm._l(_vm.forms, function(item, index) {
+                        _vm._l(_vm.Farms, function (item, index) {
                         return _c(
                           "div",
                           { staticClass: "row no-gutters my-2" },
@@ -68813,7 +68956,7 @@ var render = function() {
                                     attrs: { "aria-hidden": "true" },
                                     on: {
                                       click: function($event) {
-                                        return _vm.addItems("form")
+                                          return _vm.addItems("farm")
                                       }
                                     }
                                   })
@@ -68827,8 +68970,8 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: item[0],
-                                    expression: "item[0]"
+                                      value: item["farm"],
+                                      expression: "item['farm']"
                                   }
                                 ],
                                 staticClass: "col-6 w-100",
@@ -68838,13 +68981,13 @@ var render = function() {
                                   name: "update-FormName-" + index,
                                   id: "update-FormName-" + index
                                 },
-                                domProps: { value: item[0] },
+                                  domProps: {value: item["farm"]},
                                 on: {
                                   input: function($event) {
                                     if ($event.target.composing) {
                                       return
                                     }
-                                    _vm.$set(item, 0, $event.target.value)
+                                      _vm.$set(item, "farm", $event.target.value)
                                   }
                                 }
                               }),
@@ -68854,8 +68997,8 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: item[1],
-                                    expression: "item[1]"
+                                      value: item["address"],
+                                      expression: "item['address']"
                                   }
                                 ],
                                 staticClass: "col-6 w-100",
@@ -68865,13 +69008,17 @@ var render = function() {
                                   name: "update-FormAddress-" + index,
                                   id: "update-FormAddress-" + index
                                 },
-                                domProps: { value: item[1] },
+                                  domProps: {value: item["address"]},
                                 on: {
                                   input: function($event) {
                                     if ($event.target.composing) {
                                       return
                                     }
-                                    _vm.$set(item, 1, $event.target.value)
+                                      _vm.$set(
+                                          item,
+                                          "address",
+                                          $event.target.value
+                                      )
                                   }
                                 }
                               })
@@ -68886,7 +69033,7 @@ var render = function() {
                                   attrs: { "aria-hidden": "true" },
                                   on: {
                                     click: function($event) {
-                                      return _vm.deleteItems("form", index)
+                                        return _vm.deleteItems("farm", index)
                                     }
                                   }
                                 })
@@ -68901,7 +69048,7 @@ var render = function() {
                     _c(
                       "div",
                       { staticClass: "col-12" },
-                      _vm._l(_vm.crops, function(Crop, index) {
+                        _vm._l(_vm.Crops, function (Crop, index) {
                         return _c(
                           "div",
                           { staticClass: "row no-gutters my-2" },
@@ -68921,7 +69068,7 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                            農田\n                                            "
+                                      "\n                                                農田\n                                                "
                                   ),
                                   _c("i", {
                                     staticClass: "fa fa-plus",
@@ -68946,8 +69093,8 @@ var render = function() {
                                         {
                                           name: "model",
                                           rawName: "v-model",
-                                          value: Crop[0],
-                                          expression: "Crop[0]"
+                                            value: Crop["farm"],
+                                            expression: "Crop['farm']"
                                         }
                                       ],
                                       staticClass: "w-100 h-100",
@@ -68973,7 +69120,7 @@ var render = function() {
                                             })
                                           _vm.$set(
                                             Crop,
-                                            0,
+                                              "farm",
                                             $event.target.multiple
                                               ? $$selectedVal
                                               : $$selectedVal[0]
@@ -68981,7 +69128,7 @@ var render = function() {
                                         }
                                       }
                                     },
-                                    _vm._l(_vm.forms, function(form) {
+                                      _vm._l(_vm.Farms, function (farm) {
                                       return _c(
                                         "option",
                                         {
@@ -68989,15 +69136,15 @@ var render = function() {
                                             {
                                               name: "show",
                                               rawName: "v-show",
-                                              value: form[0] !== "",
-                                              expression: "form[0]!==''"
+                                                value: farm["farm"] !== "",
+                                                expression: "farm['farm']!==''"
                                             }
                                           ]
                                         },
                                         [
                                           _vm._v(
                                             "\n                                                        " +
-                                              _vm._s(form[0]) +
+                                              _vm._s(farm["farm"]) +
                                               "\n                                                    "
                                           )
                                         ]
@@ -69013,8 +69160,8 @@ var render = function() {
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                        value: Crop[1],
-                                        expression: "Crop[1]"
+                                          value: Crop["crop"],
+                                          expression: "Crop['crop']"
                                       }
                                     ],
                                     staticClass: "w-100",
@@ -69024,13 +69171,17 @@ var render = function() {
                                       name: "selectCropData" + index,
                                       placeholder: "請輸入農作物"
                                     },
-                                    domProps: { value: Crop[1] },
+                                      domProps: {value: Crop["crop"]},
                                     on: {
                                       input: function($event) {
                                         if ($event.target.composing) {
                                           return
                                         }
-                                        _vm.$set(Crop, 1, $event.target.value)
+                                          _vm.$set(
+                                              Crop,
+                                              "crop",
+                                              $event.target.value
+                                          )
                                       }
                                     }
                                   })
@@ -81965,6 +82116,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.component('conitor-exponent', __webpack_require__(/*! ./components/ConitorExponent.vue */ "./resources/js/components/ConitorExponent.vue")["default"]);
+        Vue.component('conitor-exponent-null', __webpack_require__(/*! ./components/ConitorExponentNull.vue */ "./resources/js/components/ConitorExponentNull.vue")["default"]);
 Vue.component('config-place', __webpack_require__(/*! ./components/ConfigPlace.vue */ "./resources/js/components/ConfigPlace.vue")["default"]);
 Vue.component('prog-items', __webpack_require__(/*! ./components/progItems.vue */ "./resources/js/components/progItems.vue")["default"]);
 Vue.component('monitor-items-show', __webpack_require__(/*! ./components/MonitorItemsShow.vue */ "./resources/js/components/MonitorItemsShow.vue")["default"]);
@@ -82211,8 +82363,92 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponent_vue_vue_type_template_id_6bd9bef8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+        /***/
+    }),
 
-/***/ }),
+    /***/
+    "./resources/js/components/ConitorExponentNull.vue":
+    /*!*********************************************************!*\
+      !*** ./resources/js/components/ConitorExponentNull.vue ***!
+      \*********************************************************/
+    /*! exports provided: default */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var _ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true& */ "./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true&");
+        /* harmony import */
+        var _ConitorExponentNull_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ConitorExponentNull.vue?vue&type=script&lang=js& */ "./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js&");
+        /* empty/unused harmony star reexport *//* harmony import */
+        var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+        /* normalize component */
+
+        var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+            _ConitorExponentNull_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+            _ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+            _ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+            false,
+            null,
+            "0b2458ab",
+            null
+        )
+
+        /* hot reload */
+        if (false) {
+            var api;
+        }
+        component.options.__file = "resources/js/components/ConitorExponentNull.vue"
+        /* harmony default export */
+        __webpack_exports__["default"] = (component.exports);
+
+        /***/
+    }),
+
+    /***/
+    "./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js&":
+    /*!**********************************************************************************!*\
+      !*** ./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js& ***!
+      \**********************************************************************************/
+    /*! exports provided: default */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ConitorExponentNull.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js&");
+        /* empty/unused harmony star reexport */ /* harmony default export */
+        __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+        /***/
+    }),
+
+    /***/
+    "./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true&":
+    /*!****************************************************************************************************!*\
+      !*** ./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true& ***!
+      \****************************************************************************************************/
+    /*! exports provided: render, staticRenderFns */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true&");
+        /* harmony reexport (safe) */
+        __webpack_require__.d(__webpack_exports__, "render", function () {
+            return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"];
+        });
+
+        /* harmony reexport (safe) */
+        __webpack_require__.d(__webpack_exports__, "staticRenderFns", function () {
+            return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"];
+        });
+
+
+        /***/ }),
 
 /***/ "./resources/js/components/ExampleComponent.vue":
 /*!******************************************************!*\

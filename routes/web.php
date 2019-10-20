@@ -22,7 +22,7 @@ Route::group(['prefix' => 'monitor'], function () {
 //  查詢監控畫面
     Route::post('/select', 'FormerPlaceController@select')->name('monitor_homepage_select');
 //  更新農夫設定資料
-    Route::post('/update', 'FormerPlaceController@stepClassification')->name('monitor_former_update');
+    Route::get('/update', 'FormerPlaceController@stepClassification')->name('monitor_former_update');
 //  點選id轉化到監控畫面
     Route::get('/item/{form_crop}', 'FormerConfigController@show')->name('monitor_former_config');
 });

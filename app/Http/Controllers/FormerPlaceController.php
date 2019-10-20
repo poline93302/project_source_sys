@@ -2,160 +2,161 @@
 
 namespace App\Http\Controllers;
 
-use App\UserFormer;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\FormerInfo;
+use App\FarmerFarm;
+use App\UserFormer;
+use Carbon\Carbon;
 
 class FormerPlaceController extends Controller
 {
-
-    public function createFormAddress($value, $form)
+//  更新農夫名字與信箱
+    public function UpdateFarmerAndEmail($user, $newName, $newEmail)
     {
-        FormerInfo::where('form', $form)->update(['address' => $value]);
+        UserFormer::where(['username' => $user])->update([
+            'name' => $newName,
+            'email' => $newEmail
+        ]);
     }
 
-    public function creatFormName($value)
+//  新增農場
+    public function CreateFarm($farmID, $newFarm, $newAddress)
     {
-        FormerInfo::create([
+        FarmerFarm::create([
+            'id' => $farmID,
             'former' => Auth::user()['username'],
-            'form' => $value,
+            'form' => $newFarm,
+            'address' => $newAddress,
             'create_time' => Carbon::now(),
         ]);
     }
 
-    public function createFormCrop($form, $crop)
+    public function CreateCrop($sqlID, $newFarm, $newCrop)
     {
-        $cropInfo = FormerInfo::where(['form' => $form])->first();
-
         FormerInfo::create([
-            'former' => Auth::user()['username'],
-            'form' => $form,
-            'crop' => $crop,
-            'address' => $cropInfo['address'],
+            'id' => $sqlID,
+            'farmer' => Auth::user()['username'],
+            'farm' => $newFarm,
+            'status' => '444',
+            'farmland' => 0,
+            'crop' => $newCrop,
             'create_time' => Carbon::now(),
         ]);
     }
 
-    public function updateForm($value, $form)
+//  找到農場並更新
+    public function findFormUpdate($farmID, $newFarm, $newAddress)
     {
-        FormerInfo::where(['form' => $form])->update([
-            'form' => $value,
-        ]);
-    }
+//      查看是否存在
+        $createRight = FarmerFarm::where([
+            'farmer' => Auth::user()['username'],
+            'id' => $farmID,
+        ])->get();
 
-    public function updateCrop($sqlID, $form, $crop)
-    {
-        FormerInfo::where(['id' => $sqlID])->update([
-            'form' => $form,
-            'crop' => $crop,
-        ]);
-    }
-
-    public function deleteForm($name)
-    {
-        FormerInfo::where(['form' => $name])->delete();
-    }
-
-    public function deleteCrop($id)
-    {
-        FormerInfo::where(['id' => $id])->delete();
-    }
-
-    public function update($moment, $form, $value)
-    {
-        if ($moment === 'FormAddress') {
-            $this->createFormAddress($value, $form);
+        if ($createRight->isEmpty()) {
+            $this->CreateFarm($farmID, $newFarm, $newAddress);
         } else {
-            $this->updateForm($value, $form);
+            FarmerFarm::where([
+                'farmer' => Auth::user()['username'],
+                'farm' => $farmID,
+            ])->update([
+                'farm' => $newFarm,
+                'address' => $newAddress,
+            ]);
         }
+    }
+
+    public function findCropUpdate($sqlID, $newFarm, $newCrop)
+    {
+        dd($sqlID);
+        $createRight = FormerInfo::where([
+            'farmer' => Auth::user()['username'],
+            'id' => $sqlID,
+        ])->get();
+        if ($createRight->isEmpty()) {
+            $this->CreateCrop($sqlID, $newFarm, $newCrop);
+        } else {
+//            dd(FormerInfo::where(['farmer'=>Auth::user()['username'],'farm'=>$newFarm])->count());
+            FormerInfo::where([
+                'farmer' => Auth::user()['username'],
+                'id' => $sqlID,
+            ])->update([
+                'farm' => $newFarm,
+                'crop' => $newCrop,
+                'farmland' => FormerInfo::where(['farmer' => Auth::user()['username'], 'farm' => $newFarm])->count() + 1,
+            ]);
+        }
+    }
+
+    public function deleteForm($farm)
+    {
+        FormerInfo::where([
+            'former' => Auth::user()['username'],
+            'form' => $farm,
+        ])->delete();
+    }
+
+    public function deleteCrop($sqlID)
+    {
+        FormerInfo::where([
+            'id' => $sqlID,
+        ])->delete();
     }
 
     public function stepClassification(Request $req)
     {
-        $instructionInfo = array();
-        $instructionForm = array();
-        $instructionCrop = array();
 
-        //      最後一定為空不理他 mb_split放進陣列
-//        dd($req['temporary']);
-        is_null($req['temporary']) ? $checkUpdate = false : $checkUpdate = true;
+//      temporaryDelete 1  temporaryForm 2 temporaryCrop 3
+        $this->UpdateFarmerAndEmail(Auth::user()['username'], $req['updateFormerName'], $req['updateFormerEmail']);
+        $checkPoint = is_null($req['temporaryDelete']) | is_null($req['temporaryForm']) | is_null($req['temporaryCrop']);
 
+        $checkPoint ? $checkUpdate = true : $checkUpdate = false;
+//        dd($req->all());
         if ($checkUpdate) {
-//          針對傳來數值進行切割
-            $instruction = mb_split(',', $req['temporary']);
-            foreach ($instruction as $d) {
-//              下方分類
-
-                $getWay = mb_split('_', $d);
-
-                $value = $getWay[1] . ',' . $getWay[2];
-                if ($getWay[0] === 'Form') {
-                    array_push($instructionForm, $value);
-                } else if ($getWay[0] === 'Crop') {
-                    $value = $value . ',' . $getWay[3];
-                    array_push($instructionCrop, $value);
-                } else if ($getWay[0] === 'delete') {
-                    if ($getWay[1] === 'Form') {
-                        $this->deleteForm($getWay[2]);
-                    } else {
-                        $this->deleteCrop($getWay[2]);
-                    }
-                } else {
-//                  Info
-                    array_push($instructionInfo, $value);
+//          農場針對傳來數值進行切割
+            if (!is_null($req['temporaryForm'])) {
+                $instructionForm = mb_split(',', $req['temporaryForm']);
+//              切割後個別處理
+                foreach ($instructionForm as $d) {
+//              0 -> 原本的農場名 1->該DOM id
+                    $getWay = mb_split('_', $d);
+                    $this->findFormUpdate($getWay[0], $req['update-FormName-' . $getWay[1]], $req['update-FormAddress-' . $getWay[1]]);
                 }
             }
-
-//          info 存在
-            if (($instructionInfo !== [])) {
-//          更改名字
-                foreach ($instructionInfo as $info) {
-                    $infoComeForm = mb_split(',', $info)[1];
-                    $infoComeForm === 'updateFormerName' ? $team = 'name' : $team = 'email';
-                    UserFormer::where('username', Auth::user()['username'])->update([$team => $req[$infoComeForm]]);
+//          農田針對傳來數值進行切割
+            if (!is_null($req['temporaryCrop'])) {
+                $instructionCrop = mb_split(',', $req['temporaryCrop']);
+//                dd($instructionCrop);
+//              切割後個別處理
+                foreach ($instructionCrop as $d) {
+//              0 -> sql id 1->DOM id
+                    $getWay = mb_split('_', $d);
+                    $this->findCropUpdate($getWay[0], $req['selectFormData' . $getWay[1]], $req['selectCropData' . $getWay[1]]);
                 }
             }
-//          form 存在
-            if ($instructionForm !== []) {
-                foreach ($instructionForm as $Form) {
-                    $instructionVariable = mb_split(',', $Form);
-                    $instructionComeForm = mb_split('-', $instructionVariable[1]);
-                    if ($instructionVariable[0] == 'undefined') {
-//                  新增農場
-                        $this->creatFormName($req[$instructionVariable[1]]);
-                    } else {
-//                  修改農場地址（包括新增時）
-                        $this->update($instructionComeForm[1], $instructionVariable[0], $req[$instructionVariable[1]]);
-                    }
+            if (!is_null($req['temporaryDelete'])) {
+                $instructionDelete = mb_split(',', $req['temporaryDelete']);
+//              切割後個別處理
+                foreach ($instructionDelete as $d) {
+//              0 -> form or crop  1-> if form name else sqlId
+                    $getWay = mb_split('_', $d);
+                    if ($getWay[0] === 'form') $this->deleteForm($getWay[1]); else $this->deleteCrop($getWay[1]);
                 }
             }
-//          Crop
-            if ($instructionCrop !== []) {
-                foreach ($instructionCrop as $Crop) {
-                    $cropComeFrom = mb_split(',', $Crop);
-                    $reqForm = 'selectFormData' . $cropComeFrom[1];
-                    $reqCrop = 'selectCropData' . $cropComeFrom[1];
-                    if ($cropComeFrom[2] === 'undefined') {
-                        $this->createFormCrop($req[$reqForm], $req[$reqCrop]);
-                    } else {
-                        $this->updateCrop($cropComeFrom[2], $req[$reqForm], $req[$reqCrop]);
-                    }
-                }
-            }
-
         }
         return redirect()->to(route('monitor_homepage'));
     }
 
+//尋找相關的農田
     public function select(Request $req)
     {
 //      將表單內容透過URL傳輸到show進行資料控制
         return redirect()->to(route('monitor_homepage', ['form' => $req['selectForm'], 'crop' => $req['selectCrop']]));
     }
 
+//  進入show 時 的 所有資料呈現
     public function show(Request $req)
     {
         /*      input : form(def null) & former & form_crop(def null) req->form(為url抓取職) req->crop(為url抓取職)
@@ -168,19 +169,24 @@ class FormerPlaceController extends Controller
         $formerEmail = Auth::user()['email'];
         ($req->form === 'all' || $req->form === null) ? $formQueryIndicator = 0 : $formQueryIndicator = $req->form;
         ($req->crop === 'all' || $req->crop === null) ? $cropQueryIndicator = 0 : $cropQueryIndicator = $req->crop;
+//        dd($formQueryIndicator);
 
-//      抓取該農夫的所有田
-        $selectFormer = FormerInfo::where('former', $former)->orderBy('form', 'DESC')->get();
-//      提供select進行查詢用
-        $formList = $this->selectShow(0, 0, $selectFormer);
-        $resList = $this->selectShow($formQueryIndicator, $cropQueryIndicator, $selectFormer);
-
-        return view('Form_Show.moniter.moniter_show', ['resList' => $resList, 'formList' => $formList, 'former' => $formerName, 'formerEmail' => $formerEmail]);
+//      抓取該農夫的所有農場 id 排序
+        $farmList = $this->selectFromShow(FarmerFarm::where('farmer', $former)->orderBy('id', 'ASC')->get());
+//        dd($selectForm);
+////      抓取該農夫的所有田
+        $selectCrop = FormerInfo::where('farmer', $former)->orderBy('farm', 'DESC')->get();
+////      提供select進行查詢用
+//
+        $cropsList = $this->selectCropShow(0, 0, $selectCrop);
+        $resList = $this->selectCropShow($formQueryIndicator, $cropQueryIndicator, $selectCrop);
+        return view('Form_Show.moniter.moniter_show', ['farmList' => $farmList, 'cropList' => $cropsList, 'resList' => $resList, 'former' => $formerName, 'formerEmail' => $formerEmail]);
     }
 
-    public function selectShow($formIndicator, $cropIndicator, $resList)
+//  搜尋條件
+    public function selectCropShow($formIndicator, $cropIndicator, $resCropList)
     {
-        //      [0]=>form_crop,[1]=>form_Address
+        //     $resFormList => 農田相關資訊 $resCropList田地相關資訊
         $formList = [];
         $count = 0;
 //      For Indicator computing get 2(form&crop) : 1(form) : 0(all)
@@ -188,37 +194,55 @@ class FormerPlaceController extends Controller
 //      id => farmland
         if ($Indicator === 0) {
             //      進行拆解
-            foreach ($resList as $i => $item) {
+            foreach ($resCropList as $i => $item) {
                 // 組合農場與農地 #array#
-                $formList[$i][0] = $item['form'];
-                $formList[$i][1] = $item['crop'];
-                $formList[$i][2] = $item['address'];
-                $formList[$i][3] = $item['id'];
+                $formList[$i] = [
+                    'farm' => $item['farm'],
+                    'crop' => $item['crop'],
+                    'status' => $item['status'],
+                    'farmland' => $item['farmland'],
+                    'id' => $item['id']
+                ];
             }
         } elseif ($Indicator === 1) {
-            foreach ($resList as $item) {
+            foreach ($resCropList as $item) {
                 // 組合農場與農地 #array#
-                if ($item['form'] === $formIndicator) {
-                    $formList[$count][0] = $item['form'];
-                    $formList[$count][1] = $item['crop'];
-                    $formList[$count][2] = $item['address'];
-                    $formList[$count][3] = $item['id'];
+                if ($item['farm'] === $formIndicator) {
+                    $formList[$count] = [
+                        'farm' => $item['farm'],
+                        'crop' => $item['crop'],
+                        'status' => $item['status'],
+                        'farmland' => $item['farmland'],
+                        'id' => $item['id']
+                    ];
                     $count++;
                 }
             }
         } else {
-            foreach ($resList as $item) {
+            foreach ($resCropList as $item) {
                 // 組合農場與農地 #array#
-                if ($item['form'] === $formIndicator && $item['crop'] === $cropIndicator) {
-                    $formList[$count][0] = $item['form'];
-                    $formList[$count][1] = $item['crop'];
-                    $formList[$count][2] = $item['address'];
-                    $formList[$count][3] = $item['id'];
+                if ($item['farm'] === $formIndicator && $item['crop'] === $cropIndicator) {
+                    $formList[$count] = [
+                        'farm' => $item['farm'],
+                        'crop' => $item['crop'],
+                        'status' => $item['status'],
+                        'farmland' => $item['farmland'],
+                        'id' => $item['id']
+                    ];
                     $count++;
                 }
             }
         }
-
         return $formList;
+    }
+
+    public function selectFromShow($farmList)
+    {
+        $resList = array();
+
+        foreach ($farmList as $farm) {
+            array_push($resList, ['farm' => $farm['farm'], 'address' => $farm['address'], 'id' => $farm['id']]);
+        }
+        return $resList;
     }
 }
