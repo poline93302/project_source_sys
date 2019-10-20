@@ -70,7 +70,6 @@ class FormerPlaceController extends Controller
 
     public function findCropUpdate($sqlID, $newFarm, $newCrop)
     {
-        dd($sqlID);
         $createRight = FormerInfo::where([
             'farmer' => Auth::user()['username'],
             'id' => $sqlID,
@@ -107,6 +106,7 @@ class FormerPlaceController extends Controller
 
     public function stepClassification(Request $req)
     {
+        dd($req->all());
 
 //      temporaryDelete 1  temporaryForm 2 temporaryCrop 3
         $this->UpdateFarmerAndEmail(Auth::user()['username'], $req['updateFormerName'], $req['updateFormerEmail']);
@@ -201,7 +201,8 @@ class FormerPlaceController extends Controller
                     'crop' => $item['crop'],
                     'status' => $item['status'],
                     'farmland' => $item['farmland'],
-                    'id' => $item['id']
+                    'id' => $item['id'],
+                    'create' => true
                 ];
             }
         } elseif ($Indicator === 1) {
@@ -213,7 +214,9 @@ class FormerPlaceController extends Controller
                         'crop' => $item['crop'],
                         'status' => $item['status'],
                         'farmland' => $item['farmland'],
-                        'id' => $item['id']
+                        'id' => $item['id'],
+//                      用於判斷真農場與新增農場
+                        'create' => true,
                     ];
                     $count++;
                 }
@@ -227,7 +230,8 @@ class FormerPlaceController extends Controller
                         'crop' => $item['crop'],
                         'status' => $item['status'],
                         'farmland' => $item['farmland'],
-                        'id' => $item['id']
+                        'id' => $item['id'],
+                        'create' => true,
                     ];
                     $count++;
                 }

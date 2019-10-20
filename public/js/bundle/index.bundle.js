@@ -2246,6 +2246,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "FormerInfoConfig",
@@ -2288,12 +2302,16 @@ __webpack_require__.r(__webpack_exports__);
                 this.Crops.push({
                     'id': this.originalCropCount,
                     'crop': '',
-                    'farm': ''
+                    'farm': '',
+                    'status': '444',
+                    'create': false
                 });
                 this.CropsKey.push({
                     'id': this.originalCropCount,
                     'crop': '',
-                    'farm': ''
+                    'farm': '',
+                    'status': '444',
+                    'create': false
                 });
         }
 
@@ -2314,8 +2332,10 @@ __webpack_require__.r(__webpack_exports__);
                 //新增不進行 紀錄
                 if (statueFarmId >= self.Farms[index]['id']) {
                     this.stepsDelete.push('Farm_' + this.Farms[index]['id']);
-                } //對要進行刪除的index 存
+                } //刪除步驟
 
+
+                this.stepsFarm.splice(this.stepsFarm.indexOf(this.Farms[index]['id']), 1); //對要進行刪除的index 存
 
                 lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(this.Crops, function (item, cropIndex) {
                     if (item['farm'] === self.Farms[index]['farm']) {
@@ -2358,36 +2378,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     //送出確認
     lostCheck: function lostCheck() {
-        var formUpdate = document.getElementById('updateFormerInfo');
-        var self = this; //針對所有crops form 查看是否有不合法的地方 在
-        //為stepsFarm stepsCrop  加上 ＤＯＭ的index
+        var formUpdate = document.getElementById('updateFormerInfo'); //針對所有crops form 查看是否有不合法的地方 在
 
-        var keyIndex = 0; //添加 DOM index
-
-        if (!this.formCheckRun) {
-            this.stepsFarm = this.stepsFarm.map(function (item) {
-                lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Farms, function (itemKey, indexKey) {
-                    if (itemKey['id'] === item) {
-                        keyIndex = indexKey;
-                    }
-                });
-
-                return item + '_' + keyIndex;
-            });
-            this.stepsCrop = this.stepsCrop.map(function (item) {
-                lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Crops, function (itemKey, indexKey) {
-                    if (itemKey['id'] === item) {
-                        keyIndex = indexKey;
-                    }
-                });
-
-                return item + '_' + keyIndex;
-            });
-            confirm('請再點選一次以確認更改') ? this.formCheckRun = true : this.formCheckRun = false;
-        } else {
-            formUpdate.submit();
-        }
-
+        formUpdate.submit();
       console.log('submit');
     }
   },
@@ -2415,7 +2408,6 @@ __webpack_require__.r(__webpack_exports__);
           immediate: true,
       handler: function handler(value) {
         var self = this;
-          var stepsCache = [];
 
           if (this.editFarmControl) {
           //原因 forms 為 所有農場集合體 所以透過 forEach 抓出
@@ -2423,7 +2415,9 @@ __webpack_require__.r(__webpack_exports__);
               if (JSON.stringify(item) !== JSON.stringify(self.FarmsKey[index])) {
               //當 數值改變 確認是否改變時
                   //推上更改ID
-                  stepsCache.push(item['id']); //將相關的 crops 進行更改名稱
+                  console.log(JSON.stringify(item['farm']), JSON.stringify(self.FarmsKey[index]['farm']));
+                  if (self.stepsFarm.indexOf(item['id']) !== -1) self.stepsFarm.splice(self.stepsFarm.indexOf(item['id']), 1);
+                  self.stepsFarm.push(item['id']); //將相關的 crops 進行更改名稱
 
                   lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Crops, function (cropItem) {
                       if (cropItem['farm'] === self.FarmsKey[index]['farm']) {
@@ -2433,14 +2427,45 @@ __webpack_require__.r(__webpack_exports__);
 
 
                   self.FarmsKey[index]['farm'] = item['farm'];
+                  self.FarmsKey[index]['address'] = item['address'];
             }
           });
-
-              self.stepsFarm = Array.from(new Set(stepsCache));
           }
       }
-    }
+      }
   },
+            computed: {
+                FarmNumbering: function FarmNumbering() {
+                    var self = this; //為stepsFarm stepsCrop  加上 ＤＯＭ的index
+
+                    var keyIndex = 0;
+                    this.stepsFarmStatus = this.stepsFarm.map(function (item) {
+                        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Farms, function (itemKey, indexKey) {
+                            if (itemKey['id'] === item) {
+                                keyIndex = indexKey;
+                            }
+                        });
+
+                        return item + '_' + keyIndex;
+                    });
+                    return this.stepsFarmStatus;
+                },
+                CropNumbering: function CropNumbering() {
+                    var self = this; //為stepsFarm stepsCrop  加上 ＤＯＭ的index
+
+                    var keyIndex = 0;
+                    this.stepsCropStatus = this.stepsCrop.map(function (item) {
+                        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Crops, function (itemKey, indexKey) {
+                            if (itemKey['id'] === item) {
+                                keyIndex = indexKey;
+                            }
+                        });
+
+                        return item + '_' + keyIndex;
+                    });
+                    return this.stepsCropStatus;
+                }
+            },
   data: function data() {
     return {
         Farms: [],
@@ -2453,7 +2478,9 @@ __webpack_require__.r(__webpack_exports__);
         FarmerEmail: '',
         //
         stepsFarm: [],
+        stepsFarmStatus: [],
       stepsCrop: [],
+        stepsCropStatus: [],
         stepsDelete: [],
         //
         editFarmControl: true,
@@ -2462,6 +2489,7 @@ __webpack_require__.r(__webpack_exports__);
         originalFarmCount: 0,
         originalCropCount: 0,
         formCheckRun: false,
+        switchConnect: false,
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
   },
@@ -7383,6 +7411,27 @@ exports.push([module.i, "\n.go-monitor[data-v-6bd9bef8] {\n    position: absolut
 
 
 /***/ }),
+
+    /***/
+    "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&":
+    /*!**********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+      !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& ***!
+      \**********************************************************************************************************************************************************************************************************************************************************************************************************/
+    /*! no static exports found */
+    /***/ (function (module, exports, __webpack_require__) {
+
+        exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+        exports.push([module.i, "\n.switch-type-true[data-v-6e49e268] {\n    background-color: #1f6fb2;\n    color: white;\n}\n.switch-type-false[data-v-6e49e268] {\n    background-color: white;\n}\n", ""]);
+
+// exports
+
+
+        /***/
+    }),
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MonitorItemsShow.vue?vue&type=style&index=0&id=26f9a78e&scoped=true&lang=css&":
 /*!**********************************************************************************************************************************************************************************************************************************************************************************************************!*\
@@ -67425,6 +67474,38 @@ if(false) {}
 
 /***/ }),
 
+    /***/
+    "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&":
+    /*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+      !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& ***!
+      \**************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+    /*! no static exports found */
+    /***/ (function (module, exports, __webpack_require__) {
+
+
+        var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&");
+
+        if (typeof content === 'string') content = [[module.i, content, '']];
+
+        var transform;
+        var insertInto;
+
+
+        var options = {"hmr": true}
+
+        options.transform = transform
+        options.insertInto = undefined;
+
+        var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+        if (content.locals) module.exports = content.locals;
+
+        if (false) {
+        }
+
+        /***/
+    }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MonitorItemsShow.vue?vue&type=style&index=0&id=26f9a78e&scoped=true&lang=css&":
 /*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/MonitorItemsShow.vue?vue&type=style&index=0&id=26f9a78e&scoped=true&lang=css& ***!
@@ -68659,7 +68740,8 @@ render._withStripped = true
         render._withStripped = true
 
 
-        /***/ }),
+        /***/
+    }),
 
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&":
 /*!*******************************************************************************************************************************************************************************************************************!*\
@@ -68824,18 +68906,18 @@ var render = function() {
                         {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.stepsFarm,
-                            expression: "stepsFarm"
+                            value: _vm.FarmNumbering,
+                            expression: "FarmNumbering"
                   }
                 ],
                     attrs: {type: "hidden", name: "temporaryForm"},
-                    domProps: {value: _vm.stepsFarm},
+                    domProps: {value: _vm.FarmNumbering},
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                      _vm.stepsFarm = $event.target.value
+                      _vm.FarmNumbering = $event.target.value
                   }
                 }
               }),
@@ -68845,18 +68927,18 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                      value: _vm.stepsCrop,
-                      expression: "stepsCrop"
+                      value: _vm.CropNumbering,
+                      expression: "CropNumbering"
                   }
                 ],
                   attrs: {type: "hidden", name: "temporaryCrop"},
-                  domProps: {value: _vm.stepsCrop},
+                  domProps: {value: _vm.CropNumbering},
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                      _vm.stepsCrop = $event.target.value
+                      _vm.CropNumbering = $event.target.value
                   }
                 }
               }),
@@ -68878,6 +68960,7 @@ var render = function() {
                               expression: "FarmerName"
                           }
                         ],
+                          staticClass: "w-98",
                         attrs: {
                           type: "text",
                           id: "formerInfoName",
@@ -68909,6 +68992,7 @@ var render = function() {
                               expression: "FarmerEmail"
                           }
                         ],
+                          staticClass: "w-98",
                         attrs: {
                           type: "text",
                           id: "formerInfoEmail",
@@ -68926,33 +69010,73 @@ var render = function() {
                       })
                     ]),
                     _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "col-12 my-3" },
-                        _vm._l(_vm.Farms, function (item, index) {
-                        return _c(
+                      _c("div", {staticClass: "btn-group mt-3 col-8"}, [
+                          _c(
+                              "div",
+                              {
+                                  staticClass: "btn border",
+                                  class: "switch-type-" + !_vm.switchConnect,
+                                  on: {
+                                      click: function ($event) {
+                                          _vm.switchConnect = false
+                                      }
+                                  }
+                              },
+                              [_vm._v("農場資訊\n                                ")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                              "div",
+                              {
+                                  staticClass: "btn border",
+                                  class: "switch-type-" + _vm.switchConnect,
+                                  on: {
+                                      click: function ($event) {
+                                          _vm.switchConnect = true
+                                      }
+                                  }
+                              },
+                              [_vm._v("農田資訊\n                                ")]
+                          )
+                      ]),
+                      _vm._v(" "),
+                      _c(
                           "div",
-                          { staticClass: "row no-gutters my-2" },
-                          [
-                            _c("div", { staticClass: "col-2" }, [
-                              _c(
-                                "span",
-                                {
-                                  directives: [
-                                    {
+                          {
+                              directives: [
+                                  {
                                       name: "show",
                                       rawName: "v-show",
-                                      value: index === 0,
-                                      expression: "index===0"
-                                    }
-                                  ]
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                            農場\n                                            "
-                                  ),
+                                      value: !_vm.switchConnect,
+                                      expression: "!switchConnect"
+                                  }
+                              ],
+                              staticClass: "col-12 mt-3 border rounded border-info"
+                          },
+                          [
+                              _c(
+                                  "div",
+                                  {staticClass: "flex-total-center row"},
+                                  [
+                                      _c(
+                                          "div",
+                                          {
+                                              staticClass:
+                                                  "col-12 row flex-total-center text-center bg-info"
+                                          },
+                                          [
+                                              _c("div", {staticClass: "col  text-light"}, [
+                                                  _vm._v("農場名稱")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("div", {staticClass: "col  text-light"}, [
+                                                  _vm._v("農場地址")
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("div", {staticClass: "col-auto"}, [
                                   _c("i", {
-                                    staticClass: "fa fa-plus",
+                                      staticClass:
+                                          "fa fa-plus-circle text-light tool-remind",
                                     attrs: { "aria-hidden": "true" },
                                     on: {
                                       click: function($event) {
@@ -68960,118 +69084,146 @@ var render = function() {
                                       }
                                     }
                                   })
-                                ]
-                              )
-                            ]),
+                                              ])
+                                          ]
+                                      ),
                             _vm._v(" "),
-                            _c("div", { staticClass: "col-9 row no-gutters" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                      value: item["farm"],
-                                      expression: "item['farm']"
-                                  }
-                                ],
-                                staticClass: "col-6 w-100",
-                                attrs: {
-                                  type: "text",
-                                  placeholder: "請輸入農場名稱",
-                                  name: "update-FormName-" + index,
-                                  id: "update-FormName-" + index
-                                },
-                                  domProps: {value: item["farm"]},
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                      _vm.$set(item, "farm", $event.target.value)
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                      value: item["address"],
-                                      expression: "item['address']"
-                                  }
-                                ],
-                                staticClass: "col-6 w-100",
-                                attrs: {
-                                  type: "text",
-                                  placeholder: "請輸入農場地址",
-                                  name: "update-FormAddress-" + index,
-                                  id: "update-FormAddress-" + index
-                                },
-                                  domProps: {value: item["address"]},
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                      _vm.$set(
+                                      _vm._l(_vm.Farms, function (item, index) {
+                                          return _c(
+                                              "div",
+                                              {
+                                                  staticClass:
+                                                      "col-12 row  border border-bottom-0"
+                                              },
+                                              [
+                                                  _c("input", {
+                                                      directives: [
+                                                          {
+                                                              name: "model",
+                                                              rawName: "v-model",
+                                                              value: item["farm"],
+                                                              expression: "item['farm']"
+                                                          }
+                                                      ],
+                                                      staticClass: "col border-0 text-center",
+                                                      attrs: {
+                                                          type: "text",
+                                                          placeholder: "請輸入農場名稱",
+                                                          name: "update-FormName-" + index,
+                                                          id: "update-FormName-" + index
+                                                      },
+                                                      domProps: {value: item["farm"]},
+                                                      on: {
+                                                          input: function ($event) {
+                                                              if ($event.target.composing) {
+                                                                  return
+                                                              }
+                                                              _vm.$set(
+                                                                  item,
+                                                                  "farm",
+                                                                  $event.target.value
+                                                              )
+                                                          }
+                                                      }
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c("input", {
+                                                      directives: [
+                                                          {
+                                                              name: "model",
+                                                              rawName: "v-model",
+                                                              value: item["address"],
+                                                              expression: "item['address']"
+                                                          }
+                                                      ],
+                                                      staticClass: "col border-0 text-center",
+                                                      attrs: {
+                                                          type: "text",
+                                                          placeholder: "請輸入農場地址",
+                                                          name: "update-FormAddress-" + index,
+                                                          id: "update-FormAddress-" + index
+                                                      },
+                                                      domProps: {value: item["address"]},
+                                                      on: {
+                                                          input: function ($event) {
+                                                              if ($event.target.composing) {
+                                                                  return
+                                                              }
+                                                              _vm.$set(
                                           item,
                                           "address",
                                           $event.target.value
-                                      )
-                                  }
-                                }
-                              })
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "col-1 flex-total-center" },
-                              [
-                                _c("i", {
-                                  staticClass: "fa fa-minus text-danger",
-                                  attrs: { "aria-hidden": "true" },
-                                  on: {
-                                    click: function($event) {
-                                        return _vm.deleteItems("farm", index)
-                                    }
-                                  }
-                                })
-                              ]
-                            )
+                                                              )
+                                                          }
+                                                      }
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                      "div",
+                                                      {
+                                                          staticClass: "col-auto flex-total-center"
+                                                      },
+                                                      [
+                                                          _c("i", {
+                                                              staticClass: "fa fa-minus text-danger",
+                                                              attrs: {"aria-hidden": "true"},
+                                                              on: {
+                                                                  click: function ($event) {
+                                                                      return _vm.deleteItems(
+                                                                          "farm",
+                                                                          index
+                                                                      )
+                                                                  }
+                                                              }
+                                                          })
+                                                      ]
+                                                  )
+                                              ]
+                                          )
+                                      })
+                                  ],
+                                  2
+                              )
                           ]
-                        )
-                      }),
-                      0
                     ),
                     _vm._v(" "),
                     _c(
                       "div",
-                      { staticClass: "col-12" },
-                        _vm._l(_vm.Crops, function (Crop, index) {
-                        return _c(
-                          "div",
-                          { staticClass: "row no-gutters my-2" },
-                          [
-                            _c("div", { staticClass: "col-2" }, [
-                              _c(
-                                "span",
+                        {
+                            directives: [
                                 {
-                                  directives: [
-                                    {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: index === 0,
-                                      expression: "index===0"
-                                    }
-                                  ]
-                                },
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: _vm.switchConnect,
+                                    expression: "switchConnect"
+                                }
+                            ],
+                            staticClass: "col-12 mt-3 border rounded border-info"
+                        },
+                        [
+                            _c(
+                                "div",
+                                {staticClass: "flex-total-center row"},
                                 [
-                                  _vm._v(
-                                      "\n                                                農田\n                                                "
-                                  ),
+                                    _c(
+                                        "div",
+                                        {
+                                            staticClass:
+                                                "col-12 row flex-total-center text-center bg-info"
+                                        },
+                                        [
+                                            _c("div", {staticClass: "col  text-light"}, [
+                                                _vm._v("農場")
+                                            ]),
+                                            _vm._v(" "),
+                                            _c("div", {staticClass: "col  text-light"}, [
+                                                _vm._v("農田")
+                                            ]),
+                                            _vm._v(" "),
+                                            _c("div", {staticClass: "col-auto"}, [
                                   _c("i", {
-                                    staticClass: "fa fa-plus",
+                                      staticClass:
+                                          "fa fa-plus-circle text-light tool-remind",
                                     attrs: { "aria-hidden": "true" },
                                     on: {
                                       click: function($event) {
@@ -69079,82 +69231,98 @@ var render = function() {
                                       }
                                     }
                                   })
-                                ]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "col-9" }, [
-                              _c("div", { staticClass: "row no-gutters" }, [
-                                _c("div", { staticClass: "col-6" }, [
-                                  _c(
-                                    "select",
-                                    {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                            value: Crop["farm"],
-                                            expression: "Crop['farm']"
-                                        }
-                                      ],
-                                      staticClass: "w-100 h-100",
-                                      attrs: {
-                                        name: "selectFormData" + index,
-                                        id: "select-FormData-" + index
-                                      },
-                                      on: {
-                                        change: function($event) {
-                                          var $$selectedVal = Array.prototype.filter
-                                            .call(
-                                              $event.target.options,
-                                              function(o) {
-                                                return o.selected
-                                              }
-                                            )
-                                            .map(function(o) {
-                                              var val =
-                                                "_value" in o
-                                                  ? o._value
-                                                  : o.value
-                                              return val
-                                            })
-                                          _vm.$set(
-                                            Crop,
-                                              "farm",
-                                            $event.target.multiple
-                                              ? $$selectedVal
-                                              : $$selectedVal[0]
-                                          )
-                                        }
-                                      }
-                                    },
-                                      _vm._l(_vm.Farms, function (farm) {
-                                      return _c(
-                                        "option",
-                                        {
-                                          directives: [
-                                            {
-                                              name: "show",
-                                              rawName: "v-show",
-                                                value: farm["farm"] !== "",
-                                                expression: "farm['farm']!==''"
-                                            }
-                                          ]
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                                        " +
-                                              _vm._s(farm["farm"]) +
-                                              "\n                                                    "
-                                          )
+                                            ])
                                         ]
-                                      )
-                                    }),
-                                    0
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "col-6" }, [
+                                    ),
+                            _vm._v(" "),
+                                    _vm._l(_vm.Crops, function (Crop, index) {
+                                        return _c(
+                                            "div",
+                                            {
+                                                staticClass:
+                                                    "col-12 row border border-bottom-0"
+                                            },
+                                            [
+                                                Crop["create"]
+                                                    ? _c(
+                                                    "div",
+                                                    {staticClass: "col text-center"},
+                                                    [
+                                                        _vm._v(
+                                                            "\n                                            " +
+                                                            _vm._s(Crop["farm"]) +
+                                                            "\n                                        "
+                                                        )
+                                                    ]
+                                                    )
+                                                    : _c(
+                                                    "select",
+                                                    {
+                                                        directives: [
+                                                            {
+                                                                name: "model",
+                                                                rawName: "v-model",
+                                                                value: Crop["farm"],
+                                                                expression: "Crop['farm']"
+                                                            }
+                                                        ],
+                                                        staticClass: "col text-center",
+                                                        attrs: {
+                                                            name: "selectFormData" + index,
+                                                            id: "select-FormData-" + index
+                                                        },
+                                                        on: {
+                                                            change: function ($event) {
+                                                                var $$selectedVal = Array.prototype.filter
+                                                                    .call(
+                                                                        $event.target.options,
+                                                                        function (o) {
+                                                                            return o.selected
+                                                                        }
+                                                                    )
+                                                                    .map(function (o) {
+                                                                        var val =
+                                                                            "_value" in o
+                                                                                ? o._value
+                                                                                : o.value
+                                                                        return val
+                                                                    })
+                                                                _vm.$set(
+                                                                    Crop,
+                                                                    "farm",
+                                                                    $event.target.multiple
+                                                                        ? $$selectedVal
+                                                                        : $$selectedVal[0]
+                                                                )
+                                                            }
+                                                        }
+                                                    },
+                                                    _vm._l(_vm.Farms, function (farm) {
+                                                        return _c(
+                                                            "option",
+                                                            {
+                                                                directives: [
+                                                                    {
+                                                                        name: "show",
+                                                                        rawName: "v-show",
+                                                                        value: farm["farm"] !== "",
+                                                                        expression:
+                                                                            "farm['farm']!==''"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            [
+                                                                _vm._v(
+                                                                    "\n                                                " +
+                                                                    _vm._s(farm["farm"]) +
+                                                                    "\n                                            "
+                                                                )
+                                                            ]
+                                                        )
+                                                    }),
+                                                    0
+                                                    ),
+                                                _vm._v(" "),
                                   _c("input", {
                                     directives: [
                                       {
@@ -69164,7 +69332,7 @@ var render = function() {
                                           expression: "Crop['crop']"
                                       }
                                     ],
-                                    staticClass: "w-100",
+                                      staticClass: "col border-0 text-center",
                                     attrs: {
                                       type: "text",
                                       id: "select-CropData-" + index,
@@ -69184,30 +69352,35 @@ var render = function() {
                                           )
                                       }
                                     }
-                                  })
-                                ])
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "col-1 flex-total-center" },
-                              [
-                                _c("i", {
-                                  staticClass: "fa fa-minus text-danger",
-                                  attrs: { "aria-hidden": "true" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.deleteItems("crop", index)
-                                    }
-                                  }
-                                })
-                              ]
+                                  }),
+                                                _vm._v(" "),
+                                                _c(
+                                                    "div",
+                                                    {
+                                                        staticClass: "col-auto flex-total-center"
+                                                    },
+                                                    [
+                                                        _c("i", {
+                                                            staticClass: "fa fa-minus text-danger",
+                                                            attrs: {"aria-hidden": "true"},
+                                                            on: {
+                                                                click: function ($event) {
+                                                                    return _vm.deleteItems(
+                                                                        "crop",
+                                                                        index
+                                                                    )
+                                                                }
+                                                            }
+                                                        })
+                                                    ]
+                                                )
+                                            ]
+                                        )
+                                    })
+                                ],
+                                2
                             )
-                          ]
-                        )
-                      }),
-                      0
+                        ]
                     )
                   ])
                 ])
@@ -82448,7 +82621,8 @@ __webpack_require__.r(__webpack_exports__);
         });
 
 
-        /***/ }),
+        /***/
+    }),
 
 /***/ "./resources/js/components/ExampleComponent.vue":
 /*!******************************************************!*\
@@ -82530,7 +82704,11 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FormerInfoConfig_vue_vue_type_template_id_6e49e268_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true& */ "./resources/js/components/FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true&");
 /* harmony import */ var _FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormerInfoConfig.vue?vue&type=script&lang=js& */ "./resources/js/components/FormerInfoConfig.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+        /* empty/unused harmony star reexport *//* harmony import */
+        var _FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& */ "./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&");
+        /* harmony import */
+        var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -82538,7 +82716,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+        var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _FormerInfoConfig_vue_vue_type_template_id_6e49e268_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
   _FormerInfoConfig_vue_vue_type_template_id_6e49e268_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -82566,9 +82744,35 @@ component.options.__file = "resources/js/components/FormerInfoConfig.vue"
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./FormerInfoConfig.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]);
 
-/***/ }),
+        /***/
+    }),
+
+    /***/
+    "./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&":
+    /*!***************************************************************************************************************!*\
+      !*** ./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& ***!
+      \***************************************************************************************************************/
+    /*! no static exports found */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&");
+        /* harmony import */
+        var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+        /* harmony reexport (unknown) */
+        for (var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if (__WEBPACK_IMPORT_KEY__ !== 'default') (function (key) {
+            __webpack_require__.d(__webpack_exports__, key, function () {
+                return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key];
+            })
+        }(__WEBPACK_IMPORT_KEY__));
+        /* harmony default export */
+        __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a);
+
+        /***/ }),
 
 /***/ "./resources/js/components/FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true&":
 /*!*************************************************************************************************!*\

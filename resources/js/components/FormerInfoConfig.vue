@@ -12,81 +12,94 @@
                 <form method="get" :action="route" id="updateFormerInfo">
                     <input type="hidden" name="_token" v-model="csrf">
                     <input type="hidden" name="temporaryDelete" v-model="stepsDelete">
-                    <input type="hidden" name="temporaryForm" v-model="stepsFarm">
-                    <input type="hidden" name="temporaryCrop" v-model="stepsCrop">
+                    <input type="hidden" name="temporaryForm" v-model="FarmNumbering">
+                    <input type="hidden" name="temporaryCrop" v-model="CropNumbering">
                     <div class="modal-body">
                         <div class="container">
                             <div class="row">
                                 <div class="col-6">
                                     <label for="formerInfoName">名稱：</label>
                                     <input type="text" id="formerInfoName" v-model="FarmerName"
-                                           name="updateFormerName"
+                                           name="updateFormerName" class="w-98"
                                     />
                                 </div>
                                 <div class="col-6">
                                     <label for="formerInfoEmail">信箱：</label>
                                     <input type="text" id="formerInfoEmail" v-model="FarmerEmail"
-                                           name="updateFormerEmail"/>
+                                           name="updateFormerEmail" class="w-98"/>
+                                </div>
+                                <div class="btn-group mt-3 col-8">
+                                    <div class="btn border" @click="switchConnect = false"
+                                         :class="'switch-type-'+!switchConnect">農場資訊
+                                    </div>
+                                    <div class="btn border" @click="switchConnect = true "
+                                         :class="'switch-type-'+switchConnect">農田資訊
+                                    </div>
                                 </div>
                                 <!--                            農場列表-->
-                                <div class="col-12 my-3">
-                                    <div v-for="(item,index) in Farms" class="row no-gutters my-2">
-                                        <div class="col-2">
-                                            <span v-show="index===0">
-                                                農場
-                                                <i class="fa fa-plus" aria-hidden="true" @click="addItems('farm')"></i>
-                                            </span>
+                                <div class="col-12 mt-3 border rounded border-info" v-show="!switchConnect">
+                                    <div class="flex-total-center row">
+                                        <div class="col-12 row flex-total-center text-center bg-info">
+                                            <div class="col  text-light">農場名稱</div>
+                                            <div class="col  text-light">農場地址</div>
+                                            <div class="col-auto">
+                                                <i class="fa fa-plus-circle text-light tool-remind" aria-hidden="true"
+                                                   @click="addItems('farm')">
+                                                </i>
+                                            </div>
                                         </div>
-                                        <div class="col-9 row no-gutters">
-                                            <input type="text" class="col-6 w-100" placeholder="請輸入農場名稱"
+                                        <div v-for="(item,index) in Farms" class="col-12 row  border border-bottom-0">
+                                            <input type="text" class="col border-0 text-center" placeholder="請輸入農場名稱"
                                                    :name='"update-FormName-"+index' :id='"update-FormName-"+index'
                                                    v-model="item['farm']"
                                             />
-                                            <input type="text" class="col-6 w-100" placeholder="請輸入農場地址"
+                                            <input type="text" class="col border-0 text-center" placeholder="請輸入農場地址"
                                                    :name='"update-FormAddress-"+index' :id='"update-FormAddress-"+index'
                                                    v-model="item['address']"
                                             />
-                                        </div>
-                                        <div class="col-1 flex-total-center">
-                                            <i class="fa fa-minus text-danger" aria-hidden="true"
-                                               @click="deleteItems('farm',index)"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--                            農田列表-->
-                                <div class="col-12">
-                                    <div v-for="(Crop,index) in Crops" class="row no-gutters my-2">
-                                        <div class="col-2">
-                                                <span v-show="index===0">
-                                                    農田
-                                                    <i class="fa fa-plus" aria-hidden="true"
-                                                       @click="addItems('crop')"></i>
-                                                </span>
-                                        </div>
-                                        <div class="col-9">
-                                            <div class="row no-gutters">
-                                                <div class="col-6">
-                                                    <select :name="'selectFormData'+index"
-                                                            :id="'select-FormData-'+index"
-                                                            class="w-100 h-100"
-                                                            v-model="Crop['farm']"
-                                                    >
-                                                        <option v-show="farm['farm']!==''" v-for="farm in Farms">
-                                                            {{ farm['farm'] }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-6">
-                                                    <input type="text" v-model="Crop['crop']"
-                                                           :id="'select-CropData-'+index" :name="'selectCropData'+index"
-                                                           class="w-100" placeholder="請輸入農作物"
-                                                    />
-                                                </div>
+                                            <div class="col-auto flex-total-center">
+                                                <i class="fa fa-minus text-danger" aria-hidden="true"
+                                                   @click="deleteItems('farm',index)"></i>
                                             </div>
                                         </div>
-                                        <div class="col-1 flex-total-center">
-                                            <i class="fa fa-minus text-danger" aria-hidden="true"
-                                               @click="deleteItems('crop',index)"></i>
+                                    </div>
+
+                                </div>
+                                <!--                            農田列表-->
+                                <div class="col-12 mt-3 border rounded border-info" v-show="switchConnect">
+                                    <div class="flex-total-center row">
+                                        <div class="col-12 row flex-total-center text-center bg-info">
+                                            <div class="col  text-light">農場</div>
+                                            <div class="col  text-light">農田</div>
+                                            <div class="col-auto">
+                                                <i class="fa fa-plus-circle text-light tool-remind" aria-hidden="true"
+                                                   @click="addItems('crop')"></i>
+                                            </div>
+                                        </div>
+                                        <div v-for="(Crop,index) in Crops" class="col-12 row border border-bottom-0">
+                                            <div v-if="Crop['create']" class="col text-center">
+                                                {{Crop['farm']}}
+                                            </div>
+                                            <select :name="'selectFormData'+index"
+                                                    :id="'select-FormData-'+index"
+                                                    v-model="Crop['farm']"
+                                                    class="col text-center"
+                                                    v-else
+                                            >
+                                                <option v-show="farm['farm']!==''" v-for="farm in Farms">
+                                                    {{ farm['farm'] }}
+                                                </option>
+                                            </select>
+
+                                            <input type="text" v-model="Crop['crop']"
+                                                   class="col border-0 text-center"
+                                                   :id="'select-CropData-'+index" :name="'selectCropData'+index"
+                                                   placeholder="請輸入農作物"
+                                            />
+                                            <div class="col-auto flex-total-center">
+                                                <i class="fa fa-minus text-danger" aria-hidden="true"
+                                                   @click="deleteItems('crop',index)"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -100,6 +113,7 @@
                     </div>
                 </form>
             </div>
+
         </div>
     </div>
 </template>
@@ -134,8 +148,20 @@
                     this.editCropControl = false;
                     if (this.Crops[cropLen - 1]['farm'] !== '') {
                         this.originalCropCount++;
-                        this.Crops.push({'id': this.originalCropCount, 'crop': '', 'farm': ''});
-                        this.CropsKey.push({'id': this.originalCropCount, 'crop': '', 'farm': ''});
+                        this.Crops.push({
+                            'id': this.originalCropCount,
+                            'crop': '',
+                            'farm': '',
+                            'status': '444',
+                            'create': false
+                        });
+                        this.CropsKey.push({
+                            'id': this.originalCropCount,
+                            'crop': '',
+                            'farm': '',
+                            'status': '444',
+                            'create': false
+                        });
                     }
                     this.editCropControl = true;
                 }
@@ -155,6 +181,8 @@
                         if (statueFarmId >= self.Farms[index]['id']) {
                             this.stepsDelete.push('Farm_' + this.Farms[index]['id']);
                         }
+                        //刪除步驟
+                        this.stepsFarm.splice(this.stepsFarm.indexOf(this.Farms[index]['id']), 1);
                         //對要進行刪除的index 存
                         _.forEach(this.Crops, function (item, cropIndex) {
                             if (item['farm'] === self.Farms[index]['farm']) {
@@ -205,36 +233,8 @@
             //送出確認
             lostCheck() {
                 let formUpdate = document.getElementById('updateFormerInfo');
-                let self = this;
                 //針對所有crops form 查看是否有不合法的地方 在
-                //為stepsFarm stepsCrop  加上 ＤＯＭ的index
-                let keyIndex = 0;
-                //添加 DOM index
-                if (!this.formCheckRun) {
-
-                    this.stepsFarm = this.stepsFarm.map(function (item) {
-                        _.forEach(self.Farms, function (itemKey, indexKey) {
-                            if (itemKey['id'] === item) {
-                                keyIndex = indexKey;
-                            }
-                        });
-                        return item + '_' + keyIndex;
-
-                    });
-                    this.stepsCrop = this.stepsCrop.map(function (item) {
-                        _.forEach(self.Crops, function (itemKey, indexKey) {
-                            if (itemKey['id'] === item) {
-                                keyIndex = indexKey;
-                            }
-                        });
-                        return item + '_' + keyIndex;
-                    });
-                    confirm('請再點選一次以確認更改') ? this.formCheckRun = true : this.formCheckRun = false;
-
-                } else {
-                    formUpdate.submit();
-                }
-
+                formUpdate.submit();
                 console.log('submit');
             },
         },
@@ -260,13 +260,14 @@
                 immediate: true,
                 handler: function (value) {
                     let self = this;
-                    let stepsCache = [];
                     if (this.editFarmControl) {
                         //原因 forms 為 所有農場集合體 所以透過 forEach 抓出
                         _.forEach(value, function (item, index) {
                             if (JSON.stringify(item) !== JSON.stringify(self.FarmsKey[index])) {//當 數值改變 確認是否改變時
                                 //推上更改ID
-                                stepsCache.push(item['id']);
+                                console.log(JSON.stringify(item['farm']), JSON.stringify(self.FarmsKey[index]['farm']));
+                                if (self.stepsFarm.indexOf(item['id']) !== -1) self.stepsFarm.splice(self.stepsFarm.indexOf(item['id']), 1);
+                                self.stepsFarm.push(item['id']);
                                 //將相關的 crops 進行更改名稱
                                 _.forEach(self.Crops, function (cropItem) {
                                     if (cropItem['farm'] === self.FarmsKey[index]['farm']) {
@@ -275,11 +276,42 @@
                                 });
                                 //更新最高數值
                                 self.FarmsKey[index]['farm'] = item['farm'];
+                                self.FarmsKey[index]['address'] = item['address'];
                             }
                         });
-                        self.stepsFarm = Array.from(new Set(stepsCache));
                     }
                 },
+            }
+        },
+        computed: {
+            FarmNumbering() {
+                let self = this;
+                //為stepsFarm stepsCrop  加上 ＤＯＭ的index
+                let keyIndex = 0;
+                this.stepsFarmStatus = this.stepsFarm.map(function (item) {
+                    _.forEach(self.Farms, function (itemKey, indexKey) {
+                        if (itemKey['id'] === item) {
+                            keyIndex = indexKey;
+                        }
+                    });
+                    return item + '_' + keyIndex;
+
+                });
+                return this.stepsFarmStatus;
+            },
+            CropNumbering() {
+                let self = this;
+                //為stepsFarm stepsCrop  加上 ＤＯＭ的index
+                let keyIndex = 0;
+                this.stepsCropStatus = this.stepsCrop.map(function (item) {
+                    _.forEach(self.Crops, function (itemKey, indexKey) {
+                        if (itemKey['id'] === item) {
+                            keyIndex = indexKey;
+                        }
+                    });
+                    return item + '_' + keyIndex;
+                });
+                return this.stepsCropStatus;
             }
         },
 
@@ -295,7 +327,9 @@
                 FarmerEmail: '',
                 //
                 stepsFarm: [],
+                stepsFarmStatus: [],
                 stepsCrop: [],
+                stepsCropStatus: [],
                 stepsDelete: [],
                 //
                 editFarmControl: true,
@@ -305,6 +339,7 @@
                 originalCropCount: 0,
                 formCheckRun: false,
 
+                switchConnect: false,
 
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             }
@@ -317,5 +352,12 @@
 </script>
 
 <style scoped>
+    .switch-type-true {
+        background-color: #1f6fb2;
+        color: white;
+    }
 
+    .switch-type-false {
+        background-color: white;
+    }
 </style>
