@@ -18,16 +18,10 @@
                             <div class="form-group mb-1">
                                 <label for="former"></label>
                                 <select class="form-control-sm w-98" id="selectForm" name="selectForm"
-                                        onchange="linkSelectChange({{ json_encode($formList) }})">
+                                        onchange="linkSelectChange({{ json_encode($cropList) }})">
                                     <option value="all">請選擇農場</option>
-                                    {{ $listStatus = "" }}
-                                    @foreach( ($formList) as $List)
-                                        {{--                                        $pos計算_的所在長度 ; $formTitle文字切割--}}
-                                        {{ $pos = strpos($List[0], '_') , $formTitle = substr($List[0],0,$pos)}}
-                                        @if($listStatus !== $formTitle)
-                                            <option>{{ ($formTitle) }}</option>
-                                        @endif
-                                        {{ $listStatus = $formTitle }}
+                                    @foreach( ($farmList) as $List)
+                                        <option>{{ ($List['farm']) }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -68,28 +62,41 @@
             </div>
         </div>
     </header>
-    <div class="show-monitor">
-        {{--                顯示部分--}}
-        @if(is_null($formList))
-            <div class="no-create w-100 flex-total-center">請新增農場與農田</div>
+    <div class="show-monitor container mt-5">
+        {{--                            顯示部分--}}
+        @if($resList===[])
+            <div class="row">
+                <div class="col-12 alert alert-info">
+                    <div class="no-create w-100 flex-total-center ">請新增農田</div>
+                </div>
+            </div>
         @else
-            @foreach($resList as $key=>$d)
-                <Conitor-Exponent
-                        :name="{{ json_encode(Auth::user()->username) }}"
-                        :form_crop="{{ json_encode($d[0]) }}"
-                        :config_number="{{$key}}"
-                        :url_api_target="{{json_encode(route('api.get.number.target'))}}"
-                        :url_path="{{json_encode(route('monitor_former_config',['form_crop'=>$key]))}}">
-                </Conitor-Exponent>
+            @foreach($resList as $d)
+                {{--                      $d[2] = > id--}}
+                @if($d['status'] === '444')
+                    <conitor-exponent-null
+                            :form_crop="{{ json_encode($d['farm'].'_'.$d['crop']) }}"
+                    >
+                    </conitor-exponent-null>
+                @else
+                    <Conitor-Exponent
+                            :name="{{ json_encode(Auth::user()->username) }}"
+                            :form_crop="{{ json_encode($d['farm'].'_'.$d['crop']) }}"
+                            :config_number="{{$d['id']}}"
+                            :url_api_target="{{json_encode(route('api.get.number.target'))}}"
+                            :url_path="{{json_encode(route('monitor_former_config',['form_crop'=> $d['farmland']]))}}">
+                    </Conitor-Exponent>
+                @endif
             @endforeach
         @endif
     </div>
 
-    {{-- 農夫資訊的Modal--}}
+    {{--     農夫資訊的Modal--}}
     <former-info-config :formername=" {{ json_encode($former) }} "
-                        :formcrop="{{ json_encode($resList) }}"
                         :formeremail="{{ json_encode($formerEmail) }}"
                         :route="{{ json_encode(route('monitor_former_update'))}}"
+                        :farms="{{ json_encode($farmList) }}"
+                        :crops="{{ json_encode($resList) }}"
     >
     </former-info-config>
 @endsection

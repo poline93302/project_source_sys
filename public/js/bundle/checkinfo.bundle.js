@@ -35,14 +35,11 @@ function linkSelectChange(arr) {
     let selectFormTwo = document.getElementById('selectCrop');
 
     let optionValue = '<option value="all">請選擇農田</option>';
-    let res = "";
-    let resOption = "";
-    _.forEach(arr, function (optain) {
-        res = _.split(optain, '_');
-        resOption = _.split(res[1], ',');
-        console.log(res);
-        if (res[0] === selectForm.value) {
-            optionValue += `<option>${resOption[0]}</option>`
+
+    //arr 為所有該農夫的農田
+    _.forEach(arr, function (option) {
+        if (option['farm'] === selectForm.value) {
+            optionValue += `<option>${option['crop']}</option>`
         }
     });
 

@@ -15,10 +15,11 @@ class CreateFormTable extends Migration
     {
         Schema::create('formerInfo', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('former')->nullable();
-            $table->string('form')->nullable();
+            $table->string('farmer')->nullable();
+            $table->string('farm')->nullable();
             $table->string('crop')->nullable();
-            $table->string('address')->nullable();
+            $table->string('status')->nullable();
+            $table->string('farmland')->nullable();
             $table->dateTime('create_time');
         });
     }

@@ -5,86 +5,102 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">農夫農場資訊</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="resetValue()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="post" :action="route" id="updateFormerInfo">
-                    <input type="hidden" name="_token" :value="csrf">
-                    <input type="hidden" name="temporary" v-model="repeat">
+                <form method="get" :action="route" id="updateFormerInfo">
+                    <input type="hidden" name="_token" v-model="csrf">
+                    <input type="hidden" name="temporaryDelete" v-model="stepsDelete">
+                    <input type="hidden" name="temporaryForm" v-model="FarmNumbering">
+                    <input type="hidden" name="temporaryCrop" v-model="CropNumbering">
                     <div class="modal-body">
                         <div class="container">
                             <div class="row">
                                 <div class="col-6">
                                     <label for="formerInfoName">名稱：</label>
-                                    <input type="text" id="formerInfoName" v-model="formerName"
-                                           name="updateFormerName"
-                                           @change="searchUpdate('updateFormerName',formername,'Info')"/>
+                                    <input type="text" id="formerInfoName" v-model="FarmerName"
+                                           name="updateFormerName" class="w-98"
+                                    />
                                 </div>
                                 <div class="col-6">
                                     <label for="formerInfoEmail">信箱：</label>
-                                    <input type="text" id="formerInfoEmail" v-model="formerEmail"
-                                           name="updateFormerEmail"
-                                           @change="searchUpdate('updateFormerEmail',formeremail,'Info')"/>
+                                    <input type="text" id="formerInfoEmail" v-model="FarmerEmail"
+                                           name="updateFormerEmail" class="w-98"/>
                                 </div>
-                                <!--                            農場列表-->
-                                <div class="col-12 my-3">
-                                    <div v-for="(thisFormName,index) in sortOutData[0]" class="row no-gutters my-2">
-                                        <div class="col-2">
-                                        <span v-show="index===0">
-                                            農場
-                                            <i class="fa fa-plus" aria-hidden="true"
-                                               @click="addForm('update-FormName-'+sortOutData[0].length,'update-FormEmail-'+sortOutData[0].length)"></i>
-                                        </span>
-                                        </div>
-                                        <div class="col-9 row no-gutters">
-                                            <input type="text" class="col-6 w-100" v-model="thisFormName[0]"
-                                                   placeholder="請輸入農場名稱" :name='"update-FormName-"+index'
-                                                   :id='"update-FormName-"+index'
-                                                   @change="searchUpdate('update-FormName-'+index,formName[0][index],'Form')"/>
-                                            <input type="text" class="col-6 w-100" v-model="thisFormName[1]"
-                                                   placeholder="請輸入農場地址" :name='"update-FormAddress-"+index'
-                                                   @change="searchUpdate('update-FormAddress-'+index,thisFormName[0],'Form')"/>
-                                        </div>
-                                        <div class="col-1 flex-total-center">
-                                            <i class="fa fa-minus text-danger" aria-hidden="true"
-                                               @click="deleteForm(index)"></i>
-                                        </div>
+                                <div class="btn-group mt-3 col-8">
+                                    <div class="btn border" @click="switchConnect = false"
+                                         :class="'switch-type-'+!switchConnect">農場資訊
+                                    </div>
+                                    <div class="btn border" @click="switchConnect = true "
+                                         :class="'switch-type-'+switchConnect">農田資訊
                                     </div>
                                 </div>
-                                <!--                            農田列表-->
-                                <div class="col-12">
-                                    <div v-for="(Crop,index) in sortOutData[1]" class="row no-gutters my-2">
-                                        <div class="col-2">
-                                        <span v-show="index===0">
-                                            農田
-                                            <i class="fa fa-plus" aria-hidden="true" @click="addCrop()"></i>
-                                        </span>
-                                        </div>
-                                        <div class="col-9">
-                                            <div class="row no-gutters">
-                                                <div class="col-6">
-                                                    <select :name="'selectFormData'+index"
-                                                            :id="'select-FormData-'+index"
-                                                            class="w-100 h-100"
-                                                            @change="reFormCrop(index,Crop.split('|')[2])"
-                                                            v-model="(Crop.split('|'))[0]">
-                                                        <option v-for="form in sortOutData[0]">
-                                                            {{ form[0] }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-6">
-                                                    <input type="text" :id="'select-CropData-'+index" class="w-100"
-                                                           @change="reFormCrop(index,Crop.split('|')[2])"
-                                                           v-model="(Crop.split('|'))[1]"
-                                                           placeholder="請輸入農作物" :name="'selectCropData'+index"/>
-                                                </div>
+                                <!--                            農場列表-->
+                                <div class="col-12 mt-3 border rounded border-info" v-show="!switchConnect">
+                                    <div class="flex-total-center row">
+                                        <div class="col-12 row flex-total-center text-center bg-primary">
+                                            <div class="col  text-light">農場名稱</div>
+                                            <div class="col  text-light">農場地址</div>
+                                            <div class="col-auto">
+                                                <i class="fa fa-plus-circle text-light tool-remind" aria-hidden="true"
+                                                   @click="addItems('farm')">
+                                                </i>
                                             </div>
                                         </div>
-                                        <div class="col-1 flex-total-center">
-                                            <i class="fa fa-minus text-danger" aria-hidden="true"
-                                               @click="deleteCrop(Crop.split('|')[2],index)"></i>
+                                        <div v-for="(item,index) in Farms" class="col-12 row  border border-bottom-0">
+                                            <input type="text" class="col border-0 text-center" placeholder="請輸入農場名稱"
+                                                   :name='"update-FormName-"+index' :id='"update-FormName-"+index'
+                                                   v-model="item['farm']"
+                                            />
+                                            <input type="text" class="col border-0 text-center" placeholder="請輸入農場地址"
+                                                   :name='"update-FormAddress-"+index' :id='"update-FormAddress-"+index'
+                                                   v-model="item['address']"
+                                            />
+                                            <div class="col-auto flex-total-center">
+                                                <i class="fa fa-minus text-danger" aria-hidden="true"
+                                                   @click="deleteItems('farm',index)"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!--                            農田列表-->
+                                <div class="col-12 mt-3 border rounded border-info" v-show="switchConnect">
+                                    <div class="flex-total-center row">
+                                        <div class="col-12 row flex-total-center text-center bg-primary">
+                                            <div class="col  text-light">農場</div>
+                                            <div class="col  text-light">農田</div>
+                                            <div class="col-auto">
+                                                <i class="fa fa-plus-circle text-light tool-remind" aria-hidden="true"
+                                                   @click="addItems('crop')"></i>
+                                            </div>
+                                        </div>
+                                        <div v-for="(Crop,index) in Crops" class="col-12 row border border-bottom-0">
+                                            <input type="hidden" v-model="Crop['farm']" :name="'selectFormData'+index"/>
+                                            <div v-if="Crop['create']" class="col text-center">
+                                                {{Crop['farm']}}
+                                            </div>
+                                            <select :name="'selectFormData'+index"
+                                                    :id="'select-FormData-'+index"
+                                                    v-model="Crop['farm']"
+                                                    class="col text-center"
+                                                    v-else
+                                            >
+                                                <option v-show="farm['farm']!==''" v-for="farm in Farms">
+                                                    {{ farm['farm'] }}
+                                                </option>
+                                            </select>
+
+                                            <input type="text" v-model="Crop['crop']"
+                                                   class="col border-0 text-center"
+                                                   :id="'select-CropData-'+index" :name="'selectCropData'+index"
+                                                   placeholder="請輸入農作物"
+                                            />
+                                            <div class="col-auto flex-total-center">
+                                                <i class="fa fa-minus text-danger" aria-hidden="true"
+                                                   @click="deleteItems('crop',index)"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -92,124 +108,280 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="resetAny()">關閉
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="resetValue()">關閉
                         </button>
                         <button type="button" class="btn btn-primary" @click="lostCheck()">更新</button>
                     </div>
                 </form>
             </div>
+
         </div>
     </div>
 </template>
 
 <script>
+    import _ from 'lodash';
+
     export default {
         name: "FormerInfoConfig",
         props: {
             formername: String,
             formeremail: String,
-            formcrop: Array,
+            farms: Array,
+            crops: Array,
             route: String,
         },
         methods: {
-            addForm() {
-                this.sortOutData[0].push(['', '']);
-            },
-            //id 為 DOM ID
-            deleteForm(id) {
-                let deleteValue = document.getElementById('update-FormName-' + id);
-                if (window.confirm('確定刪除嗎？若確認的話會將相關農地“刪除”')) {
-                    this.sortOutData[0].splice(id, 1);
-                    //
-                    this.stepToInter.push('delete_Form_' + deleteValue.value + "_");
-                }
-            },
-            addCrop() {
-                this.sortOutData[1].push('');
-            },
-            deleteCrop(id, fontId) {
-                this.stepToInter.push('delete_Crop_' + id + "_");
-                this.sortOutData[1].splice(fontId, 1);
-            },
-            reFormCrop(id, sqlId) {
-                let formName = document.getElementById('select-FormData-' + id);
-                let cropName = document.getElementById('select-CropData-' + id);
-
-                this.$set(this.sortOutData[1], id, formName.value + '|' + cropName.value + '|' + sqlId);
-
-                this.stepToInter.push('Crop_Form_' + id + '_' + sqlId);
-            },
-            cutFormCrop() {
-                let self = this;
-                let formCrop = [];
-                let formStatus = '';
-                _.forEach(this.formcrop, function (value, index) {
-                    //value[0]農作物 value[1]農場地址
-                    formCrop[index] = value[0].split('_');
-                    self.cropName.push(formCrop[index]);
-                    if (formStatus !== formCrop[index][0]) {
-                        self.formName[0].push(formCrop[index][0]);
-                        self.formName[1].push(value[1]);
-                        formStatus = formCrop[index][0];
+            //新增農場/農田 ps.一次新增一層
+            addItems(grad) {
+                if (grad === 'farm') {
+                    let farmLen = this.Farms.length;
+                    this.editFarmControl = false;
+                    if ((farmLen === 0) || ((this.Farms[farmLen - 1]['farm'] !== ''))) {
+                        this.originalFarmID++;
+                        this.Farms.push({'id': this.originalFarmID, 'address': '', 'farm': ''});
+                        this.FarmsKey.push({'id': this.originalFarmID, 'address': '', 'farm': ''});
                     }
-                });
-                this.createFlash();
+                    this.editFarmControl = true;
+                } else {
+                    let cropLen = this.Crops.length;
+                    this.editCropControl = false;
+                    if ((cropLen === 0) || (this.Crops[cropLen - 1]['farm'] !== '')) {
+                        this.originalCropID++;
+                        this.Crops.push({
+                            'id': this.originalCropID,
+                            'crop': '',
+                            'farm': '',
+                            'status': '444',
+                            'create': false
+                        });
+                        this.CropsKey.push({
+                            'id': this.originalCropID,
+                            'crop': '',
+                            'farm': '',
+                            'status': '444',
+                            'create': false
+                        });
+                    }
+                    this.editCropControl = true;
+                }
             },
-            resetAny() {
-                this.sortOutData = [[], []];
-                this.createFlash();
-            },
-            createFlash() {
+
+            //刪除農場/農田
+            deleteItems(grad, index) {
                 let self = this;
-                this.formerName = this.formername;
-                this.formerEmail = this.formeremail;
+                let deleteCount = [];
+                // 查看Farm資料庫中的id
+                let statueFarmId = self.farms[self.farms.length - 1]['id'];
+                // 查看Crop資料庫中的id
+                let statueCropId = self.crops[self.crops.length - 1]['id'];
 
-                for (let i = 0; i < this.formName[0].length; i++) {
-                    self.sortOutData[0].push([this.formName[0][i], this.formName[1][i]])
-                }
-                for (let i = 0; i < this.cropName.length; i++) {
-                    self.sortOutData[1].push(this.cropName[i][0] + '|' + this.cropName[i][1] + "|" + this.formcrop[i][2]);
+                if (grad === 'farm') {
+                    if (confirm('若刪除農場，相關的農田也會一並刪除，確認是否刪除？')) {
+                        //新增不進行 紀錄
+                        if (statueFarmId >= self.Farms[index]['id']) {
+                            this.stepsDelete.push('Farm_' + this.Farms[index]['id']);
+                        }
+                        //刪除步驟
+                        if (this.stepsFarm.indexOf(this.Farms[index]['id']) !== -1)
+                            this.stepsFarm.splice(this.stepsFarm.indexOf(this.Farms[index]['id']), 1);
+                        //對要進行刪除的index 存
+                        _.forEach(this.Crops, function (item, cropIndex) {
+                            if (item['farm'] === self.Farms[index]['farm']) {
+                                if (statueCropId >= item['id'])
+                                    self.stepsDelete.push('Crop_' + item['id']);
+                                deleteCount.push(cropIndex);
+                            }
+                        });
+                        console.log(deleteCount);
+                        deleteCount.sort();
+                        deleteCount.reverse();
+                        //對Crop 進行刪除
+                        _.forEach(deleteCount, function (number) {
+                            self.Crops.splice(number, 1);
+                            self.CropsKey.splice(number, 1);
+                        });
+
+                        this.Farms.splice(index, 1);
+                        this.FarmsKey.splice(index, 1);
+                    }
+                } else {
+                    console.log(statueCropId);
+                    console.log(self.Crops[index]['id']);
+                    if (statueCropId >= self.Crops[index]['id'])
+                        this.stepsDelete.push('Crop_' + this.Crops[index]['id']);
+                    this.Crops.splice(index, 1);
+                    this.CropsKey.splice(index, 1);
                 }
             },
-            //查詢更改部分 id 為更改數值的DOM_ID original原本要被更改的數值
-            searchUpdate(id, original, way) {
-                this.stepToInter.push(way + "_" + original + "_" + id);
+            //重設所有數字
+            resetValue() {
+                let self = this;
+
+                this.FarmerName = this.formername;
+                this.FarmerEmail = this.formeremail;
+
+                this.originalFarmID = this.farms.length !== 0 ? this.farms[this.farms.length - 1]['id'] : 0;
+                this.originalCropID = this.crops.length !== 0 ? this.crops[this.crops.length - 1]['id'] : 0;
+
+                this.Farms = _.cloneDeep(self.farms);
+                this.FarmsKey = _.cloneDeep(self.farms);
+                this.Crops = _.cloneDeep(self.crops);
+                this.CropsKey = _.cloneDeep(self.crops);
+                //     self.crops.sort(function (a, b) {
+                //         return a.farm > b.farm ? 1 : -1
+                //     }));
+                // this.CropsKey = _.cloneDeep(
+                //     self.crops.sort(function (a, b) {
+                //         return a.farm > b.farm ? 1 : -1
+                //     }));
+
+                this.stepsFarm = [];
+                this.stepsCrop = [];
+                this.stepsDelete = [];
             },
 
+            //送出確認
             lostCheck() {
-                let updateFormerInfo = document.getElementById('updateFormerInfo');
-                this.repeat = Array.from(new Set(this.stepToInter));
-                updateFormerInfo.elements.temporary.value = this.repeat
-                // console.log();
-                // if (confirm('確定送出')) {
-                updateFormerInfo.submit();
-                // }
-            }
+                let formUpdate = document.getElementById('updateFormerInfo');
+                //針對所有crops form 查看是否有不合法的地方 在
+                formUpdate.submit();
+                console.log('submit');
+            },
         },
+        watch: {
+            Crops: {
+                deep: true,
+                handler:
+                    function (values) {
+                        let self = this;
+                        let stepsCache = [];
+                        if (this.editCropControl) {
+                            _.forEach(values, function (items, index) {
+                                if (JSON.stringify(items) !== JSON.stringify(self.CropsKey[index])) {
+                                    console.log(JSON.stringify(items), JSON.stringify(self.CropsKey[index]));
+                                    stepsCache.push(items['id']);
+                                }
+                            });
+                            console.log(stepsCache);
+                            self.stepsCrop = Array.from(new Set(stepsCache));
+                        }
+                    }
+
+                ,
+            }
+            ,
+            //當forms進行更改時
+            Farms: {
+                deep: true,
+                immediate:
+                    true,
+                handler:
+
+                    function (value) {
+                        let self = this;
+                        if (this.editFarmControl) {
+                            //原因 forms 為 所有農場集合體 所以透過 forEach 抓出
+                            _.forEach(value, function (item, index) {
+                                if (JSON.stringify(item) !== JSON.stringify(self.FarmsKey[index])) {//當 數值改變 確認是否改變時
+                                    //推上更改ID
+                                    if (self.stepsFarm.indexOf(item['id']) !== -1) self.stepsFarm.splice(self.stepsFarm.indexOf(item['id']), 1);
+                                    self.stepsFarm.push(item['id']);
+                                    //將相關的 crops 進行更改名稱
+                                    _.forEach(self.Crops, function (cropItem) {
+                                        if (cropItem['farm'] === self.FarmsKey[index]['farm']) {
+                                            cropItem['farm'] = item['farm'];
+                                        }
+                                    });
+                                    //更新最高數值
+                                    self.FarmsKey[index]['farm'] = item['farm'];
+                                    self.FarmsKey[index]['address'] = item['address'];
+                                }
+                            });
+                        }
+                    }
+
+                ,
+            }
+        }
+        ,
+        computed: {
+            FarmNumbering() {
+                let self = this;
+                //為stepsFarm stepsCrop  加上 ＤＯＭ的index
+                let keyIndex = 0;
+                this.stepsFarmStatus = this.stepsFarm.map(function (item) {
+                    _.forEach(self.Farms, function (itemKey, indexKey) {
+                        if (itemKey['id'] === item) {
+                            keyIndex = indexKey;
+                        }
+                    });
+                    return item + '_' + keyIndex;
+
+                });
+                return this.stepsFarmStatus;
+            }
+            ,
+            CropNumbering() {
+                let self = this;
+                //為stepsFarm stepsCrop  加上 ＤＯＭ的index
+                let keyIndex = 0;
+                this.stepsCropStatus = this.stepsCrop.map(function (item) {
+                    _.forEach(self.Crops, function (itemKey, indexKey) {
+                        if (itemKey['id'] === item) {
+                            keyIndex = indexKey;
+                        }
+                    });
+                    return item + '_' + keyIndex;
+                });
+                return this.stepsCropStatus;
+            }
+        }
+        ,
+
         data() {
             return {
-                //重複者刪除 [0]名稱[1]地址
-                formName: [[], []],
-                //所有數值進行增加
-                cropName: [],
-                //記下前端步驟
-                stepToInter: [],
-                //最後結果送出
-                repeat: [],
-                //進行運算[0][0]formName [0][1]Address [1]cropName
-                sortOutData: [[], [],],
+                Farms: [],
+                FarmsKey: [],
+                //
+                Crops: [],
+                CropsKey: [],
                 //農夫名稱
-                formerName: '',
-                formerEmail: '',
+                FarmerName: '',
+                FarmerEmail: '',
+                //
+                stepsFarm: [],
+                stepsFarmStatus: [],
+                stepsCrop: [],
+                stepsCropStatus: [],
+                stepsDelete: [],
+                //
+                editFarmControl: true,
+                editCropControl: true,
+                //
+                originalFarmID: 0,
+                originalCropID: 0,
+                formCheckRun: false,
+
+                switchConnect: false,
+
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             }
-        },
+        }
+        ,
         created() {
-            this.cutFormCrop();
+            this.resetValue();
         }
     }
 </script>
 
 <style scoped>
+    .switch-type-true {
+        background-color: #1f6fb2;
+        color: white;
+    }
 
+    .switch-type-false {
+        background-color: white;
+    }
 </style>
