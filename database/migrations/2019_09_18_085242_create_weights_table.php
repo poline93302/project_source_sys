@@ -16,6 +16,7 @@ class CreateWeightsTable extends Migration
         Schema::create('weights', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('formerName')->nullable();
+            $table->integer('farm')->nullable();
             $table->integer('farmland')->nullable();
             $table->integer('water_level')->nullable();
             $table->integer('water_ph')->nullable();

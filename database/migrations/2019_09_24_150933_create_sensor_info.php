@@ -16,7 +16,8 @@ class CreateSensorInfo extends Migration
         Schema::create('sensor_info', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('former');
-            $table->string('farmland');
+            $table->integer('farm');
+            $table->integer('farmland');
             $table->string('sensor');
             $table->integer('max');
             $table->integer('min');

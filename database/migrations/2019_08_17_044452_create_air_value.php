@@ -16,6 +16,7 @@ class CreateAirValue extends Migration
         Schema::create('airRecy', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('former');
+            $table->integer('farm');
             $table->integer('farmland');
             $table->string('sensor');
             $table->double('value');

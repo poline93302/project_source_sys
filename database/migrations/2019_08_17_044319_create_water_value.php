@@ -17,6 +17,7 @@ class CreateWaterValue extends Migration
         Schema::create('waterRecy', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('former');
+            $table->integer('farm');
             $table->integer('farmland');
             $table->string('sensor');
             $table->double('value');

@@ -18,7 +18,6 @@ class CreateFormCropCorrespondence extends Migration
             $table->string('farmer');
             $table->string('farm');
             $table->string('address');
-            //            $table->timestamps();
         });
     }
 
