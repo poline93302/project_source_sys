@@ -2260,6 +2260,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "FormerInfoConfig",
@@ -2273,50 +2274,49 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
       //新增農場/農田 ps.一次新增一層
     addItems: function addItems(grad) {
-        var farmLen = this.Farms.length;
-        var cropLen = this.Crops.length;
-
         if (grad === 'farm') {
+            var farmLen = this.Farms.length;
             this.editFarmControl = false;
 
-            if (this.Farms[farmLen - 1]['farm'] !== '') {
-                this.originalFarmCount++;
+            if (farmLen === 0 || this.Farms[farmLen - 1]['farm'] !== '') {
+                this.originalFarmID++;
                 this.Farms.push({
-                    'id': this.originalFarmCount,
+                    'id': this.originalFarmID,
                     'address': '',
                     'farm': ''
                 });
                 this.FarmsKey.push({
-                    'id': this.originalFarmCount,
+                    'id': this.originalFarmID,
                     'address': '',
                     'farm': ''
                 });
-        }
+            }
 
             this.editFarmControl = true;
-      } else {
+        } else {
+            var cropLen = this.Crops.length;
             this.editCropControl = false;
 
-            if (this.Crops[cropLen - 1]['farm'] !== '') {
-                this.originalCropCount++;
+            if (cropLen === 0 || this.Crops[cropLen - 1]['farm'] !== '') {
+                this.originalCropID++;
                 this.Crops.push({
-                    'id': this.originalCropCount,
+                    'id': this.originalCropID,
                     'crop': '',
                     'farm': '',
                     'status': '444',
                     'create': false
                 });
                 this.CropsKey.push({
-                    'id': this.originalCropCount,
+                    'id': this.originalCropID,
                     'crop': '',
                     'farm': '',
                     'status': '444',
                     'create': false
                 });
-        }
+            }
 
             this.editCropControl = true;
-      }
+        }
     },
       //刪除農場/農田
     deleteItems: function deleteItems(grad, index) {
@@ -2335,27 +2335,30 @@ __webpack_require__.r(__webpack_exports__);
                 } //刪除步驟
 
 
-                this.stepsFarm.splice(this.stepsFarm.indexOf(this.Farms[index]['id']), 1); //對要進行刪除的index 存
+                if (this.stepsFarm.indexOf(this.Farms[index]['id']) !== -1) this.stepsFarm.splice(this.stepsFarm.indexOf(this.Farms[index]['id']), 1); //對要進行刪除的index 存
 
                 lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(this.Crops, function (item, cropIndex) {
                     if (item['farm'] === self.Farms[index]['farm']) {
+                        if (statueCropId >= item['id']) self.stepsDelete.push('Crop_' + item['id']);
                         deleteCount.push(cropIndex);
                     }
                 });
 
+                console.log(deleteCount);
                 deleteCount.sort();
                 deleteCount.reverse(); //對Crop 進行刪除
 
                 lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(deleteCount, function (number) {
-                    if (statueCropId >= self.Crops[index]['id']) self.stepsDelete.push('Crop_' + self.Crops[index]['id']);
                     self.Crops.splice(number, 1);
+                    self.CropsKey.splice(number, 1);
                 });
 
-                this.CropsKey = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.Crops);
                 this.Farms.splice(index, 1);
                 this.FarmsKey.splice(index, 1);
             }
         } else {
+            console.log(statueCropId);
+            console.log(self.Crops[index]['id']);
             if (statueCropId >= self.Crops[index]['id']) this.stepsDelete.push('Crop_' + this.Crops[index]['id']);
             this.Crops.splice(index, 1);
             this.CropsKey.splice(index, 1);
@@ -2366,12 +2369,19 @@ __webpack_require__.r(__webpack_exports__);
       var self = this;
         this.FarmerName = this.formername;
         this.FarmerEmail = this.formeremail;
+        this.originalFarmID = this.farms.length !== 0 ? this.farms[this.farms.length - 1]['id'] : 0;
+        this.originalCropID = this.crops.length !== 0 ? this.crops[this.crops.length - 1]['id'] : 0;
         this.Farms = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.farms);
-        this.Crops = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.crops);
         this.FarmsKey = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.farms);
-        this.CropsKey = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.crops);
-        this.originalFarmCount = this.farms[this.farms.length - 1]['id'];
-        this.originalCropCount = this.crops[this.crops.length - 1]['id'];
+        this.Crops = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.crops);
+        this.CropsKey = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.crops); //     self.crops.sort(function (a, b) {
+        //         return a.farm > b.farm ? 1 : -1
+        //     }));
+        // this.CropsKey = _.cloneDeep(
+        //     self.crops.sort(function (a, b) {
+        //         return a.farm > b.farm ? 1 : -1
+        //     }));
+
         this.stepsFarm = [];
         this.stepsCrop = [];
         this.stepsDelete = [];
@@ -2394,10 +2404,12 @@ __webpack_require__.r(__webpack_exports__);
           if (this.editCropControl) {
               lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(values, function (items, index) {
                   if (JSON.stringify(items) !== JSON.stringify(self.CropsKey[index])) {
+                      console.log(JSON.stringify(items), JSON.stringify(self.CropsKey[index]));
                       stepsCache.push(items['id']);
                   }
               });
 
+              console.log(stepsCache);
               self.stepsCrop = Array.from(new Set(stepsCache));
           }
       }
@@ -2415,7 +2427,6 @@ __webpack_require__.r(__webpack_exports__);
               if (JSON.stringify(item) !== JSON.stringify(self.FarmsKey[index])) {
               //當 數值改變 確認是否改變時
                   //推上更改ID
-                  console.log(JSON.stringify(item['farm']), JSON.stringify(self.FarmsKey[index]['farm']));
                   if (self.stepsFarm.indexOf(item['id']) !== -1) self.stepsFarm.splice(self.stepsFarm.indexOf(item['id']), 1);
                   self.stepsFarm.push(item['id']); //將相關的 crops 進行更改名稱
 
@@ -2486,8 +2497,8 @@ __webpack_require__.r(__webpack_exports__);
         editFarmControl: true,
         editCropControl: true,
         //
-        originalFarmCount: 0,
-        originalCropCount: 0,
+        originalFarmID: 0,
+        originalCropID: 0,
         formCheckRun: false,
         switchConnect: false,
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -69062,7 +69073,7 @@ var render = function() {
                                           "div",
                                           {
                                               staticClass:
-                                                  "col-12 row flex-total-center text-center bg-info"
+                                                  "col-12 row flex-total-center text-center bg-primary"
                                           },
                                           [
                                               _c("div", {staticClass: "col  text-light"}, [
@@ -69209,7 +69220,7 @@ var render = function() {
                                         "div",
                                         {
                                             staticClass:
-                                                "col-12 row flex-total-center text-center bg-info"
+                                                "col-12 row flex-total-center text-center bg-primary"
                                         },
                                         [
                                             _c("div", {staticClass: "col  text-light"}, [
@@ -69243,6 +69254,34 @@ var render = function() {
                                                     "col-12 row border border-bottom-0"
                                             },
                                             [
+                                                _c("input", {
+                                                    directives: [
+                                                        {
+                                                            name: "model",
+                                                            rawName: "v-model",
+                                                            value: Crop["farm"],
+                                                            expression: "Crop['farm']"
+                                                        }
+                                                    ],
+                                                    attrs: {
+                                                        type: "hidden",
+                                                        name: "selectFormData" + index
+                                                    },
+                                                    domProps: {value: Crop["farm"]},
+                                                    on: {
+                                                        input: function ($event) {
+                                                            if ($event.target.composing) {
+                                                                return
+                                                            }
+                                                            _vm.$set(
+                                                                Crop,
+                                                                "farm",
+                                                                $event.target.value
+                                                            )
+                                                        }
+                                                    }
+                                                }),
+                                                _vm._v(" "),
                                                 Crop["create"]
                                                     ? _c(
                                                     "div",
@@ -82744,7 +82783,8 @@ component.options.__file = "resources/js/components/FormerInfoConfig.vue"
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./FormerInfoConfig.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]);
+        /* empty/unused harmony star reexport */ /* harmony default export */
+        __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]);
 
         /***/
     }),
@@ -82772,7 +82812,8 @@ __webpack_require__.r(__webpack_exports__);
         /* harmony default export */
         __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a);
 
-        /***/ }),
+        /***/
+    }),
 
 /***/ "./resources/js/components/FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true&":
 /*!*************************************************************************************************!*\

@@ -77,7 +77,6 @@
                     <conitor-exponent-null
                             :form_crop="{{ json_encode($d['farm'].'_'.$d['crop']) }}"
                     >
-
                     </conitor-exponent-null>
                 @else
                     <Conitor-Exponent
@@ -96,8 +95,8 @@
     <former-info-config :formername=" {{ json_encode($former) }} "
                         :formeremail="{{ json_encode($formerEmail) }}"
                         :route="{{ json_encode(route('monitor_former_update'))}}"
-                        :Farms="{{ json_encode($farmList) }}"
-                        :Crops="{{ json_encode($resList) }}"
+                        :farms="{{ json_encode($farmList) }}"
+                        :crops="{{ json_encode($resList) }}"
     >
     </former-info-config>
 @endsection

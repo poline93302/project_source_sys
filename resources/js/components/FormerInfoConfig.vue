@@ -39,7 +39,7 @@
                                 <!--                            農場列表-->
                                 <div class="col-12 mt-3 border rounded border-info" v-show="!switchConnect">
                                     <div class="flex-total-center row">
-                                        <div class="col-12 row flex-total-center text-center bg-info">
+                                        <div class="col-12 row flex-total-center text-center bg-primary">
                                             <div class="col  text-light">農場名稱</div>
                                             <div class="col  text-light">農場地址</div>
                                             <div class="col-auto">
@@ -68,7 +68,7 @@
                                 <!--                            農田列表-->
                                 <div class="col-12 mt-3 border rounded border-info" v-show="switchConnect">
                                     <div class="flex-total-center row">
-                                        <div class="col-12 row flex-total-center text-center bg-info">
+                                        <div class="col-12 row flex-total-center text-center bg-primary">
                                             <div class="col  text-light">農場</div>
                                             <div class="col  text-light">農田</div>
                                             <div class="col-auto">
@@ -77,6 +77,7 @@
                                             </div>
                                         </div>
                                         <div v-for="(Crop,index) in Crops" class="col-12 row border border-bottom-0">
+                                            <input type="hidden" v-model="Crop['farm']" :name="'selectFormData'+index"/>
                                             <div v-if="Crop['create']" class="col text-center">
                                                 {{Crop['farm']}}
                                             </div>
@@ -133,30 +134,29 @@
         methods: {
             //新增農場/農田 ps.一次新增一層
             addItems(grad) {
-                let farmLen = this.Farms.length;
-                let cropLen = this.Crops.length;
-
                 if (grad === 'farm') {
+                    let farmLen = this.Farms.length;
                     this.editFarmControl = false;
-                    if (this.Farms[farmLen - 1]['farm'] !== '') {
-                        this.originalFarmCount++;
-                        this.Farms.push({'id': this.originalFarmCount, 'address': '', 'farm': ''});
-                        this.FarmsKey.push({'id': this.originalFarmCount, 'address': '', 'farm': ''});
+                    if ((farmLen === 0) || ((this.Farms[farmLen - 1]['farm'] !== ''))) {
+                        this.originalFarmID++;
+                        this.Farms.push({'id': this.originalFarmID, 'address': '', 'farm': ''});
+                        this.FarmsKey.push({'id': this.originalFarmID, 'address': '', 'farm': ''});
                     }
                     this.editFarmControl = true;
                 } else {
+                    let cropLen = this.Crops.length;
                     this.editCropControl = false;
-                    if (this.Crops[cropLen - 1]['farm'] !== '') {
-                        this.originalCropCount++;
+                    if ((cropLen === 0) || (this.Crops[cropLen - 1]['farm'] !== '')) {
+                        this.originalCropID++;
                         this.Crops.push({
-                            'id': this.originalCropCount,
+                            'id': this.originalCropID,
                             'crop': '',
                             'farm': '',
                             'status': '444',
                             'create': false
                         });
                         this.CropsKey.push({
-                            'id': this.originalCropCount,
+                            'id': this.originalCropID,
                             'crop': '',
                             'farm': '',
                             'status': '444',
@@ -166,6 +166,7 @@
                     this.editCropControl = true;
                 }
             },
+
             //刪除農場/農田
             deleteItems(grad, index) {
                 let self = this;
@@ -182,28 +183,31 @@
                             this.stepsDelete.push('Farm_' + this.Farms[index]['id']);
                         }
                         //刪除步驟
-                        this.stepsFarm.splice(this.stepsFarm.indexOf(this.Farms[index]['id']), 1);
+                        if (this.stepsFarm.indexOf(this.Farms[index]['id']) !== -1)
+                            this.stepsFarm.splice(this.stepsFarm.indexOf(this.Farms[index]['id']), 1);
                         //對要進行刪除的index 存
                         _.forEach(this.Crops, function (item, cropIndex) {
                             if (item['farm'] === self.Farms[index]['farm']) {
+                                if (statueCropId >= item['id'])
+                                    self.stepsDelete.push('Crop_' + item['id']);
                                 deleteCount.push(cropIndex);
                             }
                         });
+                        console.log(deleteCount);
                         deleteCount.sort();
                         deleteCount.reverse();
                         //對Crop 進行刪除
                         _.forEach(deleteCount, function (number) {
-                            if (statueCropId >= self.Crops[index]['id'])
-                                self.stepsDelete.push('Crop_' + self.Crops[index]['id']);
                             self.Crops.splice(number, 1);
+                            self.CropsKey.splice(number, 1);
                         });
-
-                        this.CropsKey = _.cloneDeep(self.Crops);
 
                         this.Farms.splice(index, 1);
                         this.FarmsKey.splice(index, 1);
                     }
                 } else {
+                    console.log(statueCropId);
+                    console.log(self.Crops[index]['id']);
                     if (statueCropId >= self.Crops[index]['id'])
                         this.stepsDelete.push('Crop_' + this.Crops[index]['id']);
                     this.Crops.splice(index, 1);
@@ -217,13 +221,20 @@
                 this.FarmerName = this.formername;
                 this.FarmerEmail = this.formeremail;
 
-                this.Farms = _.cloneDeep(self.farms);
-                this.Crops = _.cloneDeep(self.crops);
-                this.FarmsKey = _.cloneDeep(self.farms);
-                this.CropsKey = _.cloneDeep(self.crops);
+                this.originalFarmID = this.farms.length !== 0 ? this.farms[this.farms.length - 1]['id'] : 0;
+                this.originalCropID = this.crops.length !== 0 ? this.crops[this.crops.length - 1]['id'] : 0;
 
-                this.originalFarmCount = this.farms[this.farms.length - 1]['id'];
-                this.originalCropCount = this.crops[this.crops.length - 1]['id'];
+                this.Farms = _.cloneDeep(self.farms);
+                this.FarmsKey = _.cloneDeep(self.farms);
+                this.Crops = _.cloneDeep(self.crops);
+                this.CropsKey = _.cloneDeep(self.crops);
+                //     self.crops.sort(function (a, b) {
+                //         return a.farm > b.farm ? 1 : -1
+                //     }));
+                // this.CropsKey = _.cloneDeep(
+                //     self.crops.sort(function (a, b) {
+                //         return a.farm > b.farm ? 1 : -1
+                //     }));
 
                 this.stepsFarm = [];
                 this.stepsCrop = [];
@@ -241,48 +252,59 @@
         watch: {
             Crops: {
                 deep: true,
-                handler: function (values) {
-                    let self = this;
-                    let stepsCache = [];
-                    if (this.editCropControl) {
-                        _.forEach(values, function (items, index) {
-                            if (JSON.stringify(items) !== JSON.stringify(self.CropsKey[index])) {
-                                stepsCache.push(items['id']);
-                            }
-                        });
-                        self.stepsCrop = Array.from(new Set(stepsCache));
+                handler:
+                    function (values) {
+                        let self = this;
+                        let stepsCache = [];
+                        if (this.editCropControl) {
+                            _.forEach(values, function (items, index) {
+                                if (JSON.stringify(items) !== JSON.stringify(self.CropsKey[index])) {
+                                    console.log(JSON.stringify(items), JSON.stringify(self.CropsKey[index]));
+                                    stepsCache.push(items['id']);
+                                }
+                            });
+                            console.log(stepsCache);
+                            self.stepsCrop = Array.from(new Set(stepsCache));
+                        }
                     }
-                },
-            },
+
+                ,
+            }
+            ,
             //當forms進行更改時
             Farms: {
                 deep: true,
-                immediate: true,
-                handler: function (value) {
-                    let self = this;
-                    if (this.editFarmControl) {
-                        //原因 forms 為 所有農場集合體 所以透過 forEach 抓出
-                        _.forEach(value, function (item, index) {
-                            if (JSON.stringify(item) !== JSON.stringify(self.FarmsKey[index])) {//當 數值改變 確認是否改變時
-                                //推上更改ID
-                                console.log(JSON.stringify(item['farm']), JSON.stringify(self.FarmsKey[index]['farm']));
-                                if (self.stepsFarm.indexOf(item['id']) !== -1) self.stepsFarm.splice(self.stepsFarm.indexOf(item['id']), 1);
-                                self.stepsFarm.push(item['id']);
-                                //將相關的 crops 進行更改名稱
-                                _.forEach(self.Crops, function (cropItem) {
-                                    if (cropItem['farm'] === self.FarmsKey[index]['farm']) {
-                                        cropItem['farm'] = item['farm'];
-                                    }
-                                });
-                                //更新最高數值
-                                self.FarmsKey[index]['farm'] = item['farm'];
-                                self.FarmsKey[index]['address'] = item['address'];
-                            }
-                        });
+                immediate:
+                    true,
+                handler:
+
+                    function (value) {
+                        let self = this;
+                        if (this.editFarmControl) {
+                            //原因 forms 為 所有農場集合體 所以透過 forEach 抓出
+                            _.forEach(value, function (item, index) {
+                                if (JSON.stringify(item) !== JSON.stringify(self.FarmsKey[index])) {//當 數值改變 確認是否改變時
+                                    //推上更改ID
+                                    if (self.stepsFarm.indexOf(item['id']) !== -1) self.stepsFarm.splice(self.stepsFarm.indexOf(item['id']), 1);
+                                    self.stepsFarm.push(item['id']);
+                                    //將相關的 crops 進行更改名稱
+                                    _.forEach(self.Crops, function (cropItem) {
+                                        if (cropItem['farm'] === self.FarmsKey[index]['farm']) {
+                                            cropItem['farm'] = item['farm'];
+                                        }
+                                    });
+                                    //更新最高數值
+                                    self.FarmsKey[index]['farm'] = item['farm'];
+                                    self.FarmsKey[index]['address'] = item['address'];
+                                }
+                            });
+                        }
                     }
-                },
+
+                ,
             }
-        },
+        }
+        ,
         computed: {
             FarmNumbering() {
                 let self = this;
@@ -298,7 +320,8 @@
 
                 });
                 return this.stepsFarmStatus;
-            },
+            }
+            ,
             CropNumbering() {
                 let self = this;
                 //為stepsFarm stepsCrop  加上 ＤＯＭ的index
@@ -313,7 +336,8 @@
                 });
                 return this.stepsCropStatus;
             }
-        },
+        }
+        ,
 
         data() {
             return {
@@ -335,8 +359,8 @@
                 editFarmControl: true,
                 editCropControl: true,
                 //
-                originalFarmCount: 0,
-                originalCropCount: 0,
+                originalFarmID: 0,
+                originalCropID: 0,
                 formCheckRun: false,
 
                 switchConnect: false,
