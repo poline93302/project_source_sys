@@ -263,7 +263,6 @@
                                     stepsCache.push(items['id']);
                                 }
                             });
-                            console.log(stepsCache);
                             self.stepsCrop = Array.from(new Set(stepsCache));
                         }
                     }

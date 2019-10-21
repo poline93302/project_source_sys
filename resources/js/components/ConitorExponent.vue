@@ -94,12 +94,14 @@
                 // hex_value
                 let self = this;
 
+                console.log('holle');
                 axios.post(this.url_api_target, {
                     'name': this.name,
+                    'farm': this.form_crop.split('_')[0],
                     'farmland': this.config_number,
                 }).then(function (res) {
                     //weights =>[0] 權重 [1]大權重
-                    if (res.data !== 'Please') self.hex_values = [res.data.weights, res.data.target];
+                    self.hex_values = [res.data.weights, res.data.target];
                 }).catch(function (err) {
                     console.log('ERROR' + err);
                 }).finally(function () {

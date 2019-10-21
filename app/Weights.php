@@ -11,4 +11,6 @@ class Weights extends Authenticatable
     protected $table = 'weights';
     //
     protected $guarded = [];
+
+    public $timestamps = false;
 }

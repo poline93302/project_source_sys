@@ -1790,23 +1790,24 @@ __webpack_require__.r(__webpack_exports__);
     config_infos: Array,
     name_critical: {},
     api_url: Array,
-    former_name: ''
+      former_name: '',
+      farm_id: Number
   },
   data: function data() {
     return {
       value_items: ['rounded-left', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-right'],
       Config_Infos: _.cloneDeep(this.config_infos),
       ch_name: {
-        "WA1": '水位感測器',
-        "WA2": '水PH感測器',
-        "AI1": '溫度感測器',
-        "AI3": '甲烷感測器',
-        "LIG": '光線感測器',
-        "WA3": '土壤濕度感測器',
-        "AI2": '相對濕度感測器',
-        "AI4": '一氧化碳感測器'
+          "WLS": '水位感測器',
+          "WPH": '水PH感測器',
+          "OTE": '溫度感測器',
+          "CHE": '甲烷感測器',
+          "LFS": '光線感測器',
+          "WSO": '土壤濕度感測器',
+          "OHY": '相對濕度感測器',
+          "CON": '一氧化碳感測器'
       },
-      items: ['WA1', 'WA2', 'WA3', 'AI1', 'AI2', 'AI3', 'AI4', 'LIG']
+        items: ['WLS', 'WPH', 'OTE', 'CHE', 'LFS', 'WSO', 'OHY', 'CON']
     };
   },
   methods: {
@@ -1843,6 +1844,7 @@ __webpack_require__.r(__webpack_exports__);
       if (confirm('確定刪除')) {
         axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(self.api_url[1], {
           'former': self.former_name,
+            'farm': self.farm_id,
           'farmland': self.Config_Infos[index].farmland,
           'sensor': self.Config_Infos[index].sensor
         }).then(function (res) {
@@ -1860,8 +1862,10 @@ __webpack_require__.r(__webpack_exports__);
     updateCreateConfig: function updateCreateConfig(index) {
       var api = this.Config_Infos[index].control ? this.api_url[2] : this.api_url[0];
       var self = this;
+        console.log('api go');
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(api, {
         'former': this.former_name,
+          'farm': self.farm_id,
         'farmland': this.Config_Infos[index].farmland,
         'sensor': this.Config_Infos[index].sensor,
         'switch': this.Config_Infos[index]["switch"],
@@ -1880,6 +1884,7 @@ __webpack_require__.r(__webpack_exports__);
       var self = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(this.api_url[3], {
         'former': self.former_name,
+          'farm': self.farm_id,
         'farmland': this.Config_Infos[index].farmland,
         'sensor': this.Config_Infos[index].sensor,
         'switch': this.Config_Infos[index]["switch"]
@@ -2013,12 +2018,14 @@ __webpack_require__.r(__webpack_exports__);
     getValue: function getValue() {
       // hex_value
       var self = this;
+        console.log('holle');
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api_target, {
         'name': this.name,
+          'farm': this.form_crop.split('_')[0],
         'farmland': this.config_number
       }).then(function (res) {
         //weights =>[0] 權重 [1]大權重
-        if (res.data !== 'Please') self.hex_values = [res.data.weights, res.data.target];
+          self.hex_values = [res.data.weights, res.data.target];
       })["catch"](function (err) {
         console.log('ERROR' + err);
       })["finally"](function () {
@@ -2409,7 +2416,6 @@ __webpack_require__.r(__webpack_exports__);
                   }
               });
 
-              console.log(stepsCache);
               self.stepsCrop = Array.from(new Set(stepsCache));
           }
       }
@@ -2587,6 +2593,7 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     monitor_target: Number,
     monitor_items: Object,
+      farm_id: Number,
     target_name: String,
     url_api: '',
     name: String,
@@ -2597,6 +2604,7 @@ __webpack_require__.r(__webpack_exports__);
       var self = this;
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api, {
         'name': this.name,
+          'farm': this.farm_id,
         'farmland': this.farmland,
         'type': this.target_name
       }).then(function (res) {
@@ -2638,17 +2646,17 @@ __webpack_require__.r(__webpack_exports__);
           'weather': '氣候健康指數'
         },
         sensor: {
-          "AI1": 'air_cp',
-          "AI2": 'air_ph4',
-          "AI3": 'air_hun',
-          "AI4": 'air_tem',
-          "WA1": 'water_level',
-          "WA2": 'water_ph',
-          "WA3": 'water_soil',
-          "LIG": 'light_lux',
-          "WE1": 'weather_windWay',
-          "WE2": 'weather_windSpeed',
-          "WE3": 'weather_rainAccumulation'
+            "CON": 'air_cp',
+            "CHE": 'air_ph4',
+            "OTE": 'air_hun',
+            "OHY": 'air_tem',
+            "WLS": 'water_level',
+            "WPH": 'water_ph',
+            "WSO": 'water_soil',
+            "LFS": 'light_lux',
+            "OWN": 'weather_windWay',
+            "OWS": 'weather_windSpeed',
+            "ORA": 'weather_rainAccumulation'
         },
         items: {
           'water_level': '水位',
@@ -2742,6 +2750,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "WeightsModal",
@@ -2753,7 +2762,8 @@ __webpack_require__.r(__webpack_exports__);
     ch_name: Object,
     sensor_name: Object,
     name: String,
-    farmland: Number
+      farmland: Number,
+      farm_id: Number
   },
   methods: {
     resetData: function resetData() {
@@ -69524,7 +69534,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: " col-10 monitor-item-show row float-left" },
+              {staticClass: "col-lg-9 col-10 monitor-item-show row float-left"},
             _vm._l(_vm.monitor_items, function(item, index) {
               return _c("div", { staticClass: "col-4" }, [
                 _c("div", { staticClass: "text-center" }, [
@@ -69537,7 +69547,7 @@ var render = function() {
             0
           ),
           _vm._v(" "),
-          _c("div", { staticClass: "col-2" }, [
+            _c("div", {staticClass: "col-lg-3 col-2"}, [
             _c(
               "div",
               { staticClass: "row no-gutters bg-white rounded my-3 shadow" },
@@ -69613,37 +69623,41 @@ var render = function() {
                   0
                 ),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-12 border border-dark " }, [
                   _c(
-                    "div",
-                    { staticClass: "row no-gutters flex-total-center" },
-                    [
-                      _c("div", { staticClass: "col-2 flex-total-center" }, [
-                        _c("i", {
-                          staticClass: "fa fa-cog",
-                          attrs: {
-                            "aria-hidden": "true",
-                            "data-toggle": "modal",
-                            "data-target": "#weight_Modal_" + _vm.target_name
-                          }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "col-10 text-dark flex-total-center" },
-                        [
-                          _vm._v(
-                            "\n                            綜合指數：\n                            "
-                          ),
-                          _c("div", { staticClass: "text-small" }, [
-                            _vm._v(_vm._s(_vm.monitor_target))
-                          ])
-                        ]
-                      )
-                    ]
+                      "div",
+                      {staticClass: "col-12 border border-dark rounded-bottom "},
+                      [
+                          _c(
+                              "div",
+                              {staticClass: "row no-gutters flex-total-center"},
+                              [
+                                  _c("div", {staticClass: "col-2 flex-total-center"}, [
+                                      _c("i", {
+                                          staticClass: "fa fa-cog",
+                                          attrs: {
+                                              "aria-hidden": "true",
+                                              "data-toggle": "modal",
+                                              "data-target": "#weight_Modal_" + _vm.target_name
+                                          }
+                                      })
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                      "div",
+                                      {staticClass: "col-10 text-dark flex-total-center"},
+                                      [
+                                          _vm._v(
+                                              "\n                            綜合指數：\n                            "
+                                          ),
+                                          _c("div", {staticClass: "text-small"}, [
+                                              _vm._v(_vm._s(_vm.monitor_target))
+                                          ])
+                                      ]
+                                  )
+                              ]
+                          )
+                      ]
                   )
-                ])
               ]
             )
           ])
@@ -69654,6 +69668,7 @@ var render = function() {
         attrs: {
           name: _vm.name,
           farmland: _vm.farmland,
+            farm_id: _vm.farm_id,
           type: _vm.target_name,
           title: _vm.item_infos.names[_vm.target_name],
           items: _vm.monitor_items,
@@ -69789,6 +69804,27 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
+                _c("input", {
+                    directives: [
+                        {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.farm_id,
+                            expression: "farm_id"
+                        }
+                    ],
+                    attrs: {type: "hidden", name: "farm_id"},
+                    domProps: {value: _vm.farm_id},
+                    on: {
+                        input: function ($event) {
+                            if ($event.target.composing) {
+                                return
+                            }
+                            _vm.farm_id = $event.target.value
+                        }
+                    }
+                }),
+                _vm._v(" "),
               _c(
                 "div",
                 { staticClass: "modal-body row no-gutters text-center " },

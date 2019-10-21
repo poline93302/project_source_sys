@@ -13,6 +13,7 @@
                     <input type="hidden" v-model="sensorName" name="order">
                     <input type="hidden" v-model="name" name="name">
                     <input type="hidden" v-model="farmland" name="farmland">
+                    <input type="hidden" v-model="farm_id" name="farm_id">
                     <div class="modal-body row no-gutters text-center ">
                         <div class="col-4  border border-info">感測名稱</div>
                         <div class="col-4  border-top border-bottom border-info">權重</div>
@@ -68,6 +69,7 @@
             sensor_name: Object,
             name: String,
             farmland: Number,
+            farm_id: Number,
         },
         methods: {
             resetData() {

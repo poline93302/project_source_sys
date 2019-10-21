@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\FarmerFarm;
 use App\Weights;
 
 use App\WaterRecy;
@@ -18,30 +19,30 @@ class apiController extends Controller
 //  抓取大數據
     public function numberTarget(Request $req)
     {
+        $farmID = FarmerFarm::where(['farmer' => $req['name'], 'farm' => $req['farm']])->first();
 
-        $weights = $this->weightsData($req['name'], $req['farmland']);
+//        if (is_null($farmID)) return response()->json($farmID['']);
+//         return response()->json();
 
-        if (is_null($weights)) return response()->json('Please');
+        $weights = $this->weightsData($req['name'], $farmID['id'], $req['farmland']);
 
-        $AirData = $this->airData($req['name'], $req['farmland']);
-        $WaterData = $this->waterData($req['name'], $req['farmland']);
-        $LightData = $this->lightData($req['name'], $req['farmland']);
-        $WeatherData = $this->weatherData($req['name'], $req['farmland']);
-
-//        $res = count($weights) . count($AirData) . count($WaterData) . count($LightData) . count($WeatherData);
-//        if ($res !== 0) return 'nodata';
+        $AirData = $this->airData($req['name'], $farmID['id'], $req['farmland']);
+        $WaterData = $this->waterData($req['name'], $farmID['id'], $req['farmland']);
+        $LightData = $this->lightData($req['name'], $farmID['id'], $req['farmland']);
+        $WeatherData = $this->weatherData($req['name'], $farmID['id'], $req['farmland']);
+//
         $target = [
-            'air' => round($this->confirmationPercentage($req['name'], $req['farmland'], 'AI1', $weights['air_hun'], $AirData['AI1'])
-                + $this->confirmationPercentage($req['name'], $req['farmland'], 'AI2', $weights['air_cp'], $AirData['AI2'])
-                + $this->confirmationPercentage($req['name'], $req['farmland'], 'AI3', $weights['air_ph4'], $AirData['AI3'])
-                + $this->confirmationPercentage($req['name'], $req['farmland'], 'AI4', $weights['air_tem'], $AirData['AI4'])),
-            'water' => round($this->confirmationPercentage($req['name'], $req['farmland'], 'WA1', $weights['water_level'], $WaterData["WA1"])
-                + $this->confirmationPercentage($req['name'], $req['farmland'], 'WA2', $weights['water_ph'], $WaterData['WA2'])
-                + $this->confirmationPercentage($req['name'], $req['farmland'], 'WA3', $weights['water_soil'], $WaterData['WA3'])),
-            'light' => round($this->confirmationPercentage($req['name'], $req['farmland'], 'LIG', $weights['light_lux'], $LightData["LIG"])),
-            'weather' => round($this->confirmationPercentage($req['name'], $req['farmland'], 'WE1', $weights['weather_rainAccumulation'], $WeatherData['WE1'])
-                + $this->confirmationPercentage($req['name'], $req['farmland'], 'WE2', $weights['weather_windSpeed'], $WeatherData['WE2'])
-                + $this->confirmationPercentage($req['name'], $req['farmland'], 'WE3', $weights['weather_windWay'], $WeatherData['WE3']))
+            'air' => round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'OTE', $weights['air_hun'], $AirData['OTE'])
+                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'CON', $weights['air_cp'], $AirData['CON'])
+                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'CHE', $weights['air_ph4'], $AirData['CHE'])
+                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'OHY', $weights['air_tem'], $AirData['OHY'])),
+            'water' => round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'WLS', $weights['water_level'], $WaterData["WLS"])
+                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'WPH', $weights['water_ph'], $WaterData['WPH'])
+                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'WSO', $weights['water_soil'], $WaterData['WSO'])),
+            'light' => round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'LFS', $weights['light_lux'], $LightData["LFS"])),
+            'weather' => round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'ORA', $weights['weather_rainAccumulation'], $WeatherData['ORA'])
+                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'OWS', $weights['weather_windSpeed'], $WeatherData['OWS'])
+                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'OWN', $weights['weather_windWay'], $WeatherData['OWN']))
         ];
         return response()->json(['weights' => $weights, 'target' => $target]);
     }
@@ -54,14 +55,14 @@ class apiController extends Controller
         $value = [];
         $time = 0;
 
-        if (is_null($req['type'])) return response()->json('Please');
+//        if (is_null($req['type'])) return response()->json('Please');
 
-        if ($req['type'] === 'air') $value = $this->airData($req['name'], $req['farmland']);
-        if ($req['type'] === 'light') $value = $this->lightData($req['name'], $req['farmland']);
-        if ($req['type'] === 'water') $value = $this->waterData($req['name'], $req['farmland']);
-        if ($req['type'] === 'weather') $value = $this->weatherData($req['name'], $req['farmland']);
+        if ($req['type'] === 'air') $value = $this->airData($req['name'], $req['farm'], $req['farmland']);
+        if ($req['type'] === 'light') $value = $this->lightData($req['name'], $req['farm'], $req['farmland']);
+        if ($req['type'] === 'water') $value = $this->waterData($req['name'], $req['farm'], $req['farmland']);
+        if ($req['type'] === 'weather') $value = $this->weatherData($req['name'], $req['farm'], $req['farmland']);
 
-        $MaxAndMin = $this->sensorDataInterval($req['name'], $req['farmland'], $req['type']);
+        $MaxAndMin = $this->sensorDataInterval($req['name'], $req['farm'], $req['farmland'], $req['type']);
 
         foreach ($MaxAndMin as $k => $item) {
             $sensorInfo[$time] = [
@@ -76,9 +77,9 @@ class apiController extends Controller
     }
 
 //  抓取權重
-    public function weightsData($former, $land)
+    public function weightsData($former, $farm, $land)
     {
-        $weights = Weights::where(['formerName' => $former, 'farmland' => $land])->first();
+        $weights = Weights::where(['formerName' => $former, 'farm' => $farm, 'farmland' => $land])->first();
         return ($weights);
     }
 
@@ -90,34 +91,34 @@ class apiController extends Controller
     }
 
 // 抓取個別的MAX MIN
-    public function sensorDataInterval($former, $farmland, $type)
+    public function sensorDataInterval($former, $farm, $farmland, $type)
     {
         $sensorInfo = [];
         $sensorTotal = [];
         switch ($type) {
             case('air'):
                 {
-                    $sensorTotal = ['AI1', 'AI2', 'AI3', 'AI4'];
+                    $sensorTotal = ['CON', 'CHE', 'OTE', 'OHY'];
                     break;
                 }
             case('water'):
                 {
-                    $sensorTotal = ['WA1', 'WA2', 'WA3'];
+                    $sensorTotal = ['WLS', 'WPH', 'WSO'];
                     break;
                 }
             case('light'):
                 {
-                    $sensorTotal = ['LIG'];
+                    $sensorTotal = ['LFS'];
                     break;
                 }
             case('weather'):
                 {
-                    $sensorTotal = ['WE1', 'WE2', 'WE3'];
+                    $sensorTotal = ['OWN', 'OWS', 'ORA'];
                     break;
                 }
         }
         foreach ($sensorTotal as $item) {
-            $info = SensorInfo::Where(['former' => $former, 'farmland' => $farmland, 'sensor' => $item])->first();
+            $info = SensorInfo::Where(['former' => $former, 'farm' => $farm, 'farmland' => $farmland, 'sensor' => $item])->first();
             $sensorInfo[$info['sensor']] = [
                 'max' => $info['max'],
                 'min' => $info['min'],
@@ -127,10 +128,10 @@ class apiController extends Controller
     }
 
 //  最新一筆的感測器資料抓出
-    public function waterData($former, $land)
+    public function waterData($former, $farm, $land)
     {
         $data = array();
-        $Water = WaterRecy::where(['former' => $former, 'farmland' => $land])->orderBy('send_time', 'ASC')->get();
+        $Water = WaterRecy::where(['former' => $former, 'farm' => $farm, 'farmland' => $land])->orderBy('send_time', 'ASC')->get();
 
         foreach ($Water as $Data) {
             $data[$Data['sensor']] = $Data['value'];
@@ -139,10 +140,10 @@ class apiController extends Controller
     }
 
 //  最新一筆的感測器資料抓出
-    public function airData($former = '0000', $land = 0)
+    public function airData($former, $farm, $land = 0)
     {
         $data = array();
-        $Air = AirRecy::where(['former' => $former, 'farmland' => $land])->orderBy('send_time', 'ASC')->get();
+        $Air = AirRecy::where(['former' => $former, 'farm' => $farm, 'farmland' => $land])->orderBy('send_time', 'ASC')->get();
 
         foreach ($Air as $Data) {
             $data[$Data['sensor']] = $Data['value'];
@@ -152,10 +153,10 @@ class apiController extends Controller
     }
 
 //  最新一筆的感測器資料抓出
-    public function lightData($former, $land)
+    public function lightData($former, $farm, $land)
     {
         $data = [];
-        $Light = LightRecy::where(['former' => $former, 'farmland' => $land])->orderBy('send_time', 'ASC')->get();
+        $Light = LightRecy::where(['former' => $former, 'farm' => $farm, 'farmland' => $land])->orderBy('send_time', 'ASC')->get();
 
         foreach ($Light as $Data) {
             $data[$Data['sensor']] = $Data['value'];
@@ -165,10 +166,10 @@ class apiController extends Controller
     }
 
 //  最新一筆的感測器資料抓出
-    public function weatherData($former, $land)
+    public function weatherData($former, $farm, $land)
     {
         $data = array();
-        $Weather = WeatherRecy::where(['former' => $former, 'farmland' => $land])->orderBy('send_time', 'ASC')->get();
+        $Weather = WeatherRecy::where(['former' => $former, 'farm' => $farm, 'farmland' => $land])->orderBy('send_time', 'ASC')->get();
 
         foreach ($Weather as $Data) {
             $data[$Data['sensor']] = $Data['value'];
@@ -178,9 +179,9 @@ class apiController extends Controller
     }
 
 //  計算該數值在該領域的百分比
-    public function confirmationPercentage($former, $farmland, $sensor, $weights, $original)
+    public function confirmationPercentage($former, $farm, $farmland, $sensor, $weights, $original)
     {
-        $info = SensorInfo::Where(['former' => $former, 'farmland' => $farmland, 'sensor' => $sensor])->first();
+        $info = SensorInfo::where(['former' => $former, 'farm' => $farm, 'farmland' => $farmland, 'sensor' => $sensor])->first();
         $range = $info['max'] - $info['min'];
         $value = $original * ($weights / $range);
         return $value;

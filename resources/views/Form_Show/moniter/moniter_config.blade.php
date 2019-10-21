@@ -8,6 +8,7 @@
                                 :target_name="'air'"
                                 :url_api="{{ json_encode(route('api.get.item.number'))}}"
                                 :farmland="{{$farmland}}"
+                                :farm_id="{{$farmNumber}}"
                                 :name="{{json_encode($name)}}"
             >
             </monitor-items-show>
@@ -16,6 +17,7 @@
                                 :target_name="'weather'"
                                 :url_api="{{ json_encode(route('api.get.item.number'))}}"
                                 :farmland="{{$farmland}}"
+                                :farm_id="{{$farmNumber}}"
                                 :name="{{json_encode($name)}}"
             >
             </monitor-items-show>
@@ -24,6 +26,7 @@
                                 :target_name="'water'"
                                 :url_api="{{ json_encode(route('api.get.item.number'))}}"
                                 :farmland="{{$farmland}}"
+                                :farm_id="{{$farmNumber}}"
                                 :name="{{json_encode($name)}}"
             >
             </monitor-items-show>
@@ -32,6 +35,7 @@
                                 :target_name="'light'"
                                 :url_api="{{ json_encode(route('api.get.item.number'))}}"
                                 :farmland="{{$farmland}}"
+                                :farm_id="{{$farmNumber}}"
                                 :name="{{json_encode($name)}}"
             >
             </monitor-items-show>
@@ -40,6 +44,7 @@
         <config-place :config_infos="{{ json_encode($formerConfig) }}"
                       :back_url="{{ json_encode(route('monitor_homepage')) }}"
                       :name_critical="{{ json_encode($sensor) }}"
+                      :farm_id="{{$farmNumber}}"
                       :api_url="[ {{ json_encode(route('api.post.config.create')) }}, {{ json_encode(route('api.post.config.delete')) }} , {{ json_encode(route('api.post.config.update')) }} , {{ json_encode(route('api.post.config.switch')) }} ]"
                       :former_name="{{json_encode($name)}}"></config-place>
     </div>

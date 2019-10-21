@@ -24,7 +24,7 @@ Route::group(['prefix' => 'monitor'], function () {
 //  更新農夫設定資料
     Route::get('/update', 'FormerPlaceController@stepClassification')->name('monitor_former_update');
 //  點選id轉化到監控畫面
-    Route::get('/item/{form_crop}', 'FormerConfigController@show')->name('monitor_former_config');
+    Route::get('/{farm}/{farmland}', 'FormerConfigController@show')->name('monitor_former_config');
 });
 
 //有關使用者相關

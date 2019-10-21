@@ -7,13 +7,13 @@
                  :class="monitor_target<=30 ? 'bg-danger' : monitor_target>60? 'bg-success': 'bg-warning'">
                 {{ item_infos.names[target_name]}}
             </div>
-            <div class=" col-10 monitor-item-show row float-left">
+            <div class="col-lg-9 col-10 monitor-item-show row float-left">
                 <div v-for="(item,index) in monitor_items" class="col-4">
                     <div class="text-center">{{ item_infos.items[index] }}</div>
                     <div :id="index" class="text-center"></div>
                 </div>
             </div>
-            <div class="col-2">
+            <div class="col-lg-3 col-2">
                 <div class="row no-gutters bg-white rounded my-3 shadow">
                     <span class="weights-style col-4 text-dark border border-success flex-total-center ">權重</span>
                     <span class="items-style col-8 text-dark border border-info flex-total-center">項目</span>
@@ -30,7 +30,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 border border-dark ">
+                    <div class="col-12 border border-dark rounded-bottom ">
                         <div class="row no-gutters flex-total-center">
                             <div class="col-2 flex-total-center">
                                 <i class="fa fa-cog" aria-hidden="true" data-toggle="modal"
@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <weights-modal :name="name" :farmland="farmland"
+        <weights-modal :name="name" :farmland="farmland" :farm_id="farm_id"
                        :type="target_name" :title="item_infos.names[target_name]"
                        :items="monitor_items" :itemsThreshold="item_value"
                        :ch_name="item_infos.items" :sensor_name="item_infos.sensor"></weights-modal>
@@ -62,6 +62,7 @@
         props: {
             monitor_target: Number,
             monitor_items: Object,
+            farm_id: Number,
             target_name: String,
             url_api: '',
             name: String,
@@ -72,6 +73,7 @@
                 let self = this;
                 axios.post(this.url_api, {
                     'name': this.name,
+                    'farm': this.farm_id,
                     'farmland': this.farmland,
                     'type': this.target_name,
                 }).then(function (res) {
@@ -112,12 +114,12 @@
                         'weather': '氣候健康指數'
                     },
                     sensor: {
-                        "AI1": 'air_cp', "AI2": 'air_ph4',
-                        "AI3": 'air_hun', "AI4": 'air_tem',
-                        "WA1": 'water_level', "WA2": 'water_ph',
-                        "WA3": 'water_soil', "LIG": 'light_lux',
-                        "WE1": 'weather_windWay', "WE2": 'weather_windSpeed',
-                        "WE3": 'weather_rainAccumulation',
+                        "CON": 'air_cp', "CHE": 'air_ph4',
+                        "OTE": 'air_hun', "OHY": 'air_tem',
+                        "WLS": 'water_level', "WPH": 'water_ph',
+                        "WSO": 'water_soil', "LFS": 'light_lux',
+                        "OWN": 'weather_windWay', "OWS": 'weather_windSpeed',
+                        "ORA": 'weather_rainAccumulation',
                     },
                     items:
                         {
