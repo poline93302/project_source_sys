@@ -37,12 +37,13 @@ class FormerPlaceController extends Controller
 
     public function CreateCrop($sqlID, $newFarm, $newCrop)
     {
+        $max = FormerInfo::max('farmland') + 1;
         FormerInfo::create([
             'id' => $sqlID,
             'farmer' => Auth::user()['username'],
             'farm' => $newFarm,
             'status' => '444',
-            'farmland' => FormerInfo::where(['farmer' => Auth::user()['username'], 'farm' => $newFarm])->count() + 1,
+            'farmland' => $max,
             'crop' => $newCrop,
             'create_time' => Carbon::now(),
         ]);
