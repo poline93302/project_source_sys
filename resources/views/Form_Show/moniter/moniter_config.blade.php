@@ -45,6 +45,7 @@
                       :back_url="{{ json_encode(route('monitor_homepage')) }}"
                       :name_critical="{{ json_encode($sensor) }}"
                       :farm_id="{{$farmNumber}}"
+                      :farmland="{{$farmland}}"
                       :api_url="[ {{ json_encode(route('api.post.config.create')) }}, {{ json_encode(route('api.post.config.delete')) }} , {{ json_encode(route('api.post.config.update')) }} , {{ json_encode(route('api.post.config.switch')) }} ]"
                       :former_name="{{json_encode($name)}}"></config-place>
     </div>

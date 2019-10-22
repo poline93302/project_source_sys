@@ -3,8 +3,8 @@
         <div class="row mt-3 no-gutters text-center">
             <div class="col-12 mb-3 form-header">
                 <div class="row ">
-                    <div class="col-3 form-title text-left"> {{ form_crop }}</div>
-                    <div class="col-6"></div>
+                    <div class="col-5 form-title text-left text-title"> {{ form_crop }}</div>
+                    <div class="col-4"></div>
                     <div class="col-3 place-tools text-right">
                         <a data-toggle="collapse" :href='"#replyCollapse"+config_number' role="button"
                            aria-expanded="false" aria-controls="collapseExample">
@@ -52,19 +52,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="row no-gutters">
+                <div class="row no-gutters flex-scrollable overflow-auto p-2 p-lg-0 flex-nowrap">
                     <div v-for="(hex_value,item,key) in hex_values[1]"
-                         class="col-3 mt-3 h-100 flex-total-center text-center">
+                         class="col-3 mt-3 mr-5 mr-lg-0 flex-total-center text-center">
                         <div class="monitor-items" :id="count_off(key)">
                             <div>{{ item_id[key] }}</div>
                         </div>
                     </div>
-                    <div class="col-12 h-75">&nbsp;</div>
-                    <div class="col-12 text-right">
-                        <a :href="url_path">
-                            <div class="go-monitor"></div>
-                        </a>
-                    </div>
+                </div>
+                <div class="col-12 text-right">
+                    <a :href="url_path">
+                        <div class="go-monitor"></div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -166,5 +165,9 @@
 
     .text-notice {
         font-size: 0.5rem !important;
+    }
+
+    .text-title {
+        font-size: 1.2rem !important;
     }
 </style>

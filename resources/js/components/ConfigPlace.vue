@@ -83,6 +83,7 @@
 
 <script>
     import axios from 'axios';
+
     export default {
         name: "ConfigPlace",
         props: {
@@ -92,6 +93,7 @@
             api_url: Array,
             former_name: '',
             farm_id: Number,
+            farmland: Number,
         },
         data() {
             return {
@@ -140,6 +142,7 @@
             sensorGet(id) {
                 let value = document.getElementById('select_sensor_name');
                 this.Config_Infos[id].sensor = value.value;
+                this.items.splice(this.items.indexOf(value.value), 1);
             },
             deleteConfig(index) {
                 let self = this;
@@ -147,13 +150,14 @@
                     axios.post(self.api_url[1], {
                         'former': self.former_name,
                         'farm': self.farm_id,
-                        'farmland': self.Config_Infos[index].farmland,
+                        'farmland': self.farmland,
                         'sensor': self.Config_Infos[index].sensor,
                     }).then(function (res) {
                         console.log(res.data);
                     }).catch(function (err) {
                         console.log(err);
                     }).finally(function () {
+                        self.items.push(self.Config_Infos[index].sensor);
                         self.$delete(self.Config_Infos, index);
                     });
                 }
@@ -167,7 +171,7 @@
                 axios.post(api, {
                     'former': this.former_name,
                     'farm': self.farm_id,
-                    'farmland': this.Config_Infos[index].farmland,
+                    'farmland': self.farmland,
                     'sensor': this.Config_Infos[index].sensor,
                     'switch': this.Config_Infos[index].switch,
                     'value': this.Config_Infos[index].value
@@ -187,7 +191,7 @@
                 axios.post(this.api_url[3], {
                     'former': self.former_name,
                     'farm': self.farm_id,
-                    'farmland': this.Config_Infos[index].farmland,
+                    'farmland': this.farmland,
                     'sensor': this.Config_Infos[index].sensor,
                     'switch': this.Config_Infos[index].switch,
                 }).then(function (res) {

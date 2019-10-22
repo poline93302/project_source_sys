@@ -22,8 +22,10 @@
 <body>
 <div id="app">
     @yield('show')
-    <footer class="text-center mt-5">
-        <pre>© 2018 Maselab318.  All Rights Reserved.   Designed By  YingLu_Chen.</pre>
+    <footer class="text-center mt-5 flex-total-center">
+        <div>
+            <pre class="text-font d-none d-md-flex">© 2018 Maselab318.  All Rights Reserved.   Designed By  YingLu_Chen.</pre>
+        </div>
     </footer>
 </div>
 </body>

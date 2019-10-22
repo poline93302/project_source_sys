@@ -20,13 +20,13 @@
                                 <div class="col-6">
                                     <label for="formerInfoName">名稱：</label>
                                     <input type="text" id="formerInfoName" v-model="FarmerName"
-                                           name="updateFormerName" class="w-98"
+                                           name="updateFormerName" class="w-98 border"
                                     />
                                 </div>
                                 <div class="col-6">
                                     <label for="formerInfoEmail">信箱：</label>
                                     <input type="text" id="formerInfoEmail" v-model="FarmerEmail"
-                                           name="updateFormerEmail" class="w-98"/>
+                                           name="updateFormerEmail" class="w-98 border"/>
                                 </div>
                                 <div class="btn-group mt-3 col-8">
                                     <div class="btn border" @click="switchConnect = false"

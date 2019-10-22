@@ -1790,24 +1790,25 @@ __webpack_require__.r(__webpack_exports__);
     config_infos: Array,
     name_critical: {},
     api_url: Array,
-      former_name: '',
-      farm_id: Number
+    former_name: '',
+    farm_id: Number,
+    farmland: Number
   },
   data: function data() {
     return {
       value_items: ['rounded-left', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-0', 'rounded-right'],
       Config_Infos: _.cloneDeep(this.config_infos),
       ch_name: {
-          "WLS": '水位感測器',
-          "WPH": '水PH感測器',
-          "OTE": '溫度感測器',
-          "CHE": '甲烷感測器',
-          "LFS": '光線感測器',
-          "WSO": '土壤濕度感測器',
-          "OHY": '相對濕度感測器',
-          "CON": '一氧化碳感測器'
+        "WLS": '水位感測器',
+        "WPH": '水PH感測器',
+        "OTE": '溫度感測器',
+        "CHE": '甲烷感測器',
+        "LFS": '光線感測器',
+        "WSO": '土壤濕度感測器',
+        "OHY": '相對濕度感測器',
+        "CON": '一氧化碳感測器'
       },
-        items: ['WLS', 'WPH', 'OTE', 'CHE', 'LFS', 'WSO', 'OHY', 'CON']
+      items: ['WLS', 'WPH', 'OTE', 'CHE', 'LFS', 'WSO', 'OHY', 'CON']
     };
   },
   methods: {
@@ -1837,6 +1838,7 @@ __webpack_require__.r(__webpack_exports__);
     sensorGet: function sensorGet(id) {
       var value = document.getElementById('select_sensor_name');
       this.Config_Infos[id].sensor = value.value;
+      this.items.splice(this.items.indexOf(value.value), 1);
     },
     deleteConfig: function deleteConfig(index) {
       var self = this;
@@ -1844,14 +1846,15 @@ __webpack_require__.r(__webpack_exports__);
       if (confirm('確定刪除')) {
         axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(self.api_url[1], {
           'former': self.former_name,
-            'farm': self.farm_id,
-          'farmland': self.Config_Infos[index].farmland,
+          'farm': self.farm_id,
+          'farmland': self.farmland,
           'sensor': self.Config_Infos[index].sensor
         }).then(function (res) {
           console.log(res.data);
         })["catch"](function (err) {
           console.log(err);
         })["finally"](function () {
+          self.items.push(self.Config_Infos[index].sensor);
           self.$delete(self.Config_Infos, index);
         });
       }
@@ -1862,11 +1865,11 @@ __webpack_require__.r(__webpack_exports__);
     updateCreateConfig: function updateCreateConfig(index) {
       var api = this.Config_Infos[index].control ? this.api_url[2] : this.api_url[0];
       var self = this;
-        console.log('api go');
+      console.log('api go');
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(api, {
         'former': this.former_name,
-          'farm': self.farm_id,
-        'farmland': this.Config_Infos[index].farmland,
+        'farm': self.farm_id,
+        'farmland': self.farmland,
         'sensor': this.Config_Infos[index].sensor,
         'switch': this.Config_Infos[index]["switch"],
         'value': this.Config_Infos[index].value
@@ -1884,8 +1887,8 @@ __webpack_require__.r(__webpack_exports__);
       var self = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(this.api_url[3], {
         'former': self.former_name,
-          'farm': self.farm_id,
-        'farmland': this.Config_Infos[index].farmland,
+        'farm': self.farm_id,
+        'farmland': this.farmland,
         'sensor': this.Config_Infos[index].sensor,
         'switch': this.Config_Infos[index]["switch"]
       }).then(function (res) {
@@ -1998,7 +2001,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -2018,14 +2020,14 @@ __webpack_require__.r(__webpack_exports__);
     getValue: function getValue() {
       // hex_value
       var self = this;
-        console.log('holle');
+      console.log('holle');
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api_target, {
         'name': this.name,
-          'farm': this.form_crop.split('_')[0],
+        'farm': this.form_crop.split('_')[0],
         'farmland': this.config_number
       }).then(function (res) {
         //weights =>[0] 權重 [1]大權重
-          self.hex_values = [res.data.weights, res.data.target];
+        self.hex_values = [res.data.weights, res.data.target];
       })["catch"](function (err) {
         console.log('ERROR' + err);
       })["finally"](function () {
@@ -2075,16 +2077,15 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-    /***/
-    "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js&":
-    /*!******************************************************************************************************************************************************************************!*\
-      !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js& ***!
-      \******************************************************************************************************************************************************************************/
-    /*! exports provided: default */
-    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-        "use strict";
-        __webpack_require__.r(__webpack_exports__);
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 //
 //
 //
@@ -2092,16 +2093,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-        /* harmony default export */
-        __webpack_exports__["default"] = ({
-            name: "ConitorExponentNull",
-            props: {
-                form_crop: String
-            }
-        });
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "ConitorExponentNull",
+  props: {
+    form_crop: String
+  }
+});
 
-        /***/
-    }),
+/***/ }),
 
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************************!*\
@@ -2274,239 +2273,239 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     formername: String,
     formeremail: String,
-      farms: Array,
-      crops: Array,
+    farms: Array,
+    crops: Array,
     route: String
   },
   methods: {
-      //新增農場/農田 ps.一次新增一層
+    //新增農場/農田 ps.一次新增一層
     addItems: function addItems(grad) {
-        if (grad === 'farm') {
-            var farmLen = this.Farms.length;
-            this.editFarmControl = false;
+      if (grad === 'farm') {
+        var farmLen = this.Farms.length;
+        this.editFarmControl = false;
 
-            if (farmLen === 0 || this.Farms[farmLen - 1]['farm'] !== '') {
-                this.originalFarmID++;
-                this.Farms.push({
-                    'id': this.originalFarmID,
-                    'address': '',
-                    'farm': ''
-                });
-                this.FarmsKey.push({
-                    'id': this.originalFarmID,
-                    'address': '',
-                    'farm': ''
-                });
-            }
-
-            this.editFarmControl = true;
-        } else {
-            var cropLen = this.Crops.length;
-            this.editCropControl = false;
-
-            if (cropLen === 0 || this.Crops[cropLen - 1]['farm'] !== '') {
-                this.originalCropID++;
-                this.Crops.push({
-                    'id': this.originalCropID,
-                    'crop': '',
-                    'farm': '',
-                    'status': '444',
-                    'create': false
-                });
-                this.CropsKey.push({
-                    'id': this.originalCropID,
-                    'crop': '',
-                    'farm': '',
-                    'status': '444',
-                    'create': false
-                });
-            }
-
-            this.editCropControl = true;
+        if (farmLen === 0 || this.Farms[farmLen - 1]['farm'] !== '') {
+          this.originalFarmID++;
+          this.Farms.push({
+            'id': this.originalFarmID,
+            'address': '',
+            'farm': ''
+          });
+          this.FarmsKey.push({
+            'id': this.originalFarmID,
+            'address': '',
+            'farm': ''
+          });
         }
+
+        this.editFarmControl = true;
+      } else {
+        var cropLen = this.Crops.length;
+        this.editCropControl = false;
+
+        if (cropLen === 0 || this.Crops[cropLen - 1]['farm'] !== '') {
+          this.originalCropID++;
+          this.Crops.push({
+            'id': this.originalCropID,
+            'crop': '',
+            'farm': '',
+            'status': '444',
+            'create': false
+          });
+          this.CropsKey.push({
+            'id': this.originalCropID,
+            'crop': '',
+            'farm': '',
+            'status': '444',
+            'create': false
+          });
+        }
+
+        this.editCropControl = true;
+      }
     },
-      //刪除農場/農田
+    //刪除農場/農田
     deleteItems: function deleteItems(grad, index) {
       var self = this;
-        var deleteCount = []; // 查看Farm資料庫中的id
+      var deleteCount = []; // 查看Farm資料庫中的id
 
-        var statueFarmId = self.farms[self.farms.length - 1]['id']; // 查看Crop資料庫中的id
+      var statueFarmId = self.farms[self.farms.length - 1]['id']; // 查看Crop資料庫中的id
 
-        var statueCropId = self.crops[self.crops.length - 1]['id'];
+      var statueCropId = self.crops[self.crops.length - 1]['id'];
 
-        if (grad === 'farm') {
-            if (confirm('若刪除農場，相關的農田也會一並刪除，確認是否刪除？')) {
-                //新增不進行 紀錄
-                if (statueFarmId >= self.Farms[index]['id']) {
-                    this.stepsDelete.push('Farm_' + this.Farms[index]['id']);
-                } //刪除步驟
+      if (grad === 'farm') {
+        if (confirm('若刪除農場，相關的農田也會一並刪除，確認是否刪除？')) {
+          //新增不進行 紀錄
+          if (statueFarmId >= self.Farms[index]['id']) {
+            this.stepsDelete.push('Farm_' + this.Farms[index]['id']);
+          } //刪除步驟
 
 
-                if (this.stepsFarm.indexOf(this.Farms[index]['id']) !== -1) this.stepsFarm.splice(this.stepsFarm.indexOf(this.Farms[index]['id']), 1); //對要進行刪除的index 存
+          if (this.stepsFarm.indexOf(this.Farms[index]['id']) !== -1) this.stepsFarm.splice(this.stepsFarm.indexOf(this.Farms[index]['id']), 1); //對要進行刪除的index 存
 
-                lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(this.Crops, function (item, cropIndex) {
-                    if (item['farm'] === self.Farms[index]['farm']) {
-                        if (statueCropId >= item['id']) self.stepsDelete.push('Crop_' + item['id']);
-                        deleteCount.push(cropIndex);
-                    }
-                });
-
-                console.log(deleteCount);
-                deleteCount.sort();
-                deleteCount.reverse(); //對Crop 進行刪除
-
-                lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(deleteCount, function (number) {
-                    self.Crops.splice(number, 1);
-                    self.CropsKey.splice(number, 1);
-                });
-
-                this.Farms.splice(index, 1);
-                this.FarmsKey.splice(index, 1);
+          lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(this.Crops, function (item, cropIndex) {
+            if (item['farm'] === self.Farms[index]['farm']) {
+              if (statueCropId >= item['id']) self.stepsDelete.push('Crop_' + item['id']);
+              deleteCount.push(cropIndex);
             }
-        } else {
-            console.log(statueCropId);
-            console.log(self.Crops[index]['id']);
-            if (statueCropId >= self.Crops[index]['id']) this.stepsDelete.push('Crop_' + this.Crops[index]['id']);
-            this.Crops.splice(index, 1);
-            this.CropsKey.splice(index, 1);
+          });
+
+          console.log(deleteCount);
+          deleteCount.sort();
+          deleteCount.reverse(); //對Crop 進行刪除
+
+          lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(deleteCount, function (number) {
+            self.Crops.splice(number, 1);
+            self.CropsKey.splice(number, 1);
+          });
+
+          this.Farms.splice(index, 1);
+          this.FarmsKey.splice(index, 1);
         }
+      } else {
+        console.log(statueCropId);
+        console.log(self.Crops[index]['id']);
+        if (statueCropId >= self.Crops[index]['id']) this.stepsDelete.push('Crop_' + this.Crops[index]['id']);
+        this.Crops.splice(index, 1);
+        this.CropsKey.splice(index, 1);
+      }
     },
     //重設所有數字
     resetValue: function resetValue() {
       var self = this;
-        this.FarmerName = this.formername;
-        this.FarmerEmail = this.formeremail;
-        this.originalFarmID = this.farms.length !== 0 ? this.farms[this.farms.length - 1]['id'] : 0;
-        this.originalCropID = this.crops.length !== 0 ? this.crops[this.crops.length - 1]['id'] : 0;
-        this.Farms = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.farms);
-        this.FarmsKey = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.farms);
-        this.Crops = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.crops);
-        this.CropsKey = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.crops); //     self.crops.sort(function (a, b) {
-        //         return a.farm > b.farm ? 1 : -1
-        //     }));
-        // this.CropsKey = _.cloneDeep(
-        //     self.crops.sort(function (a, b) {
-        //         return a.farm > b.farm ? 1 : -1
-        //     }));
+      this.FarmerName = this.formername;
+      this.FarmerEmail = this.formeremail;
+      this.originalFarmID = this.farms.length !== 0 ? this.farms[this.farms.length - 1]['id'] : 0;
+      this.originalCropID = this.crops.length !== 0 ? this.crops[this.crops.length - 1]['id'] : 0;
+      this.Farms = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.farms);
+      this.FarmsKey = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.farms);
+      this.Crops = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.crops);
+      this.CropsKey = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.cloneDeep(self.crops); //     self.crops.sort(function (a, b) {
+      //         return a.farm > b.farm ? 1 : -1
+      //     }));
+      // this.CropsKey = _.cloneDeep(
+      //     self.crops.sort(function (a, b) {
+      //         return a.farm > b.farm ? 1 : -1
+      //     }));
 
-        this.stepsFarm = [];
-        this.stepsCrop = [];
-        this.stepsDelete = [];
+      this.stepsFarm = [];
+      this.stepsCrop = [];
+      this.stepsDelete = [];
     },
     //送出確認
     lostCheck: function lostCheck() {
-        var formUpdate = document.getElementById('updateFormerInfo'); //針對所有crops form 查看是否有不合法的地方 在
+      var formUpdate = document.getElementById('updateFormerInfo'); //針對所有crops form 查看是否有不合法的地方 在
 
-        formUpdate.submit();
+      formUpdate.submit();
       console.log('submit');
     }
   },
   watch: {
-      Crops: {
+    Crops: {
       deep: true,
       handler: function handler(values) {
         var self = this;
-          var stepsCache = [];
+        var stepsCache = [];
 
-          if (this.editCropControl) {
-              lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(values, function (items, index) {
-                  if (JSON.stringify(items) !== JSON.stringify(self.CropsKey[index])) {
-                      console.log(JSON.stringify(items), JSON.stringify(self.CropsKey[index]));
-                      stepsCache.push(items['id']);
-                  }
-              });
+        if (this.editCropControl) {
+          lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(values, function (items, index) {
+            if (JSON.stringify(items) !== JSON.stringify(self.CropsKey[index])) {
+              console.log(JSON.stringify(items), JSON.stringify(self.CropsKey[index]));
+              stepsCache.push(items['id']);
+            }
+          });
 
-              self.stepsCrop = Array.from(new Set(stepsCache));
-          }
+          self.stepsCrop = Array.from(new Set(stepsCache));
+        }
       }
     },
-      //當forms進行更改時
-      Farms: {
+    //當forms進行更改時
+    Farms: {
       deep: true,
-          immediate: true,
+      immediate: true,
       handler: function handler(value) {
         var self = this;
 
-          if (this.editFarmControl) {
+        if (this.editFarmControl) {
           //原因 forms 為 所有農場集合體 所以透過 forEach 抓出
           lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(value, function (item, index) {
-              if (JSON.stringify(item) !== JSON.stringify(self.FarmsKey[index])) {
+            if (JSON.stringify(item) !== JSON.stringify(self.FarmsKey[index])) {
               //當 數值改變 確認是否改變時
-                  //推上更改ID
-                  if (self.stepsFarm.indexOf(item['id']) !== -1) self.stepsFarm.splice(self.stepsFarm.indexOf(item['id']), 1);
-                  self.stepsFarm.push(item['id']); //將相關的 crops 進行更改名稱
+              //推上更改ID
+              if (self.stepsFarm.indexOf(item['id']) !== -1) self.stepsFarm.splice(self.stepsFarm.indexOf(item['id']), 1);
+              self.stepsFarm.push(item['id']); //將相關的 crops 進行更改名稱
 
-                  lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Crops, function (cropItem) {
-                      if (cropItem['farm'] === self.FarmsKey[index]['farm']) {
-                          cropItem['farm'] = item['farm'];
+              lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Crops, function (cropItem) {
+                if (cropItem['farm'] === self.FarmsKey[index]['farm']) {
+                  cropItem['farm'] = item['farm'];
                 }
               }); //更新最高數值
 
 
-                  self.FarmsKey[index]['farm'] = item['farm'];
-                  self.FarmsKey[index]['address'] = item['address'];
+              self.FarmsKey[index]['farm'] = item['farm'];
+              self.FarmsKey[index]['address'] = item['address'];
             }
           });
-          }
+        }
       }
-      }
+    }
   },
-            computed: {
-                FarmNumbering: function FarmNumbering() {
-                    var self = this; //為stepsFarm stepsCrop  加上 ＤＯＭ的index
+  computed: {
+    FarmNumbering: function FarmNumbering() {
+      var self = this; //為stepsFarm stepsCrop  加上 ＤＯＭ的index
 
-                    var keyIndex = 0;
-                    this.stepsFarmStatus = this.stepsFarm.map(function (item) {
-                        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Farms, function (itemKey, indexKey) {
-                            if (itemKey['id'] === item) {
-                                keyIndex = indexKey;
-                            }
-                        });
+      var keyIndex = 0;
+      this.stepsFarmStatus = this.stepsFarm.map(function (item) {
+        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Farms, function (itemKey, indexKey) {
+          if (itemKey['id'] === item) {
+            keyIndex = indexKey;
+          }
+        });
 
-                        return item + '_' + keyIndex;
-                    });
-                    return this.stepsFarmStatus;
-                },
-                CropNumbering: function CropNumbering() {
-                    var self = this; //為stepsFarm stepsCrop  加上 ＤＯＭ的index
+        return item + '_' + keyIndex;
+      });
+      return this.stepsFarmStatus;
+    },
+    CropNumbering: function CropNumbering() {
+      var self = this; //為stepsFarm stepsCrop  加上 ＤＯＭ的index
 
-                    var keyIndex = 0;
-                    this.stepsCropStatus = this.stepsCrop.map(function (item) {
-                        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Crops, function (itemKey, indexKey) {
-                            if (itemKey['id'] === item) {
-                                keyIndex = indexKey;
-                            }
-                        });
+      var keyIndex = 0;
+      this.stepsCropStatus = this.stepsCrop.map(function (item) {
+        lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(self.Crops, function (itemKey, indexKey) {
+          if (itemKey['id'] === item) {
+            keyIndex = indexKey;
+          }
+        });
 
-                        return item + '_' + keyIndex;
-                    });
-                    return this.stepsCropStatus;
-                }
-            },
+        return item + '_' + keyIndex;
+      });
+      return this.stepsCropStatus;
+    }
+  },
   data: function data() {
     return {
-        Farms: [],
-        FarmsKey: [],
-        //
-        Crops: [],
-        CropsKey: [],
+      Farms: [],
+      FarmsKey: [],
+      //
+      Crops: [],
+      CropsKey: [],
       //農夫名稱
-        FarmerName: '',
-        FarmerEmail: '',
-        //
-        stepsFarm: [],
-        stepsFarmStatus: [],
+      FarmerName: '',
+      FarmerEmail: '',
+      //
+      stepsFarm: [],
+      stepsFarmStatus: [],
       stepsCrop: [],
-        stepsCropStatus: [],
-        stepsDelete: [],
-        //
-        editFarmControl: true,
-        editCropControl: true,
-        //
-        originalFarmID: 0,
-        originalCropID: 0,
-        formCheckRun: false,
-        switchConnect: false,
+      stepsCropStatus: [],
+      stepsDelete: [],
+      //
+      editFarmControl: true,
+      editCropControl: true,
+      //
+      originalFarmID: 0,
+      originalCropID: 0,
+      formCheckRun: false,
+      switchConnect: false,
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
   },
@@ -2585,6 +2584,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -2593,7 +2596,7 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     monitor_target: Number,
     monitor_items: Object,
-      farm_id: Number,
+    farm_id: Number,
     target_name: String,
     url_api: '',
     name: String,
@@ -2604,7 +2607,7 @@ __webpack_require__.r(__webpack_exports__);
       var self = this;
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api, {
         'name': this.name,
-          'farm': this.farm_id,
+        'farm': this.farm_id,
         'farmland': this.farmland,
         'type': this.target_name
       }).then(function (res) {
@@ -2646,17 +2649,17 @@ __webpack_require__.r(__webpack_exports__);
           'weather': '氣候健康指數'
         },
         sensor: {
-            "CON": 'air_cp',
-            "CHE": 'air_ph4',
-            "OTE": 'air_hun',
-            "OHY": 'air_tem',
-            "WLS": 'water_level',
-            "WPH": 'water_ph',
-            "WSO": 'water_soil',
-            "LFS": 'light_lux',
-            "OWN": 'weather_windWay',
-            "OWS": 'weather_windSpeed',
-            "ORA": 'weather_rainAccumulation'
+          "CON": 'air_cp',
+          "CHE": 'air_ph4',
+          "OTE": 'air_hun',
+          "OHY": 'air_tem',
+          "WLS": 'water_level',
+          "WPH": 'water_ph',
+          "WSO": 'water_soil',
+          "LFS": 'light_lux',
+          "OWN": 'weather_windWay',
+          "OWS": 'weather_windSpeed',
+          "ORA": 'weather_rainAccumulation'
         },
         items: {
           'water_level': '水位',
@@ -2665,7 +2668,7 @@ __webpack_require__.r(__webpack_exports__);
           'light_lux': '亮度',
           'air_cp': '一氧化碳',
           'air_ph4': '甲烷',
-          'air_hun': '濕度',
+          'air_hun': '相對濕度',
           'air_tem': '溫度',
           'weather_windWay': '風向',
           'weather_windSpeed': '風速',
@@ -2762,8 +2765,8 @@ __webpack_require__.r(__webpack_exports__);
     ch_name: Object,
     sensor_name: Object,
     name: String,
-      farmland: Number,
-      farm_id: Number
+    farmland: Number,
+    farm_id: Number
   },
   methods: {
     resetData: function resetData() {
@@ -2896,8 +2899,7 @@ var process_max = 25;
 
       var bg_color = ['bg-danger', 'bg-warning', 'bg-success', 'bg-success', 'bg-light']; //計算第幾個li為終點
 
-      var manyPoint = Math.floor((value - this.config_critical[this.config_sensor].min) / wegi);
-      console.log(smallRan); //計算li
+      var manyPoint = Math.floor((value - this.config_critical[this.config_sensor].min) / wegi); //計算li
 
       for (var i = 0; i < process_max; i++) {
         this.li_str += "<li class=\"border blk ".concat(i <= manyPoint ? bg_color[Math.floor((value - this.config_critical[this.config_sensor].min) / smallRan)] : bg_color[4], " ").concat(i === 0 ? 'rounded-left' : i === process_max - 1 ? 'rounded-right' : 'rounded-0', "\" id=\"blk-").concat(this.config_index, "-").concat(i, "\"></li>");
@@ -7426,33 +7428,31 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.go-monitor[data-v-6bd9bef8] {\n    position: absolute;\n    bottom: 0;\n    right: 0;\n    border-color: transparent #59ff00 transparent transparent;\n    border-style: solid solid solid solid;\n    border-width: 1.5rem 1.5rem 0 0;\n    height: 0;\n    width: 0;\n}\n.text-notice[data-v-6bd9bef8] {\n    font-size: 0.5rem !important;\n}\n", ""]);
+exports.push([module.i, "\n.go-monitor[data-v-6bd9bef8] {\n    position: absolute;\n    bottom: 0;\n    right: 0;\n    border-color: transparent #59ff00 transparent transparent;\n    border-style: solid solid solid solid;\n    border-width: 1.5rem 1.5rem 0 0;\n    height: 0;\n    width: 0;\n}\n.text-notice[data-v-6bd9bef8] {\n    font-size: 0.5rem !important;\n}\n.text-title[data-v-6bd9bef8] {\n    font-size: 1.2rem !important;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-    /***/
-    "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&":
-    /*!**********************************************************************************************************************************************************************************************************************************************************************************************************!*\
-      !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& ***!
-      \**********************************************************************************************************************************************************************************************************************************************************************************************************/
-    /*! no static exports found */
-    /***/ (function (module, exports, __webpack_require__) {
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-        exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
 // imports
 
 
 // module
-        exports.push([module.i, "\n.switch-type-true[data-v-6e49e268] {\n    background-color: #1f6fb2;\n    color: white;\n}\n.switch-type-false[data-v-6e49e268] {\n    background-color: white;\n}\n", ""]);
+exports.push([module.i, "\n.switch-type-true[data-v-6e49e268] {\n    background-color: #1f6fb2;\n    color: white;\n}\n.switch-type-false[data-v-6e49e268] {\n    background-color: white;\n}\n", ""]);
 
 // exports
 
 
-        /***/
-    }),
+/***/ }),
 
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MonitorItemsShow.vue?vue&type=style&index=0&id=26f9a78e&scoped=true&lang=css&":
 /*!**********************************************************************************************************************************************************************************************************************************************************************************************************!*\
@@ -67495,37 +67495,35 @@ if(false) {}
 
 /***/ }),
 
-    /***/
-    "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&":
-    /*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-      !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& ***!
-      \**************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-    /*! no static exports found */
-    /***/ (function (module, exports, __webpack_require__) {
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 
-        var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&");
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&");
 
-        if (typeof content === 'string') content = [[module.i, content, '']];
+if(typeof content === 'string') content = [[module.i, content, '']];
 
-        var transform;
-        var insertInto;
+var transform;
+var insertInto;
 
 
-        var options = {"hmr": true}
 
-        options.transform = transform
-        options.insertInto = undefined;
+var options = {"hmr":true}
 
-        var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+options.transform = transform
+options.insertInto = undefined;
 
-        if (content.locals) module.exports = content.locals;
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
 
-        if (false) {
-        }
+if(content.locals) module.exports = content.locals;
 
-        /***/
-    }),
+if(false) {}
+
+/***/ }),
 
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/MonitorItemsShow.vue?vue&type=style&index=0&id=26f9a78e&scoped=true&lang=css&":
 /*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
@@ -68504,11 +68502,13 @@ var render = function() {
       _c("div", { staticClass: "row mt-3 no-gutters text-center" }, [
         _c("div", { staticClass: "col-12 mb-3 form-header" }, [
           _c("div", { staticClass: "row " }, [
-            _c("div", { staticClass: "col-3 form-title text-left" }, [
-              _vm._v(" " + _vm._s(_vm.form_crop))
-            ]),
+            _c(
+              "div",
+              { staticClass: "col-5 form-title text-left text-title" },
+              [_vm._v(" " + _vm._s(_vm.form_crop))]
+            ),
             _vm._v(" "),
-            _c("div", { staticClass: "col-6" }),
+            _c("div", { staticClass: "col-4" }),
             _vm._v(" "),
             _c("div", { staticClass: "col-3 place-tools text-right" }, [
               _c(
@@ -68655,38 +68655,37 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "row no-gutters" },
-            [
-              _vm._l(_vm.hex_values[1], function(hex_value, item, key) {
-                return _c(
-                  "div",
-                  {
-                    staticClass:
-                      "col-3 mt-3 h-100 flex-total-center text-center"
-                  },
-                  [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "monitor-items",
-                        attrs: { id: _vm.count_off(key) }
-                      },
-                      [_c("div", [_vm._v(_vm._s(_vm.item_id[key]))])]
-                    )
-                  ]
-                )
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-12 h-75" }, [_vm._v(" ")]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-12 text-right" }, [
-                _c("a", { attrs: { href: _vm.url_path } }, [
-                  _c("div", { staticClass: "go-monitor" })
-                ])
-              ])
-            ],
-            2
-          )
+            {
+              staticClass:
+                "row no-gutters flex-scrollable overflow-auto p-2 p-lg-0 flex-nowrap"
+            },
+            _vm._l(_vm.hex_values[1], function(hex_value, item, key) {
+              return _c(
+                "div",
+                {
+                  staticClass:
+                    "col-3 mt-3 mr-5 mr-lg-0 flex-total-center text-center"
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "monitor-items",
+                      attrs: { id: _vm.count_off(key) }
+                    },
+                    [_c("div", [_vm._v(_vm._s(_vm.item_id[key]))])]
+                  )
+                ]
+              )
+            }),
+            0
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-12 text-right" }, [
+            _c("a", { attrs: { href: _vm.url_path } }, [
+              _c("div", { staticClass: "go-monitor" })
+            ])
+          ])
         ])
       ])
     ]
@@ -68717,52 +68716,45 @@ var staticRenderFns = [
 render._withStripped = true
 
 
-        /***/
-    }),
 
-    /***/
-    "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true&":
-    /*!**********************************************************************************************************************************************************************************************************************************!*\
-      !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true& ***!
-      \**********************************************************************************************************************************************************************************************************************************/
-    /*! exports provided: render, staticRenderFns */
-    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+/***/ }),
 
-        "use strict";
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony export (binding) */
-        __webpack_require__.d(__webpack_exports__, "render", function () {
-            return render;
-        });
-        /* harmony export (binding) */
-        __webpack_require__.d(__webpack_exports__, "staticRenderFns", function () {
-            return staticRenderFns;
-        });
-        var render = function () {
-            var _vm = this
-            var _h = _vm.$createElement
-            var _c = _vm._self._c || _h
-            return _c(
-                "div",
-                {
-                    staticClass:
-                        "text-center container sensor-part border border-light rounded mt-5 shadow py-5"
-                },
-                [
-                    _c("div", {staticClass: "col-12"}, [
-                        _vm._v(" " + _vm._s(_vm.form_crop))
-                    ]),
-                    _vm._v(" "),
-                    _c("div", {staticClass: "col-12"}, [_vm._v("請通知客服已開通資訊")])
-                ]
-            )
-        }
-        var staticRenderFns = []
-        render._withStripped = true
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "text-center container sensor-part border border-light rounded mt-5 shadow py-5"
+    },
+    [
+      _c("div", { staticClass: "col-12" }, [
+        _vm._v(" " + _vm._s(_vm.form_crop))
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-12" }, [_vm._v("請通知客服已開通資訊")])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
 
 
-        /***/
-    }),
+
+/***/ }),
 
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&":
 /*!*******************************************************************************************************************************************************************************************************************!*\
@@ -68874,7 +68866,7 @@ var render = function() {
             "form",
             {
               attrs: {
-                  method: "get",
+                method: "get",
                 action: _vm.route,
                 id: "updateFormerInfo"
               }
@@ -68906,39 +68898,18 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                      value: _vm.stepsDelete,
-                      expression: "stepsDelete"
+                    value: _vm.stepsDelete,
+                    expression: "stepsDelete"
                   }
                 ],
-                  attrs: {type: "hidden", name: "temporaryDelete"},
-                  domProps: {value: _vm.stepsDelete},
-                  on: {
-                      input: function ($event) {
-                          if ($event.target.composing) {
-                              return
-                          }
-                          _vm.stepsDelete = $event.target.value
-                      }
-                  }
-              }),
-                _vm._v(" "),
-                _c("input", {
-                    directives: [
-                        {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.FarmNumbering,
-                            expression: "FarmNumbering"
-                  }
-                ],
-                    attrs: {type: "hidden", name: "temporaryForm"},
-                    domProps: {value: _vm.FarmNumbering},
+                attrs: { type: "hidden", name: "temporaryDelete" },
+                domProps: { value: _vm.stepsDelete },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                      _vm.FarmNumbering = $event.target.value
+                    _vm.stepsDelete = $event.target.value
                   }
                 }
               }),
@@ -68948,18 +68919,39 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                      value: _vm.CropNumbering,
-                      expression: "CropNumbering"
+                    value: _vm.FarmNumbering,
+                    expression: "FarmNumbering"
                   }
                 ],
-                  attrs: {type: "hidden", name: "temporaryCrop"},
-                  domProps: {value: _vm.CropNumbering},
+                attrs: { type: "hidden", name: "temporaryForm" },
+                domProps: { value: _vm.FarmNumbering },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                      _vm.CropNumbering = $event.target.value
+                    _vm.FarmNumbering = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.CropNumbering,
+                    expression: "CropNumbering"
+                  }
+                ],
+                attrs: { type: "hidden", name: "temporaryCrop" },
+                domProps: { value: _vm.CropNumbering },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.CropNumbering = $event.target.value
                   }
                 }
               }),
@@ -68977,23 +68969,23 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                              value: _vm.FarmerName,
-                              expression: "FarmerName"
+                            value: _vm.FarmerName,
+                            expression: "FarmerName"
                           }
                         ],
-                          staticClass: "w-98",
+                        staticClass: "w-98 border",
                         attrs: {
                           type: "text",
                           id: "formerInfoName",
                           name: "updateFormerName"
                         },
-                          domProps: {value: _vm.FarmerName},
+                        domProps: { value: _vm.FarmerName },
                         on: {
                           input: function($event) {
                             if ($event.target.composing) {
                               return
                             }
-                              _vm.FarmerName = $event.target.value
+                            _vm.FarmerName = $event.target.value
                           }
                         }
                       })
@@ -69009,242 +69001,242 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                              value: _vm.FarmerEmail,
-                              expression: "FarmerEmail"
+                            value: _vm.FarmerEmail,
+                            expression: "FarmerEmail"
                           }
                         ],
-                          staticClass: "w-98",
+                        staticClass: "w-98 border",
                         attrs: {
                           type: "text",
                           id: "formerInfoEmail",
                           name: "updateFormerEmail"
                         },
-                          domProps: {value: _vm.FarmerEmail},
+                        domProps: { value: _vm.FarmerEmail },
                         on: {
                           input: function($event) {
                             if ($event.target.composing) {
                               return
                             }
-                              _vm.FarmerEmail = $event.target.value
+                            _vm.FarmerEmail = $event.target.value
                           }
                         }
                       })
                     ]),
                     _vm._v(" "),
-                      _c("div", {staticClass: "btn-group mt-3 col-8"}, [
-                          _c(
-                              "div",
-                              {
-                                  staticClass: "btn border",
-                                  class: "switch-type-" + !_vm.switchConnect,
-                                  on: {
-                                      click: function ($event) {
-                                          _vm.switchConnect = false
-                                      }
-                                  }
-                              },
-                              [_vm._v("農場資訊\n                                ")]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                              "div",
-                              {
-                                  staticClass: "btn border",
-                                  class: "switch-type-" + _vm.switchConnect,
-                                  on: {
-                                      click: function ($event) {
-                                          _vm.switchConnect = true
-                                      }
-                                  }
-                              },
-                              [_vm._v("農田資訊\n                                ")]
-                          )
-                      ]),
+                    _c("div", { staticClass: "btn-group mt-3 col-8" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "btn border",
+                          class: "switch-type-" + !_vm.switchConnect,
+                          on: {
+                            click: function($event) {
+                              _vm.switchConnect = false
+                            }
+                          }
+                        },
+                        [_vm._v("農場資訊\n                                ")]
+                      ),
                       _vm._v(" "),
                       _c(
-                          "div",
+                        "div",
+                        {
+                          staticClass: "btn border",
+                          class: "switch-type-" + _vm.switchConnect,
+                          on: {
+                            click: function($event) {
+                              _vm.switchConnect = true
+                            }
+                          }
+                        },
+                        [_vm._v("農田資訊\n                                ")]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
                           {
-                              directives: [
-                                  {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: !_vm.switchConnect,
-                                      expression: "!switchConnect"
-                                  }
-                              ],
-                              staticClass: "col-12 mt-3 border rounded border-info"
-                          },
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.switchConnect,
+                            expression: "!switchConnect"
+                          }
+                        ],
+                        staticClass: "col-12 mt-3 border rounded border-info"
+                      },
+                      [
+                        _c(
+                          "div",
+                          { staticClass: "flex-total-center row" },
                           [
-                              _c(
-                                  "div",
-                                  {staticClass: "flex-total-center row"},
-                                  [
-                                      _c(
-                                          "div",
-                                          {
-                                              staticClass:
-                                                  "col-12 row flex-total-center text-center bg-primary"
-                                          },
-                                          [
-                                              _c("div", {staticClass: "col  text-light"}, [
-                                                  _vm._v("農場名稱")
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("div", {staticClass: "col  text-light"}, [
-                                                  _vm._v("農場地址")
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("div", {staticClass: "col-auto"}, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "col-12 row flex-total-center text-center bg-primary"
+                              },
+                              [
+                                _c("div", { staticClass: "col  text-light" }, [
+                                  _vm._v("農場名稱")
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "col  text-light" }, [
+                                  _vm._v("農場地址")
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "col-auto" }, [
                                   _c("i", {
-                                      staticClass:
-                                          "fa fa-plus-circle text-light tool-remind",
+                                    staticClass:
+                                      "fa fa-plus-circle text-light tool-remind",
                                     attrs: { "aria-hidden": "true" },
                                     on: {
                                       click: function($event) {
-                                          return _vm.addItems("farm")
+                                        return _vm.addItems("farm")
                                       }
                                     }
                                   })
-                                              ])
-                                          ]
-                                      ),
+                                ])
+                              ]
+                            ),
                             _vm._v(" "),
-                                      _vm._l(_vm.Farms, function (item, index) {
-                                          return _c(
-                                              "div",
-                                              {
-                                                  staticClass:
-                                                      "col-12 row  border border-bottom-0"
-                                              },
-                                              [
-                                                  _c("input", {
-                                                      directives: [
-                                                          {
-                                                              name: "model",
-                                                              rawName: "v-model",
-                                                              value: item["farm"],
-                                                              expression: "item['farm']"
-                                                          }
-                                                      ],
-                                                      staticClass: "col border-0 text-center",
-                                                      attrs: {
-                                                          type: "text",
-                                                          placeholder: "請輸入農場名稱",
-                                                          name: "update-FormName-" + index,
-                                                          id: "update-FormName-" + index
-                                                      },
-                                                      domProps: {value: item["farm"]},
-                                                      on: {
-                                                          input: function ($event) {
-                                                              if ($event.target.composing) {
-                                                                  return
-                                                              }
-                                                              _vm.$set(
-                                                                  item,
-                                                                  "farm",
-                                                                  $event.target.value
-                                                              )
-                                                          }
-                                                      }
-                                                  }),
-                                                  _vm._v(" "),
-                                                  _c("input", {
-                                                      directives: [
-                                                          {
-                                                              name: "model",
-                                                              rawName: "v-model",
-                                                              value: item["address"],
-                                                              expression: "item['address']"
-                                                          }
-                                                      ],
-                                                      staticClass: "col border-0 text-center",
-                                                      attrs: {
-                                                          type: "text",
-                                                          placeholder: "請輸入農場地址",
-                                                          name: "update-FormAddress-" + index,
-                                                          id: "update-FormAddress-" + index
-                                                      },
-                                                      domProps: {value: item["address"]},
-                                                      on: {
-                                                          input: function ($event) {
-                                                              if ($event.target.composing) {
-                                                                  return
-                                                              }
-                                                              _vm.$set(
+                            _vm._l(_vm.Farms, function(item, index) {
+                              return _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "col-12 row  border border-bottom-0"
+                                },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: item["farm"],
+                                        expression: "item['farm']"
+                                      }
+                                    ],
+                                    staticClass: "col border-0 text-center",
+                                    attrs: {
+                                      type: "text",
+                                      placeholder: "請輸入農場名稱",
+                                      name: "update-FormName-" + index,
+                                      id: "update-FormName-" + index
+                                    },
+                                    domProps: { value: item["farm"] },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          item,
+                                          "farm",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: item["address"],
+                                        expression: "item['address']"
+                                      }
+                                    ],
+                                    staticClass: "col border-0 text-center",
+                                    attrs: {
+                                      type: "text",
+                                      placeholder: "請輸入農場地址",
+                                      name: "update-FormAddress-" + index,
+                                      id: "update-FormAddress-" + index
+                                    },
+                                    domProps: { value: item["address"] },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
                                           item,
                                           "address",
                                           $event.target.value
-                                                              )
-                                                          }
-                                                      }
-                                                  }),
-                                                  _vm._v(" "),
-                                                  _c(
-                                                      "div",
-                                                      {
-                                                          staticClass: "col-auto flex-total-center"
-                                                      },
-                                                      [
-                                                          _c("i", {
-                                                              staticClass: "fa fa-minus text-danger",
-                                                              attrs: {"aria-hidden": "true"},
-                                                              on: {
-                                                                  click: function ($event) {
-                                                                      return _vm.deleteItems(
-                                                                          "farm",
-                                                                          index
-                                                                      )
-                                                                  }
-                                                              }
-                                                          })
-                                                      ]
-                                                  )
-                                              ]
-                                          )
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass: "col-auto flex-total-center"
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fa fa-minus text-danger",
+                                        attrs: { "aria-hidden": "true" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.deleteItems(
+                                              "farm",
+                                              index
+                                            )
+                                          }
+                                        }
                                       })
-                                  ],
-                                  2
+                                    ]
+                                  )
+                                ]
                               )
-                          ]
+                            })
+                          ],
+                          2
+                        )
+                      ]
                     ),
                     _vm._v(" "),
                     _c(
                       "div",
-                        {
-                            directives: [
-                                {
-                                    name: "show",
-                                    rawName: "v-show",
-                                    value: _vm.switchConnect,
-                                    expression: "switchConnect"
-                                }
-                            ],
-                            staticClass: "col-12 mt-3 border rounded border-info"
-                        },
-                        [
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.switchConnect,
+                            expression: "switchConnect"
+                          }
+                        ],
+                        staticClass: "col-12 mt-3 border rounded border-info"
+                      },
+                      [
+                        _c(
+                          "div",
+                          { staticClass: "flex-total-center row" },
+                          [
                             _c(
-                                "div",
-                                {staticClass: "flex-total-center row"},
-                                [
-                                    _c(
-                                        "div",
-                                        {
-                                            staticClass:
-                                                "col-12 row flex-total-center text-center bg-primary"
-                                        },
-                                        [
-                                            _c("div", {staticClass: "col  text-light"}, [
-                                                _vm._v("農場")
-                                            ]),
-                                            _vm._v(" "),
-                                            _c("div", {staticClass: "col  text-light"}, [
-                                                _vm._v("農田")
-                                            ]),
-                                            _vm._v(" "),
-                                            _c("div", {staticClass: "col-auto"}, [
+                              "div",
+                              {
+                                staticClass:
+                                  "col-12 row flex-total-center text-center bg-primary"
+                              },
+                              [
+                                _c("div", { staticClass: "col  text-light" }, [
+                                  _vm._v("農場")
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "col  text-light" }, [
+                                  _vm._v("農田")
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "col-auto" }, [
                                   _c("i", {
-                                      staticClass:
-                                          "fa fa-plus-circle text-light tool-remind",
+                                    staticClass:
+                                      "fa fa-plus-circle text-light tool-remind",
                                     attrs: { "aria-hidden": "true" },
                                     on: {
                                       click: function($event) {
@@ -69252,184 +69244,184 @@ var render = function() {
                                       }
                                     }
                                   })
-                                            ])
-                                        ]
-                                    ),
+                                ])
+                              ]
+                            ),
                             _vm._v(" "),
-                                    _vm._l(_vm.Crops, function (Crop, index) {
-                                        return _c(
-                                            "div",
-                                            {
-                                                staticClass:
-                                                    "col-12 row border border-bottom-0"
-                                            },
-                                            [
-                                                _c("input", {
-                                                    directives: [
-                                                        {
-                                                            name: "model",
-                                                            rawName: "v-model",
-                                                            value: Crop["farm"],
-                                                            expression: "Crop['farm']"
-                                                        }
-                                                    ],
-                                                    attrs: {
-                                                        type: "hidden",
-                                                        name: "selectFormData" + index
-                                                    },
-                                                    domProps: {value: Crop["farm"]},
-                                                    on: {
-                                                        input: function ($event) {
-                                                            if ($event.target.composing) {
-                                                                return
-                                                            }
-                                                            _vm.$set(
-                                                                Crop,
-                                                                "farm",
-                                                                $event.target.value
-                                                            )
-                                                        }
-                                                    }
-                                                }),
-                                                _vm._v(" "),
-                                                Crop["create"]
-                                                    ? _c(
-                                                    "div",
-                                                    {staticClass: "col text-center"},
-                                                    [
-                                                        _vm._v(
-                                                            "\n                                            " +
-                                                            _vm._s(Crop["farm"]) +
-                                                            "\n                                        "
-                                                        )
-                                                    ]
-                                                    )
-                                                    : _c(
-                                                    "select",
-                                                    {
-                                                        directives: [
-                                                            {
-                                                                name: "model",
-                                                                rawName: "v-model",
-                                                                value: Crop["farm"],
-                                                                expression: "Crop['farm']"
-                                                            }
-                                                        ],
-                                                        staticClass: "col text-center",
-                                                        attrs: {
-                                                            name: "selectFormData" + index,
-                                                            id: "select-FormData-" + index
-                                                        },
-                                                        on: {
-                                                            change: function ($event) {
-                                                                var $$selectedVal = Array.prototype.filter
-                                                                    .call(
-                                                                        $event.target.options,
-                                                                        function (o) {
-                                                                            return o.selected
-                                                                        }
-                                                                    )
-                                                                    .map(function (o) {
-                                                                        var val =
-                                                                            "_value" in o
-                                                                                ? o._value
-                                                                                : o.value
-                                                                        return val
-                                                                    })
-                                                                _vm.$set(
-                                                                    Crop,
-                                                                    "farm",
-                                                                    $event.target.multiple
-                                                                        ? $$selectedVal
-                                                                        : $$selectedVal[0]
-                                                                )
-                                                            }
-                                                        }
-                                                    },
-                                                    _vm._l(_vm.Farms, function (farm) {
-                                                        return _c(
-                                                            "option",
-                                                            {
-                                                                directives: [
-                                                                    {
-                                                                        name: "show",
-                                                                        rawName: "v-show",
-                                                                        value: farm["farm"] !== "",
-                                                                        expression:
-                                                                            "farm['farm']!==''"
-                                                                    }
-                                                                ]
-                                                            },
-                                                            [
-                                                                _vm._v(
-                                                                    "\n                                                " +
-                                                                    _vm._s(farm["farm"]) +
-                                                                    "\n                                            "
-                                                                )
-                                                            ]
-                                                        )
-                                                    }),
-                                                    0
-                                                    ),
-                                                _vm._v(" "),
+                            _vm._l(_vm.Crops, function(Crop, index) {
+                              return _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "col-12 row border border-bottom-0"
+                                },
+                                [
                                   _c("input", {
                                     directives: [
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                          value: Crop["crop"],
-                                          expression: "Crop['crop']"
+                                        value: Crop["farm"],
+                                        expression: "Crop['farm']"
                                       }
                                     ],
-                                      staticClass: "col border-0 text-center",
+                                    attrs: {
+                                      type: "hidden",
+                                      name: "selectFormData" + index
+                                    },
+                                    domProps: { value: Crop["farm"] },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          Crop,
+                                          "farm",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  Crop["create"]
+                                    ? _c(
+                                        "div",
+                                        { staticClass: "col text-center" },
+                                        [
+                                          _vm._v(
+                                            "\n                                            " +
+                                              _vm._s(Crop["farm"]) +
+                                              "\n                                        "
+                                          )
+                                        ]
+                                      )
+                                    : _c(
+                                        "select",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: Crop["farm"],
+                                              expression: "Crop['farm']"
+                                            }
+                                          ],
+                                          staticClass: "col text-center",
+                                          attrs: {
+                                            name: "selectFormData" + index,
+                                            id: "select-FormData-" + index
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              var $$selectedVal = Array.prototype.filter
+                                                .call(
+                                                  $event.target.options,
+                                                  function(o) {
+                                                    return o.selected
+                                                  }
+                                                )
+                                                .map(function(o) {
+                                                  var val =
+                                                    "_value" in o
+                                                      ? o._value
+                                                      : o.value
+                                                  return val
+                                                })
+                                              _vm.$set(
+                                                Crop,
+                                                "farm",
+                                                $event.target.multiple
+                                                  ? $$selectedVal
+                                                  : $$selectedVal[0]
+                                              )
+                                            }
+                                          }
+                                        },
+                                        _vm._l(_vm.Farms, function(farm) {
+                                          return _c(
+                                            "option",
+                                            {
+                                              directives: [
+                                                {
+                                                  name: "show",
+                                                  rawName: "v-show",
+                                                  value: farm["farm"] !== "",
+                                                  expression:
+                                                    "farm['farm']!==''"
+                                                }
+                                              ]
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                                " +
+                                                  _vm._s(farm["farm"]) +
+                                                  "\n                                            "
+                                              )
+                                            ]
+                                          )
+                                        }),
+                                        0
+                                      ),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: Crop["crop"],
+                                        expression: "Crop['crop']"
+                                      }
+                                    ],
+                                    staticClass: "col border-0 text-center",
                                     attrs: {
                                       type: "text",
                                       id: "select-CropData-" + index,
                                       name: "selectCropData" + index,
                                       placeholder: "請輸入農作物"
                                     },
-                                      domProps: {value: Crop["crop"]},
+                                    domProps: { value: Crop["crop"] },
                                     on: {
                                       input: function($event) {
                                         if ($event.target.composing) {
                                           return
                                         }
-                                          _vm.$set(
-                                              Crop,
-                                              "crop",
-                                              $event.target.value
-                                          )
+                                        _vm.$set(
+                                          Crop,
+                                          "crop",
+                                          $event.target.value
+                                        )
                                       }
                                     }
                                   }),
-                                                _vm._v(" "),
-                                                _c(
-                                                    "div",
-                                                    {
-                                                        staticClass: "col-auto flex-total-center"
-                                                    },
-                                                    [
-                                                        _c("i", {
-                                                            staticClass: "fa fa-minus text-danger",
-                                                            attrs: {"aria-hidden": "true"},
-                                                            on: {
-                                                                click: function ($event) {
-                                                                    return _vm.deleteItems(
-                                                                        "crop",
-                                                                        index
-                                                                    )
-                                                                }
-                                                            }
-                                                        })
-                                                    ]
-                                                )
-                                            ]
-                                        )
-                                    })
-                                ],
-                                2
-                            )
-                        ]
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass: "col-auto flex-total-center"
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fa fa-minus text-danger",
+                                        attrs: { "aria-hidden": "true" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.deleteItems(
+                                              "crop",
+                                              index
+                                            )
+                                          }
+                                        }
+                                      })
+                                    ]
+                                  )
+                                ]
+                              )
+                            })
+                          ],
+                          2
+                        )
+                      ]
                     )
                   ])
                 ])
@@ -69495,12 +69487,12 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "border w-100 p-2 my-2 shadow" },
+    { staticClass: "border w-100 my-2 shadow" },
     [
       _c(
         "div",
         {
-          staticClass: "row border no-gutters m-3 monitor-item rounded-top ",
+          staticClass: "row border m-3 monitor-item rounded-top ",
           class: [
             _vm.monitor_target <= 30
               ? "border-danger"
@@ -69515,7 +69507,7 @@ var render = function() {
             "div",
             {
               staticClass:
-                "item-info col-12 flex-total-center bg-success rounded-top mb-3",
+                "item-info col-12 flex-total-center bg-success rounded-top mb-2",
               class:
                 _vm.monitor_target <= 30
                   ? "bg-danger"
@@ -69532,25 +69524,31 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _c(
-            "div",
-              {staticClass: "col-lg-9 col-10 monitor-item-show row float-left"},
-            _vm._l(_vm.monitor_items, function(item, index) {
-              return _c("div", { staticClass: "col-4" }, [
-                _c("div", { staticClass: "text-center" }, [
-                  _vm._v(_vm._s(_vm.item_infos.items[index]))
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "text-center", attrs: { id: index } })
-              ])
-            }),
-            0
-          ),
-          _vm._v(" "),
-            _c("div", {staticClass: "col-lg-3 col-2"}, [
+          _c("div", { staticClass: "col-lg-8 col-12 monitor-item-show" }, [
             _c(
               "div",
-              { staticClass: "row no-gutters bg-white rounded my-3 shadow" },
+              { staticClass: "row no-gutters mx-3 flex-total-center" },
+              _vm._l(_vm.monitor_items, function(item, index) {
+                return _c(
+                  "div",
+                  { staticClass: "col-auto flex-total-center flex-column" },
+                  [
+                    _c("div", [_vm._v(_vm._s(_vm.item_infos.items[index]))]),
+                    _vm._v(" "),
+                    _c("div", { attrs: { id: index } })
+                  ]
+                )
+              }),
+              0
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-2 d-lg-none" }),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-lg-4 col-8 flex-total-center" }, [
+            _c(
+              "div",
+              { staticClass: "row no-gutters bg-white rounded shadow " },
               [
                 _c(
                   "span",
@@ -69623,44 +69621,46 @@ var render = function() {
                   0
                 ),
                 _vm._v(" "),
-                  _c(
+                _c(
+                  "div",
+                  { staticClass: "col-12 border border-dark rounded-bottom " },
+                  [
+                    _c(
                       "div",
-                      {staticClass: "col-12 border border-dark rounded-bottom "},
+                      { staticClass: "row no-gutters flex-total-center" },
                       [
-                          _c(
-                              "div",
-                              {staticClass: "row no-gutters flex-total-center"},
-                              [
-                                  _c("div", {staticClass: "col-2 flex-total-center"}, [
-                                      _c("i", {
-                                          staticClass: "fa fa-cog",
-                                          attrs: {
-                                              "aria-hidden": "true",
-                                              "data-toggle": "modal",
-                                              "data-target": "#weight_Modal_" + _vm.target_name
-                                          }
-                                      })
-                                  ]),
-                                  _vm._v(" "),
-                                  _c(
-                                      "div",
-                                      {staticClass: "col-10 text-dark flex-total-center"},
-                                      [
-                                          _vm._v(
-                                              "\n                            綜合指數：\n                            "
-                                          ),
-                                          _c("div", {staticClass: "text-small"}, [
-                                              _vm._v(_vm._s(_vm.monitor_target))
-                                          ])
-                                      ]
-                                  )
-                              ]
-                          )
+                        _c("div", { staticClass: "col-2  flex-total-center" }, [
+                          _c("i", {
+                            staticClass: "fa fa-cog",
+                            attrs: {
+                              "aria-hidden": "true",
+                              "data-toggle": "modal",
+                              "data-target": "#weight_Modal_" + _vm.target_name
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "col-10 text-dark flex-total-center" },
+                          [
+                            _vm._v(
+                              "\n                            綜合指數：\n                            "
+                            ),
+                            _c("div", { staticClass: "text-small" }, [
+                              _vm._v(_vm._s(_vm.monitor_target))
+                            ])
+                          ]
+                        )
                       ]
-                  )
+                    )
+                  ]
+                )
               ]
             )
-          ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-2 d-lg-none" })
         ]
       ),
       _vm._v(" "),
@@ -69668,7 +69668,7 @@ var render = function() {
         attrs: {
           name: _vm.name,
           farmland: _vm.farmland,
-            farm_id: _vm.farm_id,
+          farm_id: _vm.farm_id,
           type: _vm.target_name,
           title: _vm.item_infos.names[_vm.target_name],
           items: _vm.monitor_items,
@@ -69804,27 +69804,27 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
-                _c("input", {
-                    directives: [
-                        {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.farm_id,
-                            expression: "farm_id"
-                        }
-                    ],
-                    attrs: {type: "hidden", name: "farm_id"},
-                    domProps: {value: _vm.farm_id},
-                    on: {
-                        input: function ($event) {
-                            if ($event.target.composing) {
-                                return
-                            }
-                            _vm.farm_id = $event.target.value
-                        }
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.farm_id,
+                    expression: "farm_id"
+                  }
+                ],
+                attrs: { type: "hidden", name: "farm_id" },
+                domProps: { value: _vm.farm_id },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
                     }
-                }),
-                _vm._v(" "),
+                    _vm.farm_id = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
               _c(
                 "div",
                 { staticClass: "modal-body row no-gutters text-center " },
@@ -82252,7 +82252,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  // use d3 to drew shape & monitor visualize
 
 var monitor_hex_id = ['monitor-water', 'monitor-light', 'monitor-air', 'monitor-weather'];
-var monitor_circle_id = []; //繪圖資訊
+var monitor_circle_id = [];
+var length = 200; //繪圖資訊
 
 var Draw_Info = function Draw_Info(id, value, max, min) {
   _classCallCheck(this, Draw_Info);
@@ -82296,7 +82297,7 @@ function Make_Hex(info) {
   circle_text.append('text').attr('dx', cx).attr('dy', cy).style("text-anchor", "middle").text(data);
 }
 function Make_Circle(info) {
-  var length, height, width, color, cx, cy, radius_outside, radius_inside;
+  var height, width, color, cx, cy, radius_outside, radius_inside;
   var data, range, data_point;
   var svg, circle_text;
   var colorify = ['#ED4013', '#E5DD35', '#24A047'];
@@ -82318,7 +82319,7 @@ function Make_Circle(info) {
   svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + info.id).append('svg').attr('width', width).attr('height', height).attr('class', 'paint-exponent'); //畫兩個六角形 一個 圓形
 
   circle_text = svg.append('g');
-  circle_text.append('circle').attr("cx", cx).attr("cy", cy).attr("r", radius_outside).style("fill", colorify[color]) //填色
+  circle_text.append('circle').attr("cx", cx).attr("cy", cy).attr("r", radius_outside).attr("viewBox", "0 0 200 200").style("fill", colorify[color]) //填色
   .style("stroke", "#fff") //邊界顏色
   .style("stroke-width", "2px"); //邊界粗度
 
@@ -82327,7 +82328,7 @@ function Make_Circle(info) {
   .style("stroke-width", "2px"); //邊界粗度
   //加字體
 
-  circle_text.append('text').attr('dx', cx).attr('dy', cy).style("text-anchor", "middle").text(data);
+  circle_text.append('text').attr('dx', cx).attr('dy', cy + 10).attr('class', 'd3-font-size').style("text-anchor", "middle").text(data);
 }
 
 function hex_point() {
@@ -82364,7 +82365,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.component('conitor-exponent', __webpack_require__(/*! ./components/ConitorExponent.vue */ "./resources/js/components/ConitorExponent.vue")["default"]);
-        Vue.component('conitor-exponent-null', __webpack_require__(/*! ./components/ConitorExponentNull.vue */ "./resources/js/components/ConitorExponentNull.vue")["default"]);
+Vue.component('conitor-exponent-null', __webpack_require__(/*! ./components/ConitorExponentNull.vue */ "./resources/js/components/ConitorExponentNull.vue")["default"]);
 Vue.component('config-place', __webpack_require__(/*! ./components/ConfigPlace.vue */ "./resources/js/components/ConfigPlace.vue")["default"]);
 Vue.component('prog-items', __webpack_require__(/*! ./components/progItems.vue */ "./resources/js/components/progItems.vue")["default"]);
 Vue.component('monitor-items-show', __webpack_require__(/*! ./components/MonitorItemsShow.vue */ "./resources/js/components/MonitorItemsShow.vue")["default"]);
@@ -82611,93 +82612,77 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponent_vue_vue_type_template_id_6bd9bef8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
-        /***/
-    }),
 
-    /***/
-    "./resources/js/components/ConitorExponentNull.vue":
-    /*!*********************************************************!*\
-      !*** ./resources/js/components/ConitorExponentNull.vue ***!
-      \*********************************************************/
-    /*! exports provided: default */
-    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+/***/ }),
 
-        "use strict";
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony import */
-        var _ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true& */ "./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true&");
-        /* harmony import */
-        var _ConitorExponentNull_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ConitorExponentNull.vue?vue&type=script&lang=js& */ "./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js&");
-        /* empty/unused harmony star reexport *//* harmony import */
-        var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/***/ "./resources/js/components/ConitorExponentNull.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/ConitorExponentNull.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true& */ "./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true&");
+/* harmony import */ var _ConitorExponentNull_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ConitorExponentNull.vue?vue&type=script&lang=js& */ "./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
-        /* normalize component */
-
-        var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-            _ConitorExponentNull_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-            _ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-            _ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-            false,
-            null,
-            "0b2458ab",
-            null
-        )
-
-        /* hot reload */
-        if (false) {
-            var api;
-        }
-        component.options.__file = "resources/js/components/ConitorExponentNull.vue"
-        /* harmony default export */
-        __webpack_exports__["default"] = (component.exports);
-
-        /***/
-    }),
-
-    /***/
-    "./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js&":
-    /*!**********************************************************************************!*\
-      !*** ./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js& ***!
-      \**********************************************************************************/
-    /*! exports provided: default */
-    /***/ (function (module, __webpack_exports__, __webpack_require__) {
-
-        "use strict";
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony import */
-        var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ConitorExponentNull.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js&");
-        /* empty/unused harmony star reexport */ /* harmony default export */
-        __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-        /***/
-    }),
-
-    /***/
-    "./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true&":
-    /*!****************************************************************************************************!*\
-      !*** ./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true& ***!
-      \****************************************************************************************************/
-    /*! exports provided: render, staticRenderFns */
-    /***/ (function (module, __webpack_exports__, __webpack_require__) {
-
-        "use strict";
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony import */
-        var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true&");
-        /* harmony reexport (safe) */
-        __webpack_require__.d(__webpack_exports__, "render", function () {
-            return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"];
-        });
-
-        /* harmony reexport (safe) */
-        __webpack_require__.d(__webpack_exports__, "staticRenderFns", function () {
-            return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"];
-        });
 
 
-        /***/
-    }),
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ConitorExponentNull_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "0b2458ab",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ConitorExponentNull.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ConitorExponentNull.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConitorExponentNull.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConitorExponentNull.vue?vue&type=template&id=0b2458ab&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConitorExponentNull_vue_vue_type_template_id_0b2458ab_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
 
 /***/ "./resources/js/components/ExampleComponent.vue":
 /*!******************************************************!*\
@@ -82779,10 +82764,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FormerInfoConfig_vue_vue_type_template_id_6e49e268_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true& */ "./resources/js/components/FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true&");
 /* harmony import */ var _FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormerInfoConfig.vue?vue&type=script&lang=js& */ "./resources/js/components/FormerInfoConfig.vue?vue&type=script&lang=js&");
-        /* empty/unused harmony star reexport *//* harmony import */
-        var _FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& */ "./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&");
-        /* harmony import */
-        var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& */ "./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -82791,7 +82774,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-        var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _FormerInfoConfig_vue_vue_type_template_id_6e49e268_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
   _FormerInfoConfig_vue_vue_type_template_id_6e49e268_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -82819,37 +82802,25 @@ component.options.__file = "resources/js/components/FormerInfoConfig.vue"
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./FormerInfoConfig.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=script&lang=js&");
-        /* empty/unused harmony star reexport */ /* harmony default export */
-        __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]);
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
-        /***/
-    }),
+/***/ }),
 
-    /***/
-    "./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&":
-    /*!***************************************************************************************************************!*\
-      !*** ./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& ***!
-      \***************************************************************************************************************/
-    /*! no static exports found */
-    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+/***/ "./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&":
+/*!***************************************************************************************************************!*\
+  !*** ./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& ***!
+  \***************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-        "use strict";
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony import */
-        var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&");
-        /* harmony import */
-        var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-        /* harmony reexport (unknown) */
-        for (var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if (__WEBPACK_IMPORT_KEY__ !== 'default') (function (key) {
-            __webpack_require__.d(__webpack_exports__, key, function () {
-                return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key];
-            })
-        }(__WEBPACK_IMPORT_KEY__));
-        /* harmony default export */
-        __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a);
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FormerInfoConfig.vue?vue&type=style&index=0&id=6e49e268&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_FormerInfoConfig_vue_vue_type_style_index_0_id_6e49e268_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
-        /***/
-    }),
+/***/ }),
 
 /***/ "./resources/js/components/FormerInfoConfig.vue?vue&type=template&id=6e49e268&scoped=true&":
 /*!*************************************************************************************************!*\

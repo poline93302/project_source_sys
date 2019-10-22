@@ -4,6 +4,9 @@ import * as d3 from 'd3';
 let monitor_hex_id = ['monitor-water', 'monitor-light', 'monitor-air', 'monitor-weather'];
 let monitor_circle_id = [];
 
+let length = 200;
+
+
 //繪圖資訊
 export class Draw_Info {
     constructor(id, value, max, min) {
@@ -72,8 +75,7 @@ export function Make_Hex(info) {
 }
 
 export function Make_Circle(info) {
-    let length,
-        height, width,
+    let height, width,
         color,
         cx, cy, radius_outside, radius_inside;
     let data, range, data_point;
@@ -110,6 +112,7 @@ export function Make_Circle(info) {
         .attr("cx", cx)
         .attr("cy", cy)
         .attr("r", radius_outside)
+        .attr("viewBox", "0 0 200 200")
         .style("fill", colorify[color])                           //填色
         .style("stroke", "#fff")                              //邊界顏色
         .style("stroke-width", "2px");                        //邊界粗度
@@ -125,7 +128,8 @@ export function Make_Circle(info) {
     //加字體
     circle_text.append('text')
         .attr('dx', cx)
-        .attr('dy', cy)
+        .attr('dy', cy + 10)
+        .attr('class', 'd3-font-size')
         .style("text-anchor", "middle")
         .text(data);
 }

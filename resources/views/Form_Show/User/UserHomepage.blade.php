@@ -2,9 +2,10 @@
 
 @section('show')
     <div class="container">
-        <div class="row flex-total-center mt-5 ">
+        <div class="row flex-total-center mt-5">
             {{--            {{ $name }}--}}
-            <form class="col-4 bg-white py-3 rounded shadow" method="POST" action="{{route('former_login')}}"
+            <form class="col-8 col-md-6 col-lg-4 bg-white py-3 rounded shadow" method="POST"
+                  action="{{route('former_login')}}"
                   id="loginForm">
                 @csrf
                 <div class="form-group">
@@ -42,7 +43,7 @@
     </div>
     <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form class="my-3 mx-3" method="POST" action="{{route('former_register')}}" id="registerForm">
                     @csrf

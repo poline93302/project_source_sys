@@ -5,15 +5,15 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <div class="container my-3">
             <div class="row text-center bg-white shadow rounded-top">
-                <div class="col-7 col-lg-7 my-3">
-                    <img src="http://placeimg.com/1500/600/any/1" class="img-fluid" alt="">
+                <div class="col-6 col-md-7 my-3 ">
+                    <img src="http://placeimg.com/1500/400/any/1" class="img-fluid" alt="">
                 </div>
-                <div class="col-5 col-lg-5 my-3 ">
+                <div class="col-6 col-md-5 my-3 ">
                     <div class="row mt-3">
                         <div class="col-12 mb-3">
                             <span class="text-dark">歡迎 {{ $former }} 抵達本站</span>
                         </div>
-                        <form method="POST" action="{{route('monitor_homepage_select')}}" class="col-12 mb-3">
+                        <form method="POST" action="{{route('monitor_homepage_select')}}" class="col-12 mb-3 mb-md-1">
                             @csrf
                             <div class="form-group mb-1">
                                 <label for="former"></label>
@@ -31,19 +31,20 @@
                                     <option value="all">請選擇農田</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-warning  btn-sm btn-block">查詢</button>
+                            <button type="submit" class="btn btn-warning  btn-sm btn-block text-font">查詢</button>
                         </form>
 
                         <div class="col-12 row no-gutters">
                             <div class="col">
-                                <button type="button" class="btn btn-primary w-98 btn-sm" data-toggle="modal"
+                                <button type="button" class="btn btn-primary w-98 btn-sm text-wrap text-font"
+                                        data-toggle="modal"
                                         data-target="#FormerInfoModal">
                                     農夫資訊
                                 </button>
                             </div>
                             <div class="col">
                                 <a href="{{ route('monitor_homepage') }}">
-                                    <button type="button" class="btn btn-primary w-98 btn-sm">
+                                    <button type="button" class="btn btn-primary w-98 btn-sm text-font">
                                         顯示全部
                                     </button>
                                 </a>
@@ -51,7 +52,8 @@
                             <div class="col">
                                 <form method="POST" action="{{ route('former_logout') }}" id="loginForm">
                                     @csrf
-                                    <button type="button" class="btn btn-primary w-98 btn-sm" onclick="alertLogin()">
+                                    <button type="button" class="btn btn-primary w-98 btn-sm text-wrap text-font"
+                                            onclick="alertLogin()">
                                         登出
                                     </button>
                                 </form>

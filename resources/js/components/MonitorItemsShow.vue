@@ -1,20 +1,23 @@
 <!--個別監控的數值畫面的主畫面-->
 <template>
-    <div class="border w-100 p-2 my-2 shadow">
+    <div class="border w-100 my-2 shadow">
         <div :class="[monitor_target<=30 ? 'border-danger' : monitor_target>60? 'border-success': 'border-warning', item_infos.classes[target_name]]"
-             class="row border no-gutters m-3 monitor-item rounded-top ">
-            <div class="item-info col-12 flex-total-center bg-success rounded-top mb-3"
+             class="row border m-3 monitor-item rounded-top ">
+            <div class="item-info col-12 flex-total-center bg-success rounded-top mb-2"
                  :class="monitor_target<=30 ? 'bg-danger' : monitor_target>60? 'bg-success': 'bg-warning'">
                 {{ item_infos.names[target_name]}}
             </div>
-            <div class="col-lg-9 col-10 monitor-item-show row float-left">
-                <div v-for="(item,index) in monitor_items" class="col-4">
-                    <div class="text-center">{{ item_infos.items[index] }}</div>
-                    <div :id="index" class="text-center"></div>
+            <div class="col-lg-8 col-12 monitor-item-show">
+                <div class="row no-gutters mx-3 flex-total-center">
+                    <div v-for="(item,index) in monitor_items" class="col-auto flex-total-center flex-column">
+                        <div>{{ item_infos.items[index] }}</div>
+                        <div :id="index"></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-2">
-                <div class="row no-gutters bg-white rounded my-3 shadow">
+            <div class="col-2 d-lg-none"></div>
+            <div class="col-lg-4 col-8 flex-total-center">
+                <div class="row no-gutters bg-white rounded shadow ">
                     <span class="weights-style col-4 text-dark border border-success flex-total-center ">權重</span>
                     <span class="items-style col-8 text-dark border border-info flex-total-center">項目</span>
 
@@ -32,7 +35,7 @@
                     </div>
                     <div class="col-12 border border-dark rounded-bottom ">
                         <div class="row no-gutters flex-total-center">
-                            <div class="col-2 flex-total-center">
+                            <div class="col-2  flex-total-center">
                                 <i class="fa fa-cog" aria-hidden="true" data-toggle="modal"
                                    :data-target="'#weight_Modal_'+target_name"></i>
                             </div>
@@ -44,6 +47,7 @@
                     </div>
                 </div>
             </div>
+            <div class="col-2 d-lg-none"></div>
         </div>
         <weights-modal :name="name" :farmland="farmland" :farm_id="farm_id"
                        :type="target_name" :title="item_infos.names[target_name]"
@@ -129,7 +133,7 @@
                             'light_lux': '亮度',
                             'air_cp': '一氧化碳',
                             'air_ph4': '甲烷',
-                            'air_hun': '濕度',
+                            'air_hun': '相對濕度',
                             'air_tem': '溫度',
                             'weather_windWay': '風向',
                             'weather_windSpeed': '風速',

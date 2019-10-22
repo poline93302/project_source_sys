@@ -29,7 +29,6 @@
                 //計算第幾個li為終點
                 let manyPoint = Math.floor((value - this.config_critical[this.config_sensor].min) / wegi);
 
-                console.log(smallRan);
                 //計算li
                 for (let i = 0; i < process_max; i++) {
                     this.li_str +=
