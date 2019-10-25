@@ -21,6 +21,7 @@ class CreateFormTable extends Migration
             $table->string('status')->nullable();
             $table->string('farmland')->nullable();
             $table->dateTime('create_time');
+//            $table->timestamps();
         });
     }
 

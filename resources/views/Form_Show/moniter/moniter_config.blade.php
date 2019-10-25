@@ -3,8 +3,17 @@
 @section('show')
     <div class="container shadow my-3">
         <div class="row monitor-items no-gutters">
+            <monitor-items-show :monitor_target=" {{ $data['target']['environment'] }}"
+                                :monitor_items="{'air_hun':{{$data['weights']['air_hun']}},'air_tem':{{$data['weights']['air_tem']}}}"
+                                :target_name="'environment'"
+                                :url_api="{{ json_encode(route('api.get.item.number'))}}"
+                                :farmland="{{$farmland}}"
+                                :farm_id="{{$farmNumber}}"
+                                :name="{{json_encode($name)}}"
+            >
+            </monitor-items-show>
             <monitor-items-show :monitor_target=" {{ $data['target']['air'] }}"
-                                :monitor_items="{'air_cp':{{$data['weights']['air_cp']}},'air_hun':{{$data['weights']['air_hun']}},'air_tem':{{$data['weights']['air_tem']}},'air_ph4':{{$data['weights']['air_ph4']}}}"
+                                :monitor_items="{'air_cp':{{$data['weights']['air_cp']}},'air_ph4':{{$data['weights']['air_ph4']}}}"
                                 :target_name="'air'"
                                 :url_api="{{ json_encode(route('api.get.item.number'))}}"
                                 :farmland="{{$farmland}}"

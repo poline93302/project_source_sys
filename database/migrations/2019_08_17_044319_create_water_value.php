@@ -21,7 +21,8 @@ class CreateWaterValue extends Migration
             $table->integer('farmland');
             $table->string('sensor');
             $table->double('value');
-            $table->dateTime('send_time');
+//            $table->dateTime('send_time');
+            $table->timestamps();
         });
     }
 

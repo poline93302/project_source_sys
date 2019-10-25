@@ -34,7 +34,7 @@ function linkSelectChange(arr) {
     let selectForm = document.getElementById('selectForm');
     let selectFormTwo = document.getElementById('selectCrop');
 
-    let optionValue = '<option value="all">請選擇農田</option>';
+    let optionValue = '<option value="all">請選擇場域</option>';
 
     //arr 為所有該農夫的農田
     _.forEach(arr, function (option) {

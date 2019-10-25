@@ -1801,11 +1801,11 @@ __webpack_require__.r(__webpack_exports__);
       ch_name: {
         "WLS": '水位感測器',
         "WPH": '水PH感測器',
-        "OTE": '溫度感測器',
+          "OHY": '溫度感測器',
         "CHE": '甲烷感測器',
         "LFS": '光線感測器',
         "WSO": '土壤濕度感測器',
-        "OHY": '相對濕度感測器',
+          "OTE": '相對濕度感測器',
         "CON": '一氧化碳感測器'
       },
       items: ['WLS', 'WPH', 'OTE', 'CHE', 'LFS', 'WSO', 'OHY', 'CON']
@@ -2020,13 +2020,14 @@ __webpack_require__.r(__webpack_exports__);
     getValue: function getValue() {
       // hex_value
       var self = this;
-      console.log('holle');
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api_target, {
         'name': this.name,
         'farm': this.form_crop.split('_')[0],
-        'farmland': this.config_number
+          'farmland': this.config_number,
+          'gateWay': false
       }).then(function (res) {
         //weights =>[0] 權重 [1]大權重
+          console.log(res.data);
         self.hex_values = [res.data.weights, res.data.target];
       })["catch"](function (err) {
         console.log('ERROR' + err);
@@ -2045,7 +2046,7 @@ __webpack_require__.r(__webpack_exports__);
       monitor_id: ['monitor-air', 'monitor-weather', 'monitor-water', 'monitor-light'],
       //感測器順序
       sensorOrder: {
-        'air': ['air_cp', 'air_hun', 'air_ph4', 'air_tem'],
+          'air': ['air_cp', 'air_ph4'],
         'light': ['light_lux'],
         'water': ['water_level', 'water_ph', 'water_soil'],
         'weather': ['weather_rainAccumulation', 'weather_windSpeed', 'weather_windWay']
@@ -2063,7 +2064,7 @@ __webpack_require__.r(__webpack_exports__);
         'weather_windSpeed': '風速',
         'weather_rainAccumulation': '累積雨量'
       },
-      item_id: ['空氣健康指數', '氣候健康指數', '水健康指數', '光健康指數'],
+        item_id: ['場域健康指數', '氣候指數', '水指數', '光指數'],
       en_item_id: ['air', 'weather', 'water', 'light'],
       //hex_draw 得到數值
       hex_draw: {},
@@ -2588,6 +2589,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -2605,12 +2610,16 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     get_value: function get_value() {
       var self = this;
+        console.log('get');
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(this.url_api, {
         'name': this.name,
         'farm': this.farm_id,
         'farmland': this.farmland,
-        'type': this.target_name
+          'type': this.target_name,
+          'gateWay': false
       }).then(function (res) {
+          console.log(res.data);
+
         lodash__WEBPACK_IMPORTED_MODULE_1___default.a.forEach(res.data, function (item) {
           self.$set(self.item_value, [self.item_infos.sensor[item.sensor]], {
             'max': item.max,
@@ -2637,20 +2646,24 @@ __webpack_require__.r(__webpack_exports__);
     return {
       item_infos: {
         classes: {
+            'environment': 'monitor-item-environment',
           'water': 'monitor-item-water',
           'light': 'monitor-item-light',
           'air': 'monitor-item-air',
           'weather': 'monitor-item-weather'
         },
         names: {
-          'water': '水健康指數',
-          'light': '燈泡健康指數',
-          'air': '空氣健康指數',
-          'weather': '氣候健康指數'
+            'environment': '環境指數',
+            'water': '水指數',
+            'light': '光指數',
+            'air': '場域健康指數',
+            'weather': '氣候指數'
         },
         sensor: {
+            //CON CHE 有害氣體
           "CON": 'air_cp',
           "CHE": 'air_ph4',
+            //OTE OHY 是環境
           "OTE": 'air_hun',
           "OHY": 'air_tem',
           "WLS": 'water_level',
@@ -2950,7 +2963,65 @@ var process_max = 25;
   }
 });
 
-/***/ }),
+        /***/
+    }),
+
+    /***/
+    "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/sensorHistory.vue?vue&type=script&lang=js&":
+    /*!************************************************************************************************************************************************************************!*\
+      !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/sensorHistory.vue?vue&type=script&lang=js& ***!
+      \************************************************************************************************************************************************************************/
+    /*! exports provided: default */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+        /* harmony import */
+        var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+        /* harmony default export */
+        __webpack_exports__["default"] = ({
+            name: "sensorHistory",
+            props: {
+                target_name: String,
+                name: String
+            },
+            methods: {
+                getValue: function getValue() {
+                    // console.log(location.href);
+                    axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/item/history', function () {
+                    }).then(function (res) {
+                        console.log(res.data);
+                    })["catch"](function (err) {
+                        console.log(err);
+                    });
+                }
+            },
+            data: function data() {
+                return {
+                    //抓取value()
+                    catch_value: []
+                };
+            },
+            mounted: function mounted() {
+                this.getValue();
+            }
+        });
+
+        /***/ }),
 
 /***/ "./node_modules/bootstrap/dist/js/bootstrap.js":
 /*!*****************************************************!*\
@@ -68524,7 +68595,7 @@ var render = function() {
                 },
                 [
                   _c("i", {
-                    staticClass: "fa fa-question",
+                      staticClass: "fa fa-list text-center",
                     attrs: { "aria-hidden": "true" }
                   })
                 ]
@@ -68683,7 +68754,10 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "col-12 text-right" }, [
             _c("a", { attrs: { href: _vm.url_path } }, [
-              _c("div", { staticClass: "go-monitor" })
+                _c("i", {
+                    staticClass: "fa fa-arrow-circle-right",
+                    attrs: {"aria-hidden": "true"}
+                })
             ])
           ])
         ])
@@ -69049,7 +69123,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("農田資訊\n                                ")]
+                          [_vm._v("場域資訊\n                                ")]
                       )
                     ]),
                     _vm._v(" "),
@@ -69230,7 +69304,7 @@ var render = function() {
                                 ]),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "col  text-light" }, [
-                                  _vm._v("農田")
+                                    _vm._v("場域")
                                 ]),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "col-auto" }, [
@@ -69516,15 +69590,25 @@ var render = function() {
                   : "bg-warning"
             },
             [
-              _vm._v(
-                "\n            " +
-                  _vm._s(_vm.item_infos.names[_vm.target_name]) +
-                  "\n        "
-              )
+                _c("div", {staticClass: "justify-content-between"}, [
+                    _vm._v(
+                        "\n                " +
+                        _vm._s(_vm.item_infos.names[_vm.target_name]) +
+                        "\n                "
+                    ),
+                    _c("i", {
+                        staticClass: "fa fa-cog",
+                        attrs: {
+                            "aria-hidden": "true",
+                            "data-toggle": "modal",
+                            "data-target": "#weight_Modal_" + _vm.target_name
+                        }
+                    })
+                ])
             ]
           ),
           _vm._v(" "),
-          _c("div", { staticClass: "col-lg-8 col-12 monitor-item-show" }, [
+            _c("div", {staticClass: "col-lg-12 col-12 monitor-item-show"}, [
             _c(
               "div",
               { staticClass: "row no-gutters mx-3 flex-total-center" },
@@ -69535,132 +69619,27 @@ var render = function() {
                   [
                     _c("div", [_vm._v(_vm._s(_vm.item_infos.items[index]))]),
                     _vm._v(" "),
-                    _c("div", { attrs: { id: index } })
-                  ]
+                      _c("div", {
+                          attrs: {
+                              "data-toggle": "modal",
+                              "data-target": "#" + index + "_modal",
+                              id: index
+                          }
+                      }),
+                      _vm._v(" "),
+                      _c("sensor-history", {
+                          attrs: {
+                              target_name: index,
+                              name: _vm.item_infos.items[index]
+                          }
+                      })
+                  ],
+                    1
                 )
               }),
-              0
+                0
             )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-2 d-lg-none" }),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-lg-4 col-8 flex-total-center" }, [
-            _c(
-              "div",
-              { staticClass: "row no-gutters bg-white rounded shadow " },
-              [
-                _c(
-                  "span",
-                  {
-                    staticClass:
-                      "weights-style col-4 text-dark border border-success flex-total-center "
-                  },
-                  [_vm._v("權重")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "span",
-                  {
-                    staticClass:
-                      "items-style col-8 text-dark border border-info flex-total-center"
-                  },
-                  [_vm._v("項目")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "col-12 monitor-item-list row text-dark no-gutters  border border-dark"
-                  },
-                  _vm._l(_vm.monitor_items, function(item, index) {
-                    return _c(
-                      "div",
-                      {
-                        staticClass: "col-12  flex-total-center border-bottom "
-                      },
-                      [
-                        _c(
-                          "div",
-                          { staticClass: "row item-list-count w-100" },
-                          [
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "col-4 text-dark text-center  border-right flex-total-center"
-                              },
-                              [
-                                _vm._v(
-                                  _vm._s(item) +
-                                    "\n                            "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "col-8 text-dark text-right flex-total-center"
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                " +
-                                    _vm._s(_vm.item_infos.items[index]) +
-                                    "\n                            "
-                                )
-                              ]
-                            )
-                          ]
-                        )
-                      ]
-                    )
-                  }),
-                  0
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "col-12 border border-dark rounded-bottom " },
-                  [
-                    _c(
-                      "div",
-                      { staticClass: "row no-gutters flex-total-center" },
-                      [
-                        _c("div", { staticClass: "col-2  flex-total-center" }, [
-                          _c("i", {
-                            staticClass: "fa fa-cog",
-                            attrs: {
-                              "aria-hidden": "true",
-                              "data-toggle": "modal",
-                              "data-target": "#weight_Modal_" + _vm.target_name
-                            }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "col-10 text-dark flex-total-center" },
-                          [
-                            _vm._v(
-                              "\n                            綜合指數：\n                            "
-                            ),
-                            _c("div", { staticClass: "text-small" }, [
-                              _vm._v(_vm._s(_vm.monitor_target))
-                            ])
-                          ]
-                        )
-                      ]
-                    )
-                  ]
-                )
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-2 d-lg-none" })
+            ])
         ]
       ),
       _vm._v(" "),
@@ -70097,6 +70076,56 @@ render._withStripped = true
 
 
 /***/ }),
+
+    /***/
+    "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/sensorHistory.vue?vue&type=template&id=b80a1b82&scoped=true&":
+    /*!****************************************************************************************************************************************************************************************************************************!*\
+      !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/sensorHistory.vue?vue&type=template&id=b80a1b82&scoped=true& ***!
+      \****************************************************************************************************************************************************************************************************************************/
+    /*! exports provided: render, staticRenderFns */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony export (binding) */
+        __webpack_require__.d(__webpack_exports__, "render", function () {
+            return render;
+        });
+        /* harmony export (binding) */
+        __webpack_require__.d(__webpack_exports__, "staticRenderFns", function () {
+            return staticRenderFns;
+        });
+        var render = function () {
+            var _vm = this
+            var _h = _vm.$createElement
+            var _c = _vm._self._c || _h
+            return _c(
+                "div",
+                {
+                    staticClass: "modal fade",
+                    attrs: {
+                        id: _vm.target_name + "_modal",
+                        tabindex: "-1",
+                        role: "dialog",
+                        "aria-labelledby": "myLargeModalLabel",
+                        "aria-hidden": "true"
+                    }
+                },
+                [
+                    _c("div", {staticClass: "modal-dialog modal-lg"}, [
+                        _c("div", {staticClass: "modal-content"}, [
+                            _vm._v("\n            " + _vm._s(_vm.name) + "\n        ")
+                        ])
+                    ])
+                ]
+            )
+        }
+        var staticRenderFns = []
+        render._withStripped = true
+
+
+        /***/
+    }),
 
 /***/ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js":
 /*!********************************************************************!*\
@@ -82370,6 +82399,7 @@ Vue.component('config-place', __webpack_require__(/*! ./components/ConfigPlace.v
 Vue.component('prog-items', __webpack_require__(/*! ./components/progItems.vue */ "./resources/js/components/progItems.vue")["default"]);
 Vue.component('monitor-items-show', __webpack_require__(/*! ./components/MonitorItemsShow.vue */ "./resources/js/components/MonitorItemsShow.vue")["default"]);
 Vue.component('former-info-config', __webpack_require__(/*! ./components/FormerInfoConfig.vue */ "./resources/js/components/FormerInfoConfig.vue")["default"]);
+        Vue.component('sensor-history', __webpack_require__(/*! ./components/sensorHistory.vue */ "./resources/js/components/sensorHistory.vue")["default"]);
 Vue.component('weights-modal', __webpack_require__(/*! ./components/WeightsModal.vue */ "./resources/js/components/WeightsModal.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -83062,8 +83092,92 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_progItems_vue_vue_type_template_id_d3c3b86a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+        /***/
+    }),
 
-/***/ }),
+    /***/
+    "./resources/js/components/sensorHistory.vue":
+    /*!***************************************************!*\
+      !*** ./resources/js/components/sensorHistory.vue ***!
+      \***************************************************/
+    /*! exports provided: default */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var _sensorHistory_vue_vue_type_template_id_b80a1b82_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sensorHistory.vue?vue&type=template&id=b80a1b82&scoped=true& */ "./resources/js/components/sensorHistory.vue?vue&type=template&id=b80a1b82&scoped=true&");
+        /* harmony import */
+        var _sensorHistory_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sensorHistory.vue?vue&type=script&lang=js& */ "./resources/js/components/sensorHistory.vue?vue&type=script&lang=js&");
+        /* empty/unused harmony star reexport *//* harmony import */
+        var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+        /* normalize component */
+
+        var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+            _sensorHistory_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+            _sensorHistory_vue_vue_type_template_id_b80a1b82_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+            _sensorHistory_vue_vue_type_template_id_b80a1b82_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+            false,
+            null,
+            "b80a1b82",
+            null
+        )
+
+        /* hot reload */
+        if (false) {
+            var api;
+        }
+        component.options.__file = "resources/js/components/sensorHistory.vue"
+        /* harmony default export */
+        __webpack_exports__["default"] = (component.exports);
+
+        /***/
+    }),
+
+    /***/
+    "./resources/js/components/sensorHistory.vue?vue&type=script&lang=js&":
+    /*!****************************************************************************!*\
+      !*** ./resources/js/components/sensorHistory.vue?vue&type=script&lang=js& ***!
+      \****************************************************************************/
+    /*! exports provided: default */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./sensorHistory.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/sensorHistory.vue?vue&type=script&lang=js&");
+        /* empty/unused harmony star reexport */ /* harmony default export */
+        __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+        /***/
+    }),
+
+    /***/
+    "./resources/js/components/sensorHistory.vue?vue&type=template&id=b80a1b82&scoped=true&":
+    /*!**********************************************************************************************!*\
+      !*** ./resources/js/components/sensorHistory.vue?vue&type=template&id=b80a1b82&scoped=true& ***!
+      \**********************************************************************************************/
+    /*! exports provided: render, staticRenderFns */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_template_id_b80a1b82_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./sensorHistory.vue?vue&type=template&id=b80a1b82&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/sensorHistory.vue?vue&type=template&id=b80a1b82&scoped=true&");
+        /* harmony reexport (safe) */
+        __webpack_require__.d(__webpack_exports__, "render", function () {
+            return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_template_id_b80a1b82_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"];
+        });
+
+        /* harmony reexport (safe) */
+        __webpack_require__.d(__webpack_exports__, "staticRenderFns", function () {
+            return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_template_id_b80a1b82_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"];
+        });
+
+
+        /***/ }),
 
 /***/ "./resources/sass/app.scss":
 /*!*********************************!*\

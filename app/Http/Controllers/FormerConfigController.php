@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\FarmerFarm;
+use App\FormerInfo;
 use Illuminate\Http\Request;
 use App\SensorInfo;
 use App\Weights;
 use App\FormerConfig;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use mysql_xdevapi\Session;
 
 
@@ -25,6 +27,9 @@ class FormerConfigController extends Controller
 //  更新感測器臨界值與權重
     public function updateWeightsThreshold(Request $req)
     {
+
+        $sqlID = FormerInfo::where(['farm' => $req['farm_id'], 'farmland' => $req['farmland']])->first()['id'];
+
         $farm = FarmerFarm::where(['id' => $req['farm_id']])->first()['farm'];
 //      內容
         $content = ['name', 'weights', 'max', 'min'];
@@ -51,7 +56,7 @@ class FormerConfigController extends Controller
 //
         foreach ($sensorName as $item) {
 //          update with weights
-            Weights::where(['formerName' => $req['name'], 'farm' => $req['farm_id'], 'farmland' => $req['farmland']])->update([$item => $sensorInfo[$item]['weights']]);
+            Weights::where(['farm_crop_id' => $sqlID, 'sensor' => $item])->update(['weights' => $sensorInfo[$item]['weights']]);
 //          update with max & min
             SensorInfo::where(['former' => $req['name'], 'farm' => $req['farm_id'], 'farmland' => $req['farmland'], 'sensor' => $sensorInfo[$item]['name']])->update(['max' => $sensorInfo[$item]['max'], 'min' => $sensorInfo[$item]['min']]);
         }
@@ -140,7 +145,7 @@ class FormerConfigController extends Controller
         $farmNumber = FarmerFarm::where(['farm' => $farm, 'farmer' => $farmer])->first();
 
         $request = new Request();
-        $request->replace(['name' => $farmer, 'farm' => $farm, 'farmland' => $farmland]);
+        $request->replace(['name' => $farmer, 'farm' => $farm, 'farmland' => $farmland, 'gateWay' => true]);
 
         $totalInfo = $this->info->numberTarget($request);
 

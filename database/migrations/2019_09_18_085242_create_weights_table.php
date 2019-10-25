@@ -15,20 +15,10 @@ class CreateWeightsTable extends Migration
     {
         Schema::create('weights', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('formerName')->nullable();
-            $table->integer('farm')->nullable();
-            $table->integer('farmland')->nullable();
-            $table->integer('water_level')->nullable();
-            $table->integer('water_ph')->nullable();
-            $table->integer('water_soil')->nullable();
-            $table->integer('light_lux')->nullable();
-            $table->integer('air_cp')->nullable();
-            $table->integer('air_ph4')->nullable();
-            $table->integer('air_hun')->nullable();
-            $table->integer('air_tem')->nullable();
-            $table->integer('weather_windSpeed')->nullable();
-            $table->integer('weather_windWay')->nullable();
-            $table->integer('weather_rainAccumulation')->nullable();
+            $table->integer('farm_crop_id');
+            $table->string('type');
+            $table->string('sensor');
+            $table->integer('weights');
         });
     }
 

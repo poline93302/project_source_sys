@@ -26,6 +26,7 @@ Vue.component('config-place', require('./components/ConfigPlace.vue').default);
 Vue.component('prog-items', require('./components/progItems.vue').default);
 Vue.component('monitor-items-show', require('./components/MonitorItemsShow.vue').default);
 Vue.component('former-info-config', require('./components/FormerInfoConfig.vue').default);
+Vue.component('sensor-history', require('./components/sensorHistory.vue').default);
 Vue.component('weights-modal', require('./components/WeightsModal.vue').default);
 
 /**

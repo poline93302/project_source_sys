@@ -28,7 +28,7 @@
                             <div class="form-group mb-1">
                                 <label for="former-crop"></label>
                                 <select class="form-control-sm w-98" id="selectCrop" name="selectCrop">
-                                    <option value="all">請選擇農田</option>
+                                    <option value="all">請選擇場域</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-warning  btn-sm btn-block text-font">查詢</button>
@@ -69,7 +69,7 @@
         @if($resList===[])
             <div class="row">
                 <div class="col-12 alert alert-info">
-                    <div class="no-create w-100 flex-total-center ">請新增農田</div>
+                    <div class="no-create w-100 flex-total-center ">請新增場域</div>
                 </div>
             </div>
         @else
