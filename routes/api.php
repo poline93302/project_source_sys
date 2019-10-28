@@ -34,7 +34,7 @@ Route::group(['prefix' => 'config'], function () {
 });
 
 Route::group(['prefix' => 'item'], function () {
-    Route::get('history', 'apiController@weatherData')->name('api.post.sensor.history');
+    Route::post('/history', 'apiController@sensorHistoryBy')->name('api.post.sensor.history');
 });
 
 

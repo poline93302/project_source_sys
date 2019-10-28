@@ -32,6 +32,7 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('/', 'FormerInfoController@index')->name('former_homepage');
     Route::post('/', 'FormerInfoController@login')->name('former_login');
     Route::post('/logout', 'FormerInfoController@logout')->name('former_logout');
+    Route::get('/singUp','FormerInfoController@singUp')->name('former_singUp');
     Route::post('/register', 'FormerInfoController@register')->name('former_register');
 });
 

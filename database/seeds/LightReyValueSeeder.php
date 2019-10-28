@@ -21,8 +21,8 @@ class LightReyValueSeeder extends Seeder
                 'farmland' => 1,
                 'sensor' => 'LFS',
                 'value' => rand(200, 2000),
-                'created_at' => Carbon::now()->addMinutes($i),
-                'updated_at' => Carbon::now()->addMinutes($i)
+                'created_at' => Carbon::now()->addMinutes($i*5),
+                'updated_at' => Carbon::now()->addMinutes($i*5)
             ]);
         }
     }

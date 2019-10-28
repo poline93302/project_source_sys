@@ -100,7 +100,6 @@
                     'gateWay': false,
                 }).then(function (res) {
                     //weights =>[0] 權重 [1]大權重
-                    console.log(res.data);
                     self.hex_values = [res.data.weights, res.data.target];
                 }).catch(function (err) {
                     console.log('ERROR' + err);

@@ -11,6 +11,7 @@ use App\LightRecy;
 use App\AirRecy;
 use App\SensorInfo;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -216,9 +217,92 @@ class apiController extends Controller
         return $value;
     }
 
-
-    public function sensorHistoryBy($sensor, $former, $farm, $farmland, $type)
+//  抓取歷史資料
+    public function sensorHistoryBy(Request $req)
     {
-        return response()->json('OYYYYY');
+//      farm farmland sensor farmer type
+//        $req = ['name' => '0000','farmer'=>'0000', 'farm' => 1, 'farmland' => 1, 'type' => 'water','sensor'=>'water_level'];
+        $result = [];
+//      確認type選擇table
+        switch ($req['type']) {
+            case 'water':
+                {
+                    $table = 'waterRecy';
+                    break;
+                }
+            case 'environment':
+            case 'air':
+                {
+                    $table = 'airRecy';
+                    break;
+                }
+            case 'weather':
+                {
+                    $table = 'weatherRecy';
+                    break;
+                }
+            case 'light':
+                {
+                    $table = 'lightRecy';
+                    break;
+                }
+        }
+//      對應感測器表
+        $switchSensorCorr = [
+            'water' => [
+                'water_level' => 'WLS',
+                'water_ph' => 'WPH',
+                'water_soil' => 'WSO',
+            ],
+            'environment' => [
+                'air_hun' => 'OTE',
+                'air_tem' => 'OHY',
+            ],
+            'air' => [
+                'air_cp' => 'CON',
+                'air_ph4' => 'CHE',
+            ],
+            'weather' => [
+                'weather_windWay' => 'OWN',
+                'weather_windSpeed' => 'OWS',
+                'weather_rainAccumulation' => 'ORA',
+            ],
+            'light' => [
+                'light_lux' => 'LFS',
+            ],
+        ];
+
+        $sensorMaxMin = SensorInfo::where([
+            'former' => $req['farmer'],
+            'farm' => $req['farm'],
+            'farmland' => $req['farmland'],
+            'sensor'=>$switchSensorCorr[$req['type']][$req['sensor']],
+        ])->first();
+
+
+        $dbData = DB::table($table)->where([
+            'former' => $req['farmer'],
+            'farm' => $req['farm'],
+            'farmland' => $req['farmland'],
+            'sensor' => $switchSensorCorr[$req['type']][$req['sensor']],
+        ])
+            ->orderBy('created_at','DESC')
+            ->take(336)
+            ->get();
+
+        foreach ($dbData as $data) {
+            array_push($result, [
+                'value' => $data->value,
+                'time' => $data->created_at,
+            ]);
+        }
+
+        $res = [
+            'max' => $sensorMaxMin['max'],
+            'min' => $sensorMaxMin['min'],
+            'res' => $result,
+        ];
+
+        return response()->json($res);
     }
 }

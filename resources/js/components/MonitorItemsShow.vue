@@ -16,7 +16,10 @@
                     <div v-for="(item,index) in monitor_items" class="col-auto flex-total-center flex-column">
                         <div>{{ item_infos.items[index] }}</div>
                         <div data-toggle="modal" :data-target="'#'+index + '_modal'" :id="index"></div>
-                        <sensor-history :target_name="index" :name="item_infos.items[index]">
+                        <sensor-history :sensor_name="index" :name="item_infos.items[index]"
+                                        :farm_id="farm_id" :farmland="farmland"
+                                        :farmer="name" :target_type="target_name"
+                        >
 
                         </sensor-history>
                     </div>
@@ -77,17 +80,15 @@
             farmland: Number,
         },
         methods: {
-            get_value() {
+            async get_value() {
                 let self = this;
-                console.log('get');
-                axios.post(this.url_api, {
+                await axios.post(this.url_api, {
                     'name': this.name,
                     'farm': this.farm_id,
                     'farmland': this.farmland,
                     'type': this.target_name,
                     'gateWay': false,
                 }).then(function (res) {
-                    console.log(res.data);
                     _.forEach(res.data, function (item) {
                         self.$set(self.item_value, [self.item_infos.sensor[item.sensor]], {
                             'max': item.max,

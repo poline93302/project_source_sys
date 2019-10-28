@@ -20,8 +20,8 @@ class WeatherReyValueSeeder extends Seeder
                 'farmland' => 1,
                 'sensor' => 'OWN',
                 'value' => rand(0, 360),
-                'created_at' => Carbon::now()->addMinute($i),
-                'updated_at' => Carbon::now()->addMinute($i),
+                'created_at' => Carbon::now()->addMinute($i*5),
+                'updated_at' => Carbon::now()->addMinute($i*5),
             ]);
             WeatherRecy::create([
                 'former' => '0000',
@@ -29,8 +29,8 @@ class WeatherReyValueSeeder extends Seeder
                 'farmland' => 1,
                 'sensor' => 'OWS',
                 'value' => rand(0, 10),
-                'created_at' => Carbon::now()->addMinute($i),
-                'updated_at' => Carbon::now()->addMinute($i),
+                'created_at' => Carbon::now()->addMinute($i*5),
+                'updated_at' => Carbon::now()->addMinute($i*5),
             ]);
             WeatherRecy::create([
                 'former' => '0000',
@@ -38,8 +38,8 @@ class WeatherReyValueSeeder extends Seeder
                 'farmland' => 1,
                 'sensor' => 'ORA',
                 'value' => rand(0, 200),
-                'created_at' => Carbon::now()->addMinute($i),
-                'updated_at' => Carbon::now()->addMinute($i),
+                'created_at' => Carbon::now()->addMinute($i*5),
+                'updated_at' => Carbon::now()->addMinute($i*5),
             ]);
         }
     }
