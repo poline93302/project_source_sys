@@ -29,6 +29,11 @@ class FormerInfoController extends Controller
         return view('Form_Show.User.UserHomepage', ['name' => null, 'pass' => null]);
     }
 
+    public function singUp(Request $req)
+    {
+        return view('Form_Show.User.UserSingUp');
+    }
+
     public function login(Request $req)
     {
         if (Auth::attempt(['username' => $req['login_username'], 'password' => $req['login_password']])) {
@@ -50,7 +55,7 @@ class FormerInfoController extends Controller
     {
 
         $check = UserFormer::where(['username' => $req['register_username']])->first();
-        if (isset($check)) return back()->withErrors(['此帳號已存在']);
+        if (isset($check)) return redirect()->to(route('former_homepage'))->withErrors(['此帳號已存在']);
 
         UserFormer::create([
             'name' => $req['register_name'],

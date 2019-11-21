@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\FarmerFarm;
+use App\FormerInfo;
 use Illuminate\Http\Request;
 use App\SensorInfo;
 use App\Weights;
 use App\FormerConfig;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use mysql_xdevapi\Session;
 
 
 class FormerConfigController extends Controller
@@ -23,6 +27,10 @@ class FormerConfigController extends Controller
 //  更新感測器臨界值與權重
     public function updateWeightsThreshold(Request $req)
     {
+
+        $sqlID = FormerInfo::where(['farm' => $req['farm_id'], 'farmland' => $req['farmland']])->first()['id'];
+
+        $farm = FarmerFarm::where(['id' => $req['farm_id']])->first()['farm'];
 //      內容
         $content = ['name', 'weights', 'max', 'min'];
 //      感測器排列 偶數為"AI1" 基數為名稱
@@ -31,7 +39,6 @@ class FormerConfigController extends Controller
         $sensorCount = count($sensorOrder);
         $sensorName = [];
         $sensorInfo = [];
-
 //      以sensor.name =['name'=>'AI1','weights'=>'10','max'=>200,'min'=>10]的模式進行切割
         for ($j = 0; $j < $sensorCount; $j += 2) {
             array_push($sensorName, $sensorOrder[$j + 1]);
@@ -49,13 +56,12 @@ class FormerConfigController extends Controller
 //
         foreach ($sensorName as $item) {
 //          update with weights
-            Weights::where(['formerName' => $req['name'], 'farmland' => $req['farmland']])->update([$item => $sensorInfo[$item]['weights']]);
+            Weights::where(['farm_crop_id' => $sqlID, 'sensor' => $item])->update(['weights' => $sensorInfo[$item]['weights']]);
 //          update with max & min
-            SensorInfo::where(['former' => $req['name'], 'farmland' => $req['farmland'], 'sensor' => $sensorInfo[$item]['name']])->update(['max' => $sensorInfo[$item]['max'], 'min' => $sensorInfo[$item]['min']]);
+            SensorInfo::where(['former' => $req['name'], 'farm' => $req['farm_id'], 'farmland' => $req['farmland'], 'sensor' => $sensorInfo[$item]['name']])->update(['max' => $sensorInfo[$item]['max'], 'min' => $sensorInfo[$item]['min']]);
         }
-//        dd($req->all());
 
-        return redirect()->to(route('monitor_former_config', ['form_crop' => $req['farmland']]));
+        return redirect()->to(route('monitor_former_config', ['farm' => $farm, 'farmland' => $req['farmland']]));
     }
 
 // 農夫設定監控值 新增
@@ -63,6 +69,7 @@ class FormerConfigController extends Controller
     {
         FormerConfig::create([
             'former' => $req['former'],
+            'farm' => $req['farm'],
             'farmland' => $req['farmland'],
             'sensor' => $req['sensor'],
             'switch' => $req['switch'],
@@ -76,6 +83,7 @@ class FormerConfigController extends Controller
     {
         FormerConfig::where([
             'former' => $req['former'],
+            'farm' => $req['farm'],
             'farmland' => $req['farmland'],
             'sensor' => $req['sensor']
         ])->delete();
@@ -88,6 +96,7 @@ class FormerConfigController extends Controller
     {
         FormerConfig::where([
             'former' => $req['former'],
+            'farm' => $req['farm'],
             'farmland' => $req['farmland'],
             'sensor' => $req['sensor']
         ])->update([
@@ -105,6 +114,7 @@ class FormerConfigController extends Controller
 
         FormerConfig::where([
             'former' => $req['former'],
+            'farm' => $req['farm'],
             'farmland' => $req['farmland'],
             'sensor' => $req['sensor']
         ])->update([
@@ -114,9 +124,9 @@ class FormerConfigController extends Controller
     }
 
 //  抓取感測器臨界值
-    public function sensorChangeData($former, $farmland)
+    public function sensorChangeData($former, $farm, $farmland)
     {
-        $sensorInfo = SensorInfo::Where(['former' => $former, 'farmland' => $farmland])->get();
+        $sensorInfo = SensorInfo::Where(['former' => $former, 'farm' => $farm, 'farmland' => $farmland])->get();
         $data = [];
         foreach ($sensorInfo as $d) {
             $data[$d['sensor']] = ['max' => $d['max'], 'min' => $d['min']];
@@ -126,14 +136,16 @@ class FormerConfigController extends Controller
     }
 
 //  回傳該農夫的設定值
-    public function show($farmland)
+    public function show($farm, $farmland)
     {
         if (is_null(Auth::user())) return redirect()->to(route('former_homepage'));
 
-        $former = Auth::user()['username'];
+        $farmer = Auth::user()['username'];
+
+        $farmNumber = FarmerFarm::where(['farm' => $farm, 'farmer' => $farmer])->first();
 
         $request = new Request();
-        $request->replace(['name' => $former, 'farmland' => $farmland]);
+        $request->replace(['name' => $farmer, 'farm' => $farm, 'farmland' => $farmland, 'gateWay' => true]);
 
         $totalInfo = $this->info->numberTarget($request);
 
@@ -143,14 +155,16 @@ class FormerConfigController extends Controller
             'target' => $totalInfo->original['target'],
         ];
 //      抓取 該農夫 該農場 設定數值
-        $formerConfig = FormerConfig::where(['former' => $former, 'farmland' => $farmland])->get();
-
-        foreach ($formerConfig as $d) {
-            $d['control'] = true;
+        $farmerConfig = FormerConfig::where(['former' => $farmer, 'farm' => $farmNumber['id'], 'farmland' => $farmland])->get();
+        if (!$farmerConfig->isEmpty()) {
+            foreach ($farmerConfig as $d) {
+                $d['control'] = true;
+            }
         }
 
-        $sensorChangeData = $this->sensorChangeData($former, $farmland);
 
-        return view('Form_Show.moniter.moniter_config', ['data' => $monitorItem, 'farmland' => $farmland, 'name' => $former, 'formerConfig' => $formerConfig, 'sensor' => $sensorChangeData]);
+        $sensorChangeData = $this->sensorChangeData($farmer, $farmNumber['id'], $farmland);
+//        dd($farmNumber['id']);
+        return view('Form_Show.moniter.moniter_config', ['data' => $monitorItem, 'farmland' => $farmland, 'name' => $farmer, 'formerConfig' => $farmerConfig, 'sensor' => $sensorChangeData, 'farmNumber' => $farmNumber['id']]);
     }
 }

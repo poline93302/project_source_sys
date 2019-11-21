@@ -16,10 +16,12 @@ class CreateWeatherValue extends Migration
         Schema::create('weatherRecy', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('former');
+            $table->integer('farm');
             $table->integer('farmland');
             $table->string('sensor');
             $table->double('value');
-            $table->dateTime('send_time');
+//            $table->dateTime('send_time');
+            $table->timestamps();
         });
     }
 

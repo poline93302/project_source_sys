@@ -13,6 +13,7 @@ const mix = require('laravel-mix');
 
 mix.js(['resources/js/app.js',
     'resources/js/Active/Sketchpad.js',
+    'resources/js/Active/Animation.js',
 ], 'public/js/bundle/index.bundle.js')
     .sass('resources/sass/app.scss', 'public/css/bundle/index.bundle.css')
     .combine('resources/js/infoCheck.js', 'public/js/bundle/checkinfo.bundle.js');

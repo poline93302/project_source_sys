@@ -4,16 +4,16 @@
     <header class="my-3">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <div class="container my-3">
-            <div class="row text-center bg-white shadow rounded-top">
-                <div class="col-7 col-lg-7 my-3">
-                    <img src="http://placeimg.com/1500/600/any/1" class="img-fluid" alt="">
+            <div class="row text-center bg-white shadow rounded">
+                <div class="col-6 col-md-7 my-3">
+                    <img src={{asset("picture/logo.gif")}} alt="標題" width="300" height="300" class="img-fluid figure-img" >
                 </div>
-                <div class="col-5 col-lg-5 my-3 ">
+                <div class="col-6 col-md-5 my-3 ">
                     <div class="row mt-3">
                         <div class="col-12 mb-3">
-                            <span class="text-dark">歡迎 {{ $former }} 抵達本站</span>
+                            <span class="text-dark">歡迎 <span class="text-info"> {{ $former }} </span>抵達本站</span>
                         </div>
-                        <form method="POST" action="{{route('monitor_homepage_select')}}" class="col-12 mb-3">
+                        <form method="POST" action="{{route('monitor_homepage_select')}}" class="col-12 mb-3 mb-md-1">
                             @csrf
                             <div class="form-group mb-1">
                                 <label for="former"></label>
@@ -28,22 +28,23 @@
                             <div class="form-group mb-1">
                                 <label for="former-crop"></label>
                                 <select class="form-control-sm w-98" id="selectCrop" name="selectCrop">
-                                    <option value="all">請選擇農田</option>
+                                    <option value="all">請選擇場域</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-warning  btn-sm btn-block">查詢</button>
+                            <button type="submit" class="btn btn-warning  btn-sm btn-block text-font">查詢</button>
                         </form>
 
                         <div class="col-12 row no-gutters">
                             <div class="col">
-                                <button type="button" class="btn btn-primary w-98 btn-sm" data-toggle="modal"
+                                <button type="button" class="btn btn-primary w-98 btn-sm text-wrap text-font"
+                                        data-toggle="modal"
                                         data-target="#FormerInfoModal">
                                     農夫資訊
                                 </button>
                             </div>
                             <div class="col">
                                 <a href="{{ route('monitor_homepage') }}">
-                                    <button type="button" class="btn btn-primary w-98 btn-sm">
+                                    <button type="button" class="btn btn-primary w-98 btn-sm text-font">
                                         顯示全部
                                     </button>
                                 </a>
@@ -51,7 +52,8 @@
                             <div class="col">
                                 <form method="POST" action="{{ route('former_logout') }}" id="loginForm">
                                     @csrf
-                                    <button type="button" class="btn btn-primary w-98 btn-sm" onclick="alertLogin()">
+                                    <button type="button" class="btn btn-primary w-98 btn-sm text-wrap text-font"
+                                            onclick="alertLogin()">
                                         登出
                                     </button>
                                 </form>
@@ -66,8 +68,8 @@
         {{--                            顯示部分--}}
         @if($resList===[])
             <div class="row">
-                <div class="col-12 alert alert-info">
-                    <div class="no-create w-100 flex-total-center ">請新增農田</div>
+                <div class="col-12 alert alert-primary text-center" role="alert">
+                    請新增場域
                 </div>
             </div>
         @else
@@ -84,7 +86,7 @@
                             :form_crop="{{ json_encode($d['farm'].'_'.$d['crop']) }}"
                             :config_number="{{$d['id']}}"
                             :url_api_target="{{json_encode(route('api.get.number.target'))}}"
-                            :url_path="{{json_encode(route('monitor_former_config',['form_crop'=> $d['farmland']]))}}">
+                            :url_path="{{json_encode(route('monitor_former_config',['farm' => $d['farm'] ,'farmland' => $d['farmland']]))}}">
                     </Conitor-Exponent>
                 @endif
             @endforeach

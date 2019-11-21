@@ -20,20 +20,20 @@
                                 <div class="col-6">
                                     <label for="formerInfoName">名稱：</label>
                                     <input type="text" id="formerInfoName" v-model="FarmerName"
-                                           name="updateFormerName" class="w-98"
+                                           name="updateFormerName" class="w-98 border"
                                     />
                                 </div>
                                 <div class="col-6">
                                     <label for="formerInfoEmail">信箱：</label>
                                     <input type="text" id="formerInfoEmail" v-model="FarmerEmail"
-                                           name="updateFormerEmail" class="w-98"/>
+                                           name="updateFormerEmail" class="w-98 border"/>
                                 </div>
                                 <div class="btn-group mt-3 col-8">
                                     <div class="btn border" @click="switchConnect = false"
                                          :class="'switch-type-'+!switchConnect">農場資訊
                                     </div>
                                     <div class="btn border" @click="switchConnect = true "
-                                         :class="'switch-type-'+switchConnect">農田資訊
+                                         :class="'switch-type-'+switchConnect">場域資訊
                                     </div>
                                 </div>
                                 <!--                            農場列表-->
@@ -70,7 +70,7 @@
                                     <div class="flex-total-center row">
                                         <div class="col-12 row flex-total-center text-center bg-primary">
                                             <div class="col  text-light">農場</div>
-                                            <div class="col  text-light">農田</div>
+                                            <div class="col  text-light">場域</div>
                                             <div class="col-auto">
                                                 <i class="fa fa-plus-circle text-light tool-remind" aria-hidden="true"
                                                    @click="addItems('crop')"></i>
@@ -263,7 +263,6 @@
                                     stepsCache.push(items['id']);
                                 }
                             });
-                            console.log(stepsCache);
                             self.stepsCrop = Array.from(new Set(stepsCache));
                         }
                     }

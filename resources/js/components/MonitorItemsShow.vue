@@ -1,54 +1,36 @@
 <!--個別監控的數值畫面的主畫面-->
 <template>
-    <div class="border w-100 p-2 my-2 shadow">
+    <div class="border w-100 my-2 shadow bg-white rounded">
         <div :class="[monitor_target<=30 ? 'border-danger' : monitor_target>60? 'border-success': 'border-warning', item_infos.classes[target_name]]"
-             class="row border no-gutters m-3 monitor-item rounded-top ">
-            <div class="item-info col-12 flex-total-center bg-success rounded-top mb-3"
+             class="row border m-3 monitor-item rounded-top ">
+            <div class="item-info col-12 flex-total-center bg-success rounded-top mb-2"
                  :class="monitor_target<=30 ? 'bg-danger' : monitor_target>60? 'bg-success': 'bg-warning'">
-                {{ item_infos.names[target_name]}}
-            </div>
-            <div class=" col-10 monitor-item-show row float-left">
-                <div v-for="(item,index) in monitor_items" class="col-4">
-                    <div class="text-center">{{ item_infos.items[index] }}</div>
-                    <div :id="index" class="text-center"></div>
+                <div class="justify-content-between">
+                    {{ item_infos.names[target_name]}}
+                    <i class="fa fa-cog" aria-hidden="true" data-toggle="modal"
+                       :data-target="'#weight_Modal_'+target_name"></i>
                 </div>
             </div>
-            <div class="col-2">
-                <div class="row no-gutters bg-white rounded my-3 shadow">
-                    <span class="weights-style col-4 text-dark border border-success flex-total-center ">權重</span>
-                    <span class="items-style col-8 text-dark border border-info flex-total-center">項目</span>
+            <div class="col-lg-12 col-12 monitor-item-show">
+                <div class="row no-gutters mx-3 flex-total-center">
+                    <div v-for="(item,index) in monitor_items" class="col-auto flex-total-center flex-column">
+                        <div>{{ item_infos.items[index] }}</div>
+                        <div data-toggle="modal" :data-target="'#'+index + '_modal'" :id="index"></div>
+                        <sensor-history :sensor_name="index" :name="item_infos.items[index]"
+                                        :farm_id="farm_id" :farmland="farmland"
+                                        :farmer="name" :target_type="target_name"
+                        >
 
-                    <div class="col-12 monitor-item-list row text-dark no-gutters  border border-dark">
-                        <div v-for="(item,index) in monitor_items"
-                             class="col-12  flex-total-center border-bottom ">
-                            <div class="row item-list-count w-100">
-                                <div class="col-4 text-dark text-center  border-right flex-total-center">{{ item }}
-                                </div>
-                                <div class="col-8 text-dark text-right flex-total-center">
-                                    {{ item_infos.items[index] }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 border border-dark ">
-                        <div class="row no-gutters flex-total-center">
-                            <div class="col-2 flex-total-center">
-                                <i class="fa fa-cog" aria-hidden="true" data-toggle="modal"
-                                   :data-target="'#weight_Modal_'+target_name"></i>
-                            </div>
-                            <div class="col-10 text-dark flex-total-center">
-                                綜合指數：
-                                <div class="text-small">{{ monitor_target }}</div>
-                            </div>
-                        </div>
+                        </sensor-history>
                     </div>
                 </div>
             </div>
         </div>
-        <weights-modal :name="name" :farmland="farmland"
+        <weights-modal :name="name" :farmland="farmland" :farm_id="farm_id"
                        :type="target_name" :title="item_infos.names[target_name]"
                        :items="monitor_items" :itemsThreshold="item_value"
-                       :ch_name="item_infos.items" :sensor_name="item_infos.sensor"></weights-modal>
+                       :ch_name="item_infos.items" :sensor_name="item_infos.sensor">
+        </weights-modal>
     </div>
 </template>
 
@@ -62,18 +44,21 @@
         props: {
             monitor_target: Number,
             monitor_items: Object,
+            farm_id: Number,
             target_name: String,
             url_api: '',
             name: String,
             farmland: Number,
         },
         methods: {
-            get_value() {
+            async get_value() {
                 let self = this;
-                axios.post(this.url_api, {
+                await axios.post(this.url_api, {
                     'name': this.name,
+                    'farm': this.farm_id,
                     'farmland': this.farmland,
                     'type': this.target_name,
+                    'gateWay': false,
                 }).then(function (res) {
                     _.forEach(res.data, function (item) {
                         self.$set(self.item_value, [self.item_infos.sensor[item.sensor]], {
@@ -100,24 +85,28 @@
             return {
                 item_infos: {
                     classes: {
+                        'environment': 'monitor-item-environment',
                         'water': 'monitor-item-water',
                         'light': 'monitor-item-light',
                         'air': 'monitor-item-air',
                         'weather': 'monitor-item-weather'
                     },
                     names: {
-                        'water': '水健康指數',
-                        'light': '燈泡健康指數',
-                        'air': '空氣健康指數',
-                        'weather': '氣候健康指數'
+                        'environment': '環境指數',
+                        'water': '水指數',
+                        'light': '光指數',
+                        'air': '場域健康指數',
+                        'weather': '氣候指數'
                     },
                     sensor: {
-                        "AI1": 'air_cp', "AI2": 'air_ph4',
-                        "AI3": 'air_hun', "AI4": 'air_tem',
-                        "WA1": 'water_level', "WA2": 'water_ph',
-                        "WA3": 'water_soil', "LIG": 'light_lux',
-                        "WE1": 'weather_windWay', "WE2": 'weather_windSpeed',
-                        "WE3": 'weather_rainAccumulation',
+                        //CON CHE 有害氣體
+                        "CON": 'air_cp', "CHE": 'air_ph4',
+                        //OTE OHY 是環境
+                        "OTE": 'air_hun', "OHY": 'air_tem',
+                        "WLS": 'water_level', "WPH": 'water_ph',
+                        "WSO": 'water_soil', "LFS": 'light_lux',
+                        "OWN": 'weather_windWay', "OWS": 'weather_windSpeed',
+                        "ORA": 'weather_rainAccumulation',
                     },
                     items:
                         {
@@ -127,7 +116,7 @@
                             'light_lux': '亮度',
                             'air_cp': '一氧化碳',
                             'air_ph4': '甲烷',
-                            'air_hun': '濕度',
+                            'air_hun': '相對濕度',
                             'air_tem': '溫度',
                             'weather_windWay': '風向',
                             'weather_windSpeed': '風速',

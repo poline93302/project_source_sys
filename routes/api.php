@@ -22,6 +22,7 @@ Route::group(['prefix' => 'numerical'], function () {
     Route::post('/target', 'apiController@numberTarget')->name('api.get.number.target');
     Route::post('/findNow', 'apiController@getNowData')->name('api.get.item.number');
     Route::post('/critical', 'apiController@sensorChangeData')->name('api.get.item.critical');
+    Route::get('/test', 'apiController@getNowData');
 });
 
 Route::group(['prefix' => 'config'], function () {
@@ -30,7 +31,10 @@ Route::group(['prefix' => 'config'], function () {
     Route::post('/switch', 'FormerConfigController@switch')->name('api.post.config.switch');
     Route::post('/delete', 'FormerConfigController@delete')->name('api.post.config.delete');
     Route::post('/updateWeightsThreshold', 'FormerConfigController@updateWeightsThreshold')->name('api.post.weight.threshold.update');
-    Route::get('/test', 'FormerConfigController@switch');
+});
+
+Route::group(['prefix' => 'item'], function () {
+    Route::post('/history', 'apiController@sensorHistoryBy')->name('api.post.sensor.history');
 });
 
 

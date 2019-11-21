@@ -16,6 +16,7 @@ class CreateFormerConfig extends Migration
         Schema::create('former_config', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->String('former');
+            $table->integer('farm');
             $table->integer('farmland');
             $table->String('sensor');
             $table->boolean('switch');

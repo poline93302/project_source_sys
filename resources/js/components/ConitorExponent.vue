@@ -1,14 +1,14 @@
 <template>
-    <div class="container sensor-part border border-light rounded mt-5 shadow">
+    <div class="container sensor-part border border-light rounded mt-5 shadow bg-white">
         <div class="row mt-3 no-gutters text-center">
             <div class="col-12 mb-3 form-header">
                 <div class="row ">
-                    <div class="col-3 form-title text-left"> {{ form_crop }}</div>
-                    <div class="col-6"></div>
+                    <div class="col-5 form-title text-left text-title"> {{ form_crop }}</div>
+                    <div class="col-4"></div>
                     <div class="col-3 place-tools text-right">
                         <a data-toggle="collapse" :href='"#replyCollapse"+config_number' role="button"
                            aria-expanded="false" aria-controls="collapseExample">
-                            <i class="fa fa-question" aria-hidden="true"></i>
+                            <i class="fa fa-list text-center" aria-hidden="true"></i>
                         </a>
                     </div>
                     <div class="col-12">
@@ -52,19 +52,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="row no-gutters">
+                <div class="row no-gutters flex-scrollable overflow-auto p-2 p-lg-0 flex-nowrap">
                     <div v-for="(hex_value,item,key) in hex_values[1]"
-                         class="col-3 mt-3 h-100 flex-total-center text-center">
+                         class="col-3 mt-3 mr-5 mr-lg-0 flex-total-center text-center">
                         <div class="monitor-items" :id="count_off(key)">
                             <div>{{ item_id[key] }}</div>
                         </div>
                     </div>
-                    <div class="col-12 h-75">&nbsp;</div>
-                    <div class="col-12 text-right">
-                        <a :href="url_path">
-                            <div class="go-monitor"></div>
-                        </a>
-                    </div>
+                </div>
+                <div class="col-12 text-right">
+                    <a :href="url_path">
+                        <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -96,10 +95,12 @@
 
                 axios.post(this.url_api_target, {
                     'name': this.name,
+                    'farm': this.form_crop.split('_')[0],
                     'farmland': this.config_number,
+                    'gateWay': false,
                 }).then(function (res) {
                     //weights =>[0] 權重 [1]大權重
-                    if (res.data !== 'Please') self.hex_values = [res.data.weights, res.data.target];
+                    self.hex_values = [res.data.weights, res.data.target];
                 }).catch(function (err) {
                     console.log('ERROR' + err);
                 }).finally(function () {
@@ -118,9 +119,9 @@
                 monitor_id: ['monitor-air', 'monitor-weather', 'monitor-water', 'monitor-light'],
                 //感測器順序
                 sensorOrder: {
-                    'air': ['air_cp', 'air_hun', 'air_ph4', 'air_tem'],
+                    'air': ['air_cp', 'air_ph4'],
                     'light': ['light_lux'],
-                    'water': ['water_level', 'water_ph', 'water_soil'],
+                    'water': ['water_level', 'water_ph'],
                     'weather': ['weather_rainAccumulation', 'weather_windSpeed', 'weather_windWay'],
                 },
                 sensor_ch: {
@@ -136,7 +137,7 @@
                     'weather_windSpeed': '風速',
                     'weather_rainAccumulation': '累積雨量',
                 },
-                item_id: ['空氣健康指數', '氣候健康指數', '水健康指數', '光健康指數'],
+                item_id: ['場域健康指數', '氣候指數', '水指數', '光指數'],
                 en_item_id: ['air', 'weather', 'water', 'light'],
                 //hex_draw 得到數值
                 hex_draw: {},
@@ -164,5 +165,9 @@
 
     .text-notice {
         font-size: 0.5rem !important;
+    }
+
+    .text-title {
+        font-size: 1.2rem !important;
     }
 </style>

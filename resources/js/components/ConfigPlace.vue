@@ -1,8 +1,8 @@
 <template>
-    <div class="row my-3 monitor-configs">
-        <div class="col-12">
+    <div class="row m-2 monitor-configs">
+        <div class="col-12 ">
             <div v-for="(Config_Info,index) in Config_Infos"
-                 class="config-place border my-3 rounded"
+                 class="config-place border my-3 rounded bg-white"
                  :class="Config_Info.switch? 'shadow':''">
                 <div class="row">
                     <div class="col-12 my-3">
@@ -83,6 +83,7 @@
 
 <script>
     import axios from 'axios';
+
     export default {
         name: "ConfigPlace",
         props: {
@@ -91,6 +92,8 @@
             name_critical: {},
             api_url: Array,
             former_name: '',
+            farm_id: Number,
+            farmland: Number,
         },
         data() {
             return {
@@ -100,16 +103,16 @@
                 ],
                 Config_Infos: _.cloneDeep(this.config_infos),
                 ch_name: {
-                    "WA1": '水位感測器',
-                    "WA2": '水PH感測器',
-                    "AI1": '溫度感測器',
-                    "AI3": '甲烷感測器',
-                    "LIG": '光線感測器',
-                    "WA3": '土壤濕度感測器',
-                    "AI2": '相對濕度感測器',
-                    "AI4": '一氧化碳感測器',
+                    "WLS": '水位感測器',
+                    "WPH": '水PH感測器',
+                    "OHY": '溫度感測器',
+                    "CHE": '甲烷感測器',
+                    "LFS": '光線感測器',
+                    "WSO": '土壤濕度感測器',
+                    "OTE": '相對濕度感測器',
+                    "CON": '一氧化碳感測器',
                 },
-                items: ['WA1', 'WA2', 'WA3', 'AI1', 'AI2', 'AI3', 'AI4', 'LIG'],
+                items: ['WLS', 'WPH', 'OTE', 'CHE', 'LFS', 'WSO', 'OHY', 'CON'],
             }
         },
         methods: {
@@ -139,19 +142,22 @@
             sensorGet(id) {
                 let value = document.getElementById('select_sensor_name');
                 this.Config_Infos[id].sensor = value.value;
+                this.items.splice(this.items.indexOf(value.value), 1);
             },
             deleteConfig(index) {
                 let self = this;
                 if (confirm('確定刪除')) {
                     axios.post(self.api_url[1], {
                         'former': self.former_name,
-                        'farmland': self.Config_Infos[index].farmland,
+                        'farm': self.farm_id,
+                        'farmland': self.farmland,
                         'sensor': self.Config_Infos[index].sensor,
                     }).then(function (res) {
                         console.log(res.data);
                     }).catch(function (err) {
                         console.log(err);
                     }).finally(function () {
+                        self.items.push(self.Config_Infos[index].sensor);
                         self.$delete(self.Config_Infos, index);
                     });
                 }
@@ -161,9 +167,11 @@
             updateCreateConfig(index) {
                 let api = this.Config_Infos[index].control ? this.api_url[2] : this.api_url[0];
                 let self = this;
+                console.log('api go');
                 axios.post(api, {
                     'former': this.former_name,
-                    'farmland': this.Config_Infos[index].farmland,
+                    'farm': self.farm_id,
+                    'farmland': self.farmland,
                     'sensor': this.Config_Infos[index].sensor,
                     'switch': this.Config_Infos[index].switch,
                     'value': this.Config_Infos[index].value
@@ -182,7 +190,8 @@
                 let self = this;
                 axios.post(this.api_url[3], {
                     'former': self.former_name,
-                    'farmland': this.Config_Infos[index].farmland,
+                    'farm': self.farm_id,
+                    'farmland': this.farmland,
                     'sensor': this.Config_Infos[index].sensor,
                     'switch': this.Config_Infos[index].switch,
                 }).then(function (res) {
