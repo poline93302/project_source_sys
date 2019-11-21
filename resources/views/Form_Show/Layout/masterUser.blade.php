@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
-    <title>農場監控系統F.M.@Farm_Monitoring</title>
+    <title>智慧農業感測網路-I.G.A</title>
 </head>
 <link
         href="https://fonts.googleapis.com/css?family=Open+Sans"

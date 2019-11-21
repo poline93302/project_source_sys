@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
-    <title>農場監控系統F.M.@Farm_Monitoring</title>
+    <title>智慧農業感測網路-I.G.A</title>
 </head>
 <link
         href="https://fonts.googleapis.com/css?family=Open+Sans"
@@ -28,7 +28,6 @@
             <div>
                 <pre class="text-font d-none d-md-flex">© 2018 Maselab318.  All Rights Reserved.   Designed By  YingLu_Chen.</pre>
             </div>
-{{--            <a href="https://www.freepik.com/free-photos-vectors/food">Food vector created by jemastock - www.freepik.com</a>--}}
         </footer>
     @endif
 </div>
