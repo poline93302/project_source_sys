@@ -21,8 +21,8 @@ class AirReyValueSeeder extends Seeder
                 'farmland' => 1,
                 'sensor' => 'CON',
                 'value' => rand(0, 100),
-                'created_at' => Carbon::now()->addMinutes($i*5),
-                'updated_at' => Carbon::now()->addMinutes($i*5)
+                'created_at' => Carbon::now()->subMinutes($i*5),
+                'updated_at' => Carbon::now()->subMinutes($i*5)
             ]);
             AirRecy::create([
                 'former' => '0000',
@@ -30,8 +30,8 @@ class AirReyValueSeeder extends Seeder
                 'farmland' => 1,
                 'sensor' => 'CHE',
                 'value' => rand(0, 100),
-                'created_at' => Carbon::now()->addMinutes($i*5),
-                'updated_at' => Carbon::now()->addMinutes($i*5)
+                'created_at' => Carbon::now()->subMinutes($i*5),
+                'updated_at' => Carbon::now()->subMinutes($i*5)
             ]);
             AirRecy::create([
                 'former' => '0000',
@@ -39,8 +39,8 @@ class AirReyValueSeeder extends Seeder
                 'farmland' => 1,
                 'sensor' => 'OTE',
                 'value' => rand(0, 100),
-                'created_at' => Carbon::now()->addMinutes($i*5),
-                'updated_at' => Carbon::now()->addMinutes($i*5)
+                'created_at' => Carbon::now()->subMinutes($i*5),
+                'updated_at' => Carbon::now()->subMinutes($i*5)
             ]);
             AirRecy::create([
                 'former' => '0000',
@@ -48,8 +48,8 @@ class AirReyValueSeeder extends Seeder
                 'farmland' => 1,
                 'sensor' => 'OHY',
                 'value' => rand(0, 50),
-                'created_at' => Carbon::now()->addMinutes($i*5),
-                'updated_at' => Carbon::now()->addMinutes($i*5)
+                'created_at' => Carbon::now()->subMinutes($i*5),
+                'updated_at' => Carbon::now()->subMinutes($i*5)
             ]);
         }
     }

@@ -8,7 +8,6 @@ let monitor_circle_id = [];
 let length = 200;
 let size = 36;
 
-
 //繪圖資訊
 export class Draw_Info {
     constructor(id, value, max, min) {
@@ -152,58 +151,79 @@ export function Make_HistoryChart(info, day) {
     let height = length * 2;
     let padding = {top: size * 1.5, right: size * 1.5, bottom: size * 1.5, left: size * 1.5};
     let point = [];
-    let today = new Date(info.time[0]);
-    let sevenDay = new Date();
+    let dataValueCorr = {};
+    let today = new Date();
+    let lastDay = new Date();
+
+    //今日的最後一筆
+    today.setHours(23, 59, 59);
     //抓取天數
-    sevenDay.setDate(today.getDate() - Number(day));
-    //標題記得改
+    if (Number(day) !== 1) {
+        lastDay.setDate(today.getDate() - Number(day));
+        lastDay.setHours(0, 0, 0, 0);
+    } else {
+        lastDay.setHours(0, 0, 0, 0);
+    }
     //清除後重劃
     d3.select('#' + info.id).select('svg').remove();
 
-
-    //轉換為 point [[x,y],[x,y]...]
+    //轉換為 point [[x,y],[x,y]...] 這邊抓出符合的日期
     for (let i = 0; i < info.value.length; i++) {
-        point.push([info.time[i], info.value[i]])
+        if (new Date(info.time[i]).getTime() >= lastDay.getTime())
+            point.push({time: new Date(info.time[i]), value: info.value[i]});
+        else
+            break;
     }
+    point.reverse();
     //Ｘ軸 橫軸為 時間 回推24小時 最後一為 至 最新一為
     let xScale = d3
-        .scaleUtc()
+        .scaleTime()
         .domain([
-            sevenDay,
+            lastDay,
             today
         ])
         .range([
             0,
             width - padding.left - padding.right
         ]);
+    //Ｘ軸 用於 方塊 的 區域
+    let rectScale = d3
+        .scaleTime()
+        .domain([
+            lastDay,
+            today
+        ])
+        .range([
+            padding.left,
+            width - padding.right
+        ]);
     // //Ｙ軸 該sensor的最大最小值 抓 最小
     let yScale = d3.scaleLinear()
         .domain([info.min, info.max])
         .range([height - padding.top - padding.bottom, 0]);
+    //Y軸 用於 方塊 的 區域
+    let rectYScale = d3.scaleLinear()
+        .domain([info.min, info.max])
+        .range([height - padding.top, padding.bottom]);
     //路徑
     let linePath = d3.line()
         .x(function (d) {
-            return xScale(new Date(d[0]))
+            return xScale(new Date(d.time))
         })
         .y(function (d) {
-            return yScale(d[1])
-        })
-        .curve(d3.curveBasis);
+            return yScale(d.value)
+        });
+
     // //開始畫畫
     let svg = d3.select('#' + info.id)
         .append('svg')
         .attr('width', width + 'px')
         .attr('height', height + 'px');
-    let focus = svg.append("g")
-        .attr("class", "focus")
-        .style("display", "none");
-
-    // svg.selectAll('*').remove();
 
     svg.append('g')
         .attr('class', 'axis')
         .attr('transform', 'translate(' + padding.left + ',' + (height - padding.bottom) + ')')
-        .call(d3.axisBottom().scale(xScale))
+        .call(d3.axisBottom().scale(xScale).ticks(24))
         .selectAll("text")
         .attr('class', 'text-history')
         .style("text-anchor", "end")
@@ -226,45 +246,60 @@ export function Make_HistoryChart(info, day) {
         .attr('stroke-width', 1)
         .attr('stroke', 'green');
 
+    //用於點被看到時 有的反應
+    let focus = svg.append("g")
+        .attr("class", "focus")
+        .style("display", "none");
+
     //原點
     focus.append("circle")
         .attr("r", 4.5);
     //方塊
     let rect = focus.append("rect")
-        .attr("x", 9)
-        .attr("dy", ".35em")
-        .attr("fill", "yellow");
+        .attr("x", 10)
+        .attr("dy", ".35rem")
+        .attr('border-color', 'green')
+        .attr('border-width', 1)
+        .attr("fill-opacity", "0");
     //字
     let text = focus.append("text")
         .attr("x", 10)
         .attr("y", 10);
 
+    let bisectDate = d3.bisector(d => d.time);
 
-    // svg.append("rect")
-    //     .attr("class", "overlay")
-    //     .on("mouseover", function () {
-    //         focus.style("display", null);
-    //     })
-    //     .on("mouseout", function () {
-    //         focus.style("display", "none");
-    //     })
+    svg.append("rect")
+        .attr("class", "overlay")
+        .attr("width", width - padding.left - padding.right)
+        .attr("height", height - padding.top - padding.bottom)
+        .attr('x', padding.left)
+        .attr('y', padding.bottom)
+        .on("mouseover", function () {
+            focus.style("display", null);
+        })
+        .on("mouseout", function () {
+            focus.style("display", "none");
+        })
+        .on("mousemove", mousemove);
 
-    // svg.append('g')
-    //     .selectAll('circle')
-    //     .data(point)
-    //     .enter()
-    //     .append('circle')
-    //     .attr('cx', function(d) {
-    //         return xScale(d.x);
-    //     })
-    //     .attr('cy', function(d) {
-    //         return yScale(d.y);
-    //     })
-    //     .attr('r', 5)
-    //     .attr('transform', function(d){
-    //         return 'translate(' + (xScale(d[0]) + padding.left) + ',' + (yScale(d[1]) + padding.top) + ')'
-    //     })
-    //     .attr('fill', 'green');
+    // console.log(point);
+    function mousemove() {
+        let contain = d3.mouse(this);
+        let x = rectScale.invert(contain[0]);
+        let i = bisectDate.right(point, x,1);
+        let d0 = point[i - 1];
+        let d1 = point[i];
+        let d = (x - d0.time) > (d1.time - x) ? d1 : d0;
+        //point time = x 的 數值 = y
+        focus.attr("transform", "translate(" + rectScale(d.time) + "," + rectYScale(d.value) + ")");
+        focus.select("text").text('數值：'+d.value)
+            .attr('class','smValue')
+            .append("tspan")
+            .attr("x", 5).attr("dy", "1.5rem").attr('class','rectPlace').attr('text-align','center')
+            .text(d3.timeFormat("%Y/%m/%d %H:%M")(d.time));
+        let bbox = focus.select("text").node().getBBox();
+        rect.attr("width", bbox.width + 4).attr("height", bbox.height + 4)
+    }
 }
 
 function hex_point() {

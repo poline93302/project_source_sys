@@ -1,8 +1,8 @@
 <template>
-    <div class="row my-3 monitor-configs">
-        <div class="col-12">
+    <div class="row m-2 monitor-configs">
+        <div class="col-12 ">
             <div v-for="(Config_Info,index) in Config_Infos"
-                 class="config-place border my-3 rounded"
+                 class="config-place border my-3 rounded bg-white"
                  :class="Config_Info.switch? 'shadow':''">
                 <div class="row">
                     <div class="col-12 my-3">

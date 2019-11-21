@@ -1,0 +1,22 @@
+/*****draw Info****/
+.overlay {
+    fill: none;
+    pointer-events: all;
+}
+
+.focus circle {
+    fill: none;
+    stroke: steelblue;
+}
+
+.rectPlace{
+    font-size: 0.5rem!important;
+    fill:red;
+}
+
+.smValue{
+    font-size: 0.8rem!important;
+    align-items: center;
+    text-align: center;
+    fill:blue;
+}

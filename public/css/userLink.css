@@ -1,9 +1,3 @@
-.div-gradient {
-    background: linear-gradient(335deg, rgba(85, 160, 105, 1) 30%, rgba(235, 211, 68, 0.9) 100%);
-    background: -moz-linear-gradient(335deg, rgba(85, 160, 105, 1) 30%, rgba(235, 211, 68, 0.9) 100%);
-    background: -webkit-linear-gradient(335deg, rgba(85, 160, 105, 1) 30%, rgba(235, 211, 68, 0.9) 100%);
-    background: -o-linear-gradient(335deg, rgba(85, 160, 105, 1) 30%, rgba(235, 211, 68, 0.9) 100%);
-}
 
 .btn-login.btn-lg {
     padding: 0.25rem !important;
@@ -20,9 +14,16 @@
     margin-top: 0.1rem!important;
 }
 
+.logo-show{
+    height: 10rem;
+}
+
 
 @media (max-width: 1200px) {
     .item-width {
+        width: 50% !important;
+    }
+    .item-width-login{
         width: 50% !important;
     }
 }
@@ -31,10 +32,16 @@
     .item-width {
         width: 75% !important;
     }
+    .item-width-login{
+        width: 50% !important;
+    }
 }
 
 @media (max-width: 768px) {
     .item-width {
         width: 75% !important;
+    }
+    .item-width-login{
+        width: 50% !important;
     }
 }

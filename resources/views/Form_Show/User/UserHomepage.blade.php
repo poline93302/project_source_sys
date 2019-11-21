@@ -2,7 +2,10 @@
 
 @section('show')
     <div class="flex-total-center h-100 flex-column">
-        <div class="item-width-login rounded-top bg-white flex-total-center border py-1 d-flex justify-content-between px-3">
+        <div class="border rounded-top item-width-login bg-white logo-show flex-total-center">
+            <img src={{asset("picture/logo.gif")}} alt="標題" width="200" height="200">
+        </div>
+        <div class="item-width-login bg-white border border-top-0 py-1 d-flex justify-content-between px-3">
             <div class="">登入資訊</div>
             <div class=""><a href="{{route('former_singUp')}}" class="text-font"> 註冊 </a></div>
         </div>
@@ -11,7 +14,7 @@
               id="loginForm">
             @csrf
             <div class="form-group">
-                <label for="username" class="text-dark">帳號</label>
+                <label for="username" class="text-secondary">帳號</label>
                 <input type="text" class="form-control text-font" id="username" name="login_username"
                        placeholder="輸入帳號"
                        required
@@ -22,7 +25,7 @@
 
             </div>
             <div class="form-group">
-                <label for="password" class="text-dark">密碼</label>
+                <label for="password" class="text-secondary">密碼</label>
                 <input type="password" class="form-control text-font" id="password" name="login_password"
                        placeholder="輸入密碼"
                        required
@@ -40,7 +43,7 @@
                     @endforeach
                 </div>
             @endif
-            <button type="button" class="btn btn-primary btn-lg btn-block text-font btn-login"
+            <button type="button" class="btn btn-primary btn-lg btn-block text-font btn-login mt-4"
                     onclick="loginInfoCheck();">
                 登入
             </button>

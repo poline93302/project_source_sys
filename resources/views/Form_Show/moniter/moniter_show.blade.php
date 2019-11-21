@@ -4,14 +4,14 @@
     <header class="my-3">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <div class="container my-3">
-            <div class="row text-center bg-white shadow rounded-top">
-                <div class="col-6 col-md-7 my-3 ">
-                    <img src="http://placeimg.com/1500/400/any/1" class="img-fluid" alt="">
+            <div class="row text-center bg-white shadow rounded">
+                <div class="col-6 col-md-7 my-3">
+                    <img src={{asset("picture/logo.gif")}} alt="標題" width="300" height="300" class="img-fluid figure-img" >
                 </div>
                 <div class="col-6 col-md-5 my-3 ">
                     <div class="row mt-3">
                         <div class="col-12 mb-3">
-                            <span class="text-dark">歡迎 {{ $former }} 抵達本站</span>
+                            <span class="text-dark">歡迎 <span class="text-info"> {{ $former }} </span>抵達本站</span>
                         </div>
                         <form method="POST" action="{{route('monitor_homepage_select')}}" class="col-12 mb-3 mb-md-1">
                             @csrf
@@ -68,8 +68,8 @@
         {{--                            顯示部分--}}
         @if($resList===[])
             <div class="row">
-                <div class="col-12 alert alert-info">
-                    <div class="no-create w-100 flex-total-center ">請新增場域</div>
+                <div class="col-12 alert alert-primary text-center" role="alert">
+                    請新增場域
                 </div>
             </div>
         @else

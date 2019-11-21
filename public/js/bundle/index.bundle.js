@@ -2059,7 +2059,7 @@ __webpack_require__.r(__webpack_exports__);
       sensorOrder: {
         'air': ['air_cp', 'air_ph4'],
         'light': ['light_lux'],
-        'water': ['water_level', 'water_ph', 'water_soil'],
+        'water': ['water_level', 'water_ph'],
         'weather': ['weather_rainAccumulation', 'weather_windSpeed', 'weather_windWay']
       },
       sensor_ch: {
@@ -2586,35 +2586,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -3058,6 +3029,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -3122,10 +3097,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }(),
     changeDay: function changeDay(day) {
       this.day_count = day;
+      this.activeBtn(day);
     },
     finishPainting: function finishPainting() {
       this.painting_info = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_3__["Draw_Info_History"]('painting-history-' + this.sensor_name, this.total_value, this.total_time, this.catch_value.max, this.catch_value.min);
       Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_3__["Make_HistoryChart"])(this.painting_info, this.day_count);
+    },
+    activeBtn: function activeBtn(node) {
+      var choice = document.getElementById('choiceDay' + node);
+      this.delActiveBtn();
+      choice.classList.add('active', 'text-white');
+    },
+    delActiveBtn: function delActiveBtn() {
+      var number = [1, 3, 7];
+      number.forEach(function (item) {
+        document.getElementById('choiceDay' + item).classList.remove('active', 'text-white');
+      });
     }
   },
   data: function data() {
@@ -3134,12 +3121,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       catch_value: {},
       total_value: [],
       total_time: [],
-      day_count: 7,
+      day_count: 1,
       painting_info: {}
     };
   },
   mounted: function mounted() {
     this.getValue();
+    this.activeBtn(this.day_count);
   },
   watch: {
     day_count: {
@@ -7667,6 +7655,25 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 // module
 exports.push([module.i, "\n.weights-style[data-v-26f9a78e] {\n    border-radius: 0.25rem 0 0 0;\n}\n.items-style[data-v-26f9a78e] {\n    border-radius: 0 0.25rem 0 0;\n}\n.item-info[data-v-26f9a78e] {\n    height: 1.5rem;\n}\n.text-small[data-v-26f9a78e] {\n    font-size: 0.8rem;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/sensorHistory.vue?vue&type=style&index=0&id=b80a1b82&scoped=true&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/sensorHistory.vue?vue&type=style&index=0&id=b80a1b82&scoped=true&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.flex-column>button[data-v-b80a1b82]{\n    margin-bottom: 1rem;\n}\n", ""]);
 
 // exports
 
@@ -68492,6 +68499,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/sensorHistory.vue?vue&type=style&index=0&id=b80a1b82&scoped=true&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/sensorHistory.vue?vue&type=style&index=0&id=b80a1b82&scoped=true&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./sensorHistory.vue?vue&type=style&index=0&id=b80a1b82&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/sensorHistory.vue?vue&type=style&index=0&id=b80a1b82&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/lib/addStyles.js":
 /*!****************************************************!*\
   !*** ./node_modules/style-loader/lib/addStyles.js ***!
@@ -69091,15 +69128,15 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row my-3 monitor-configs" }, [
+  return _c("div", { staticClass: "row m-2 monitor-configs" }, [
     _c(
       "div",
-      { staticClass: "col-12" },
+      { staticClass: "col-12 " },
       _vm._l(_vm.Config_Infos, function(Config_Info, index) {
         return _c(
           "div",
           {
-            staticClass: "config-place border my-3 rounded",
+            staticClass: "config-place border my-3 rounded bg-white",
             class: Config_Info.switch ? "shadow" : ""
           },
           [
@@ -69433,7 +69470,7 @@ var render = function() {
     "div",
     {
       staticClass:
-        "container sensor-part border border-light rounded mt-5 shadow"
+        "container sensor-part border border-light rounded mt-5 shadow bg-white"
     },
     [
       _c("div", { staticClass: "row mt-3 no-gutters text-center" }, [
@@ -69678,7 +69715,7 @@ var render = function() {
     "div",
     {
       staticClass:
-        "text-center container sensor-part border border-light rounded mt-5 shadow py-5"
+        "text-center container sensor-part border border-light rounded mt-5 shadow py-5  bg-white"
     },
     [
       _c("div", { staticClass: "col-12" }, [
@@ -70427,7 +70464,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "border w-100 my-2 shadow" },
+    { staticClass: "border w-100 my-2 shadow bg-white rounded" },
     [
       _c(
         "div",
@@ -70983,54 +71020,58 @@ var render = function() {
                 _vm._v(" " + _vm._s(_vm.name))
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-6" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-outline-info btn-sm",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function($event) {
-                        return _vm.changeDay(1)
-                      }
-                    }
-                  },
-                  [_vm._v("一天\n                        ")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-outline-info btn-sm",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function($event) {
-                        return _vm.changeDay(3)
-                      }
-                    }
-                  },
-                  [_vm._v("三天\n                        ")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-outline-info btn-sm",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function($event) {
-                        return _vm.changeDay(7)
-                      }
-                    }
-                  },
-                  [_vm._v("七天\n                        ")]
-                )
-              ]),
-              _vm._v(" "),
               _c("div", {
-                staticClass: "col-12 flex-total-center",
+                staticClass: "col-10 flex-total-center",
                 attrs: { id: "painting-history-" + _vm.sensor_name }
               }),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "col-2 flex-column d-flex btn-history" },
+                [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-outline-info btn-sm",
+                      attrs: { type: "button", id: "choiceDay1" },
+                      on: {
+                        click: function($event) {
+                          return _vm.changeDay(1)
+                        }
+                      }
+                    },
+                    [_vm._v("一天\n                        ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-outline-info btn-sm",
+                      attrs: { type: "button", id: "choiceDay3" },
+                      on: {
+                        click: function($event) {
+                          return _vm.changeDay(3)
+                        }
+                      }
+                    },
+                    [_vm._v("三天\n                        ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-outline-info btn-sm",
+                      attrs: { type: "button", id: "choiceDay7" },
+                      on: {
+                        click: function($event) {
+                          return _vm.changeDay(7)
+                        }
+                      }
+                    },
+                    [_vm._v("七天\n                        ")]
+                  )
+                ]
+              ),
               _vm._v(" "),
               _c("div", { staticClass: "col-12 flex-total-center" }, [
                 _vm._v(
@@ -83187,6 +83228,20 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/js/Active/Animation.js":
+/*!******************************************!*\
+  !*** ./resources/js/Active/Animation.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// 製作仔入相關等動畫
+window.onload = function () {
+  console.log('onload'); // $(".load").fadeOut(3000);
+};
+
+/***/ }),
+
 /***/ "./resources/js/Active/Sketchpad.js":
 /*!******************************************!*\
   !*** ./resources/js/Active/Sketchpad.js ***!
@@ -83309,64 +83364,79 @@ function Make_HistoryChart(info, day) {
     left: size * 1.5
   };
   var point = [];
-  var today = new Date(info.time[0]);
-  var sevenDay = new Date(); //抓取天數
+  var dataValueCorr = {};
+  var today = new Date();
+  var lastDay = new Date(); //今日的最後一筆
 
-  sevenDay.setDate(today.getDate() - Number(day)); //標題記得改
-  //清除後重劃
+  today.setHours(23, 59, 59); //抓取天數
 
-  d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + info.id).select('svg').remove(); //轉換為 point [[x,y],[x,y]...]
+  if (Number(day) !== 1) {
+    lastDay.setDate(today.getDate() - Number(day));
+    lastDay.setHours(0, 0, 0, 0);
+  } else {
+    lastDay.setHours(0, 0, 0, 0);
+  } //清除後重劃
+
+
+  d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + info.id).select('svg').remove(); //轉換為 point [[x,y],[x,y]...] 這邊抓出符合的日期
 
   for (var i = 0; i < info.value.length; i++) {
-    point.push([info.time[i], info.value[i]]);
-  } //Ｘ軸 橫軸為 時間 回推24小時 最後一為 至 最新一為
+    if (new Date(info.time[i]).getTime() >= lastDay.getTime()) point.push({
+      time: new Date(info.time[i]),
+      value: info.value[i]
+    });else break;
+  }
 
+  point.reverse(); //Ｘ軸 橫軸為 時間 回推24小時 最後一為 至 最新一為
 
-  var xScale = d3__WEBPACK_IMPORTED_MODULE_0__["scaleUtc"]().domain([sevenDay, today]).range([0, width - padding.left - padding.right]); // //Ｙ軸 該sensor的最大最小值 抓 最小
+  var xScale = d3__WEBPACK_IMPORTED_MODULE_0__["scaleTime"]().domain([lastDay, today]).range([0, width - padding.left - padding.right]); //Ｘ軸 用於 方塊 的 區域
 
-  var yScale = d3__WEBPACK_IMPORTED_MODULE_0__["scaleLinear"]().domain([info.min, info.max]).range([height - padding.top - padding.bottom, 0]); //路徑
+  var rectScale = d3__WEBPACK_IMPORTED_MODULE_0__["scaleTime"]().domain([lastDay, today]).range([padding.left, width - padding.right]); // //Ｙ軸 該sensor的最大最小值 抓 最小
+
+  var yScale = d3__WEBPACK_IMPORTED_MODULE_0__["scaleLinear"]().domain([info.min, info.max]).range([height - padding.top - padding.bottom, 0]); //Y軸 用於 方塊 的 區域
+
+  var rectYScale = d3__WEBPACK_IMPORTED_MODULE_0__["scaleLinear"]().domain([info.min, info.max]).range([height - padding.top, padding.bottom]); //路徑
 
   var linePath = d3__WEBPACK_IMPORTED_MODULE_0__["line"]().x(function (d) {
-    return xScale(new Date(d[0]));
+    return xScale(new Date(d.time));
   }).y(function (d) {
-    return yScale(d[1]);
-  }).curve(d3__WEBPACK_IMPORTED_MODULE_0__["curveBasis"]); // //開始畫畫
+    return yScale(d.value);
+  }); // //開始畫畫
 
   var svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + info.id).append('svg').attr('width', width + 'px').attr('height', height + 'px');
-  var focus = svg.append("g").attr("class", "focus").style("display", "none"); // svg.selectAll('*').remove();
-
-  svg.append('g').attr('class', 'axis').attr('transform', 'translate(' + padding.left + ',' + (height - padding.bottom) + ')').call(d3__WEBPACK_IMPORTED_MODULE_0__["axisBottom"]().scale(xScale)).selectAll("text").attr('class', 'text-history').style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+  svg.append('g').attr('class', 'axis').attr('transform', 'translate(' + padding.left + ',' + (height - padding.bottom) + ')').call(d3__WEBPACK_IMPORTED_MODULE_0__["axisBottom"]().scale(xScale).ticks(24)).selectAll("text").attr('class', 'text-history').style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
   svg.append('g').attr('class', 'axis').attr('transform', 'translate(' + padding.left + ',' + padding.top + ')').call(d3__WEBPACK_IMPORTED_MODULE_0__["axisLeft"]().scale(yScale).ticks(5)).selectAll("text").attr('class', 'text-history').style("text-anchor", "end");
-  svg.append('g').append('path').attr('class', 'line-path').attr('transform', 'translate(' + padding.left + ',' + padding.top + ')').attr('d', linePath(point)).attr('fill', 'none').attr('stroke-width', 1).attr('stroke', 'green'); //原點
+  svg.append('g').append('path').attr('class', 'line-path').attr('transform', 'translate(' + padding.left + ',' + padding.top + ')').attr('d', linePath(point)).attr('fill', 'none').attr('stroke-width', 1).attr('stroke', 'green'); //用於點被看到時 有的反應
+
+  var focus = svg.append("g").attr("class", "focus").style("display", "none"); //原點
 
   focus.append("circle").attr("r", 4.5); //方塊
 
-  var rect = focus.append("rect").attr("x", 9).attr("dy", ".35em").attr("fill", "yellow"); //字
+  var rect = focus.append("rect").attr("x", 10).attr("dy", ".35rem").attr('border-color', 'green').attr('border-width', 1).attr("fill-opacity", "0"); //字
 
-  var text = focus.append("text").attr("x", 10).attr("y", 10); // svg.append("rect")
-  //     .attr("class", "overlay")
-  //     .on("mouseover", function () {
-  //         focus.style("display", null);
-  //     })
-  //     .on("mouseout", function () {
-  //         focus.style("display", "none");
-  //     })
-  // svg.append('g')
-  //     .selectAll('circle')
-  //     .data(point)
-  //     .enter()
-  //     .append('circle')
-  //     .attr('cx', function(d) {
-  //         return xScale(d.x);
-  //     })
-  //     .attr('cy', function(d) {
-  //         return yScale(d.y);
-  //     })
-  //     .attr('r', 5)
-  //     .attr('transform', function(d){
-  //         return 'translate(' + (xScale(d[0]) + padding.left) + ',' + (yScale(d[1]) + padding.top) + ')'
-  //     })
-  //     .attr('fill', 'green');
+  var text = focus.append("text").attr("x", 10).attr("y", 10);
+  var bisectDate = d3__WEBPACK_IMPORTED_MODULE_0__["bisector"](function (d) {
+    return d.time;
+  });
+  svg.append("rect").attr("class", "overlay").attr("width", width - padding.left - padding.right).attr("height", height - padding.top - padding.bottom).attr('x', padding.left).attr('y', padding.bottom).on("mouseover", function () {
+    focus.style("display", null);
+  }).on("mouseout", function () {
+    focus.style("display", "none");
+  }).on("mousemove", mousemove); // console.log(point);
+
+  function mousemove() {
+    var contain = d3__WEBPACK_IMPORTED_MODULE_0__["mouse"](this);
+    var x = rectScale.invert(contain[0]);
+    var i = bisectDate.right(point, x, 1);
+    var d0 = point[i - 1];
+    var d1 = point[i];
+    var d = x - d0.time > d1.time - x ? d1 : d0; //point time = x 的 數值 = y
+
+    focus.attr("transform", "translate(" + rectScale(d.time) + "," + rectYScale(d.value) + ")");
+    focus.select("text").text('數值：' + d.value).attr('class', 'smValue').append("tspan").attr("x", 5).attr("dy", "1.5rem").attr('class', 'rectPlace').attr('text-align', 'center').text(d3__WEBPACK_IMPORTED_MODULE_0__["timeFormat"]("%Y/%m/%d %H:%M")(d.time));
+    var bbox = focus.select("text").node().getBBox();
+    rect.attr("width", bbox.width + 4).attr("height", bbox.height + 4);
+  }
 }
 
 function hex_point() {
@@ -84115,7 +84185,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sensorHistory_vue_vue_type_template_id_b80a1b82_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sensorHistory.vue?vue&type=template&id=b80a1b82&scoped=true& */ "./resources/js/components/sensorHistory.vue?vue&type=template&id=b80a1b82&scoped=true&");
 /* harmony import */ var _sensorHistory_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sensorHistory.vue?vue&type=script&lang=js& */ "./resources/js/components/sensorHistory.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _sensorHistory_vue_vue_type_style_index_0_id_b80a1b82_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sensorHistory.vue?vue&type=style&index=0&id=b80a1b82&scoped=true&lang=css& */ "./resources/js/components/sensorHistory.vue?vue&type=style&index=0&id=b80a1b82&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -84123,7 +84195,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _sensorHistory_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _sensorHistory_vue_vue_type_template_id_b80a1b82_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
   _sensorHistory_vue_vue_type_template_id_b80a1b82_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -84152,6 +84224,22 @@ component.options.__file = "resources/js/components/sensorHistory.vue"
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./sensorHistory.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/sensorHistory.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/sensorHistory.vue?vue&type=style&index=0&id=b80a1b82&scoped=true&lang=css&":
+/*!************************************************************************************************************!*\
+  !*** ./resources/js/components/sensorHistory.vue?vue&type=style&index=0&id=b80a1b82&scoped=true&lang=css& ***!
+  \************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_style_index_0_id_b80a1b82_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./sensorHistory.vue?vue&type=style&index=0&id=b80a1b82&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/sensorHistory.vue?vue&type=style&index=0&id=b80a1b82&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_style_index_0_id_b80a1b82_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_style_index_0_id_b80a1b82_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_style_index_0_id_b80a1b82_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_style_index_0_id_b80a1b82_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_sensorHistory_vue_vue_type_style_index_0_id_b80a1b82_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -84185,14 +84273,15 @@ __webpack_require__.r(__webpack_exports__);
 /***/ }),
 
 /***/ 0:
-/*!************************************************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/js/Active/Sketchpad.js ./resources/sass/app.scss ***!
-  \************************************************************************************************/
+/*!***********************************************************************************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/js/Active/Sketchpad.js ./resources/js/Active/Animation.js ./resources/sass/app.scss ***!
+  \***********************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! /Users/yinglu_chen/Sourse_project_SFH/resources/js/app.js */"./resources/js/app.js");
 __webpack_require__(/*! /Users/yinglu_chen/Sourse_project_SFH/resources/js/Active/Sketchpad.js */"./resources/js/Active/Sketchpad.js");
+__webpack_require__(/*! /Users/yinglu_chen/Sourse_project_SFH/resources/js/Active/Animation.js */"./resources/js/Active/Animation.js");
 module.exports = __webpack_require__(/*! /Users/yinglu_chen/Sourse_project_SFH/resources/sass/app.scss */"./resources/sass/app.scss");
 
 

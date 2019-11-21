@@ -1,10 +1,10 @@
 @extends('Form_Show.Layout.master')
 
 @section('show')
-    <div class="container shadow my-3">
-        <div class="row monitor-items no-gutters">
+    <div class="container shadow bg-white">
+        <div class="row monitor-items m-3">
             <monitor-items-show :monitor_target=" {{ $data['target']['environment'] }}"
-                                :monitor_items="{'air_hun':{{$data['weights']['air_hun']}},'air_tem':{{$data['weights']['air_tem']}}}"
+                                :monitor_items="{'air_hun':{{$data['weights']['air_hun']}},'air_tem':{{$data['weights']['air_tem']}},'water_soil':{{$data['weights']['water_soil']}}}"
                                 :target_name="'environment'"
                                 :url_api="{{ json_encode(route('api.get.item.number'))}}"
                                 :farmland="{{$farmland}}"
@@ -31,7 +31,7 @@
             >
             </monitor-items-show>
             <monitor-items-show :monitor_target=" {{ $data['target']['water'] }}"
-                                :monitor_items="{'water_level':{{$data['weights']['water_level']}},'water_ph':{{$data['weights']['water_ph']}},'water_soil':{{$data['weights']['water_soil']}}}"
+                                :monitor_items="{'water_level':{{$data['weights']['water_level']}},'water_ph':{{$data['weights']['water_ph']}}}"
                                 :target_name="'water'"
                                 :url_api="{{ json_encode(route('api.get.item.number'))}}"
                                 :farmland="{{$farmland}}"

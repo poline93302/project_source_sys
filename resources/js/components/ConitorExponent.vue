@@ -1,5 +1,5 @@
 <template>
-    <div class="container sensor-part border border-light rounded mt-5 shadow">
+    <div class="container sensor-part border border-light rounded mt-5 shadow bg-white">
         <div class="row mt-3 no-gutters text-center">
             <div class="col-12 mb-3 form-header">
                 <div class="row ">
@@ -121,7 +121,7 @@
                 sensorOrder: {
                     'air': ['air_cp', 'air_ph4'],
                     'light': ['light_lux'],
-                    'water': ['water_level', 'water_ph', 'water_soil'],
+                    'water': ['water_level', 'water_ph'],
                     'weather': ['weather_rainAccumulation', 'weather_windSpeed', 'weather_windWay'],
                 },
                 sensor_ch: {

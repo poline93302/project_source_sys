@@ -21,6 +21,7 @@ class apiController extends Controller
 //  抓取大數據
     public function numberTarget(Request $req)
     {
+
         $farmID = FarmerFarm::where(['farmer' => $req['name'], 'farm' => $req['farm']])->first();
 
         $weights = $this->weightsData($req['name'], $farmID['id'], $req['farmland']);
@@ -33,10 +34,12 @@ class apiController extends Controller
         $target = [
             'air' => round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'CON', $weights['air_cp'], $AirData['CON'])
                 + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'CHE', $weights['air_ph4'], $AirData['CHE'])),
+
             'water' => round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'WLS', $weights['water_level'], $WaterData["WLS"])
-                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'WPH', $weights['water_ph'], $WaterData['WPH'])
-                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'WSO', $weights['water_soil'], $WaterData['WSO'])),
+                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'WPH', $weights['water_ph'], $WaterData['WPH'])),
+
             'light' => round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'LFS', $weights['light_lux'], $LightData["LFS"])),
+
             'weather' => round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'ORA', $weights['weather_rainAccumulation'], $WeatherData['ORA'])
                 + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'OWS', $weights['weather_windSpeed'], $WeatherData['OWS'])
                 + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'OWN', $weights['weather_windWay'], $WeatherData['OWN']))
@@ -44,7 +47,8 @@ class apiController extends Controller
         if ($req['gateWay'])
             $target['environment'] =
                 round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'OHY', $weights['air_tem'], $AirData['OHY'])
-                    + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'OTE', $weights['air_hun'], $AirData['OTE']));
+                    + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'OTE', $weights['air_hun'], $AirData['OTE'])
+                    + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'WSO', $weights['water_soil'], $AirData['WSO']));
         return response()->json(['weights' => $weights, 'target' => $target]);
     }
 
@@ -112,7 +116,7 @@ class apiController extends Controller
         switch ($type) {
             case('environment'):
                 {
-                    $sensorTotal = ['OTE', 'OHY'];
+                    $sensorTotal = ['OTE', 'OHY', 'WSO'];
                     break;
                 }
             case('air'):
@@ -122,7 +126,7 @@ class apiController extends Controller
                 }
             case('water'):
                 {
-                    $sensorTotal = ['WLS', 'WPH', 'WSO'];
+                    $sensorTotal = ['WLS', 'WPH'];
                     break;
                 }
             case('light'):
@@ -150,7 +154,7 @@ class apiController extends Controller
 //  最新一筆的感測器資料抓出
     public function waterData($former, $farm, $land)
     {
-        $sensors = ['WPH', 'WSO', 'WLS'];
+        $sensors = ['WPH', 'WLS'];
         $data = array();
         foreach ($sensors as $sensor) {
             $Water = WaterRecy::where(['former' => $former, 'farm' => $farm, 'farmland' => $land, 'sensor' => $sensor])->orderBy('created_at', 'DESC')->first();//created_at
@@ -163,8 +167,8 @@ class apiController extends Controller
     public function airData($former, $farm, $land, $type)
     {
         $sensors = [
-            'all' => ['OTE', 'OHY', 'CHE', 'CON'],
-            'environment' => ['OTE', 'OHY'],
+            'all' => ['OTE', 'OHY', 'CHE', 'CON','WSO'],
+            'environment' => ['OTE', 'OHY','WSO'],
             'air' => ['CHE', 'CON']
         ];
         $data = array();
@@ -172,8 +176,12 @@ class apiController extends Controller
         foreach ($sensors as $k => $sensor) {
             if ($type === $k) {
                 foreach ($sensor as $item) {
-                    $Air = AirRecy::where(['former' => $former, 'farm' => $farm, 'farmland' => $land, 'sensor' => $item])->orderBy('created_at', 'DESC')->first();;
-                    $data[$Air['sensor']] = $Air['value'];
+                    if($item === 'WSO'){
+                        $upData = WaterRecy::where(['former' => $former, 'farm' => $farm, 'farmland' => $land, 'sensor' => $item])->orderBy('created_at', 'DESC')->first();;
+                    }else
+                        $upData = AirRecy::where(['former' => $former, 'farm' => $farm, 'farmland' => $land, 'sensor' => $item])->orderBy('created_at', 'DESC')->first();
+
+                    $data[$upData['sensor']] = $upData['value'];
                 }
             }
         }
@@ -223,40 +231,21 @@ class apiController extends Controller
 //      farm farmland sensor farmer type
 //        $req = ['name' => '0000','farmer'=>'0000', 'farm' => 1, 'farmland' => 1, 'type' => 'water','sensor'=>'water_level'];
         $result = [];
-//      確認type選擇table
-        switch ($req['type']) {
-            case 'water':
-                {
-                    $table = 'waterRecy';
-                    break;
-                }
-            case 'environment':
-            case 'air':
-                {
-                    $table = 'airRecy';
-                    break;
-                }
-            case 'weather':
-                {
-                    $table = 'weatherRecy';
-                    break;
-                }
-            case 'light':
-                {
-                    $table = 'lightRecy';
-                    break;
-                }
-        }
+//      先切割後 選擇table +Recy
+        $tableWord = mb_split('_', $req['sensor']);
+
+        $table = $tableWord[0] . 'Recy';
+
 //      對應感測器表
         $switchSensorCorr = [
             'water' => [
                 'water_level' => 'WLS',
                 'water_ph' => 'WPH',
-                'water_soil' => 'WSO',
             ],
             'environment' => [
                 'air_hun' => 'OTE',
                 'air_tem' => 'OHY',
+                'water_soil' => 'WSO',
             ],
             'air' => [
                 'air_cp' => 'CON',
@@ -271,24 +260,25 @@ class apiController extends Controller
                 'light_lux' => 'LFS',
             ],
         ];
-
+//      抓取最大值
         $sensorMaxMin = SensorInfo::where([
             'former' => $req['farmer'],
             'farm' => $req['farm'],
             'farmland' => $req['farmland'],
-            'sensor'=>$switchSensorCorr[$req['type']][$req['sensor']],
+            'sensor' => $switchSensorCorr[$req['type']][$req['sensor']],
         ])->first();
 
-
+//      抓取歷史資料
         $dbData = DB::table($table)->where([
             'former' => $req['farmer'],
             'farm' => $req['farm'],
             'farmland' => $req['farmland'],
             'sensor' => $switchSensorCorr[$req['type']][$req['sensor']],
         ])
-            ->orderBy('created_at','DESC')
+            ->orderBy('created_at', 'DESC')
             ->take(336)
             ->get();
+
 
         foreach ($dbData as $data) {
             array_push($result, [

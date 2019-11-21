@@ -1,6 +1,6 @@
 <!--個別監控的數值畫面的主畫面-->
 <template>
-    <div class="border w-100 my-2 shadow">
+    <div class="border w-100 my-2 shadow bg-white rounded">
         <div :class="[monitor_target<=30 ? 'border-danger' : monitor_target>60? 'border-success': 'border-warning', item_infos.classes[target_name]]"
              class="row border m-3 monitor-item rounded-top ">
             <div class="item-info col-12 flex-total-center bg-success rounded-top mb-2"
@@ -25,35 +25,6 @@
                     </div>
                 </div>
             </div>
-            <!--            <div class="col-2 d-lg-none"></div>
-                        <div class="col-lg-4 col-8 flex-total-center mb-3">
-                            <div class="row no-gutters bg-white rounded shadow ">
-                                <span class="weights-style col-4 text-dark border border-success flex-total-center ">權重</span>
-                                <span class="items-style col-8 text-dark border border-info flex-total-center">項目</span>
-
-                                <div class="col-12 monitor-item-list row text-dark no-gutters  border border-dark">
-                                    <div v-for="(item,index) in monitor_items"
-                                         class="col-12  flex-total-center border-bottom ">
-                                        <div class="row item-list-count w-100">
-                                            <div class="col-4 text-dark text-center  border-right flex-total-center">{{ item }}
-                                            </div>
-                                            <div class="col-8 text-dark text-right flex-total-center">
-                                                {{ item_infos.items[index] }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 border border-dark rounded-bottom ">
-                                    <div class="row no-gutters flex-total-center">
-                                        <div class="col-12 text-dark flex-total-center">
-                                            綜合指數：
-                                            <div class="text-small">{{ monitor_target }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-2 d-lg-none"></div>-->
         </div>
         <weights-modal :name="name" :farmland="farmland" :farm_id="farm_id"
                        :type="target_name" :title="item_infos.names[target_name]"

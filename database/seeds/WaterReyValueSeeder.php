@@ -23,8 +23,8 @@ class WaterReyValueSeeder extends Seeder
                 'farmland' => 1,
                 'sensor' => 'WPH',
                 'value' => rand(0, 14),
-                'created_at' => Carbon::now()->addMinute($i*5),
-                'updated_at' => Carbon::now()->addMinute($i*5),
+                'created_at' => Carbon::now()->subMinutes($i*5),
+                'updated_at' => Carbon::now()->subMinutes($i*5),
             ]);
             WaterRecy::create([
                 'former' => '0000',
@@ -32,8 +32,8 @@ class WaterReyValueSeeder extends Seeder
                 'farmland' => 1,
                 'sensor' => 'WLS',
                 'value' => rand(0, 200),
-                'created_at' => Carbon::now()->addMinute($i*5),
-                'updated_at' => Carbon::now()->addMinute($i*5),
+                'created_at' => Carbon::now()->subMinutes($i*5),
+                'updated_at' => Carbon::now()->subMinutes($i*5),
             ]);
             WaterRecy::create([
                 'former' => '0000',
@@ -41,8 +41,8 @@ class WaterReyValueSeeder extends Seeder
                 'farmland' => 1,
                 'sensor' => 'WSO',
                 'value' => rand(0, 100),
-                'created_at' => Carbon::now()->addMinute($i*5),
-                'updated_at' => Carbon::now()->addMinute($i*5),
+                'created_at' => Carbon::now()->subMinutes($i*5),
+                'updated_at' => Carbon::now()->subMinutes($i*5),
             ]);
         }
     }
