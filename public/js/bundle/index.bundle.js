@@ -2651,7 +2651,38 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       lodash__WEBPACK_IMPORTED_MODULE_2___default.a.forEach(this.item_value, function (id, key) {
         self.draw_Info[key] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["Draw_Info"](key, id['value'], id['max'], id['min']);
-        Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["Make_Circle"])(self.draw_Info[key]);
+        self.draw_Info[key]['draw_type'] = self.item_infos.items_draws[key];
+
+        switch (self.draw_Info[key]['draw_type']) {
+          case 'circle':
+            {
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["Make_Circle"])(self.draw_Info[key]);
+              break;
+            }
+
+          case 'revers-circle':
+            {
+              break;
+            }
+
+          case 'light-img':
+            {
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["LightChange"])(self.draw_Info[key]);
+              break;
+            }
+
+          case 'water-level-img':
+            {
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["WaterLevelChar"])(self.draw_Info[key]);
+              break;
+            }
+
+          case 'pointer':
+            {
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["WindpointerChar"])(self.draw_Info[key]);
+              break;
+            }
+        }
       });
     }
   },
@@ -2699,6 +2730,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           'weather_windWay': '風向',
           'weather_windSpeed': '風速',
           'weather_rainAccumulation': '累積雨量'
+        },
+        items_draws: {
+          'water_level': 'water-level-img',
+          'water_ph': 'ph',
+          'water_soil': 'circle',
+          'light_lux': 'light-img',
+          'air_cp': 'revers-circle',
+          'air_ph4': 'revers-circle',
+          'air_hun': 'circle',
+          'air_tem': 'circle',
+          'weather_windWay': 'pointer',
+          'weather_windSpeed': 'revers-circle',
+          'weather_rainAccumulation': 'circle'
         }
       },
       item_value: {},
@@ -83246,7 +83290,7 @@ window.onload = function () {
 /*!******************************************!*\
   !*** ./resources/js/Active/Sketchpad.js ***!
   \******************************************/
-/*! exports provided: Draw_Info, Draw_Info_History, Make_Hex, Make_Circle, Make_HistoryChart */
+/*! exports provided: Draw_Info, Draw_Info_History, Make_Hex, Make_Circle, WaterLevelChar, LightChange, WindpointerChar, DoardChardot, Make_HistoryChart */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -83255,6 +83299,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Draw_Info_History", function() { return Draw_Info_History; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Make_Hex", function() { return Make_Hex; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Make_Circle", function() { return Make_Circle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WaterLevelChar", function() { return WaterLevelChar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LightChange", function() { return LightChange; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WindpointerChar", function() { return WindpointerChar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DoardChardot", function() { return DoardChardot; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Make_HistoryChart", function() { return Make_HistoryChart; });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/index.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
@@ -83325,7 +83373,6 @@ function Make_Circle(info) {
   var data, range, data_point;
   var svg, circle_text;
   var colorify = ['#ED4013', '#E5DD35', '#24A047'];
-  length = 200;
   radius_outside = length * 0.9 / 2; //outside半徑
 
   radius_inside = length * 0.75 / 2; //inside半徑
@@ -83353,6 +83400,154 @@ function Make_Circle(info) {
   //加字體
 
   circle_text.append('text').attr('dx', cx).attr('dy', cy + 10).attr('class', 'd3-font-size').style("text-anchor", "middle").text(data);
+} //水位圖（開關）改圖即可
+
+function WaterLevelChar(drowInfo) {
+  var imgUrl;
+  drowInfo.data != drowInfo.max ? imgUrl = './img/WaterLevOn.svg' : imgUrl = './img/WaterLevOff.svg';
+  return imgUrl;
+}
+; //燈泡更換 （開關）改圖即可
+
+function LightChange(drowInfo) {
+  var imgUrl;
+  drowInfo.data >= drowInfo.max ? imgUrl = './picture/LightOn.svg' : imgUrl = './picture/LightOff.svg';
+  return imgUrl;
+}
+; //風向 指針 變換方向
+
+function WindpointerChar(drowInfo) {
+  d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + drowInfo.id).select('svg').remove();
+  var data = drowInfo.value + 360;
+  var pointerData = [{
+    x: length / 2,
+    y: 30
+  }, {
+    x: 75,
+    y: length / 2 + 30
+  }, {
+    x: length / 2,
+    y: length / 2
+  }, {
+    x: 125,
+    y: length / 2 + 30
+  }];
+  var cx = length / 2;
+  var cy = length / 2;
+  var scaleLag = 8; // N NW W WS S SE E EN
+
+  var scaleSml = 2; //每大格分 兩小格
+
+  var radius = length * 0.9 / 2;
+  var indexGo = 0;
+  var spinWay = ['N', 'EN', 'E', 'ES', 'S', 'WS', 'W', 'WN']; //
+
+  var majorDelta = 360 / scaleLag; //大刻度之间的角度
+
+  var svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + drowInfo.id).append('svg').attr('height', length + 'px').attr('width', length + 'px').attr('class', 'point_wind');
+  var textStartMin = 4;
+  var textStartMax = 45 - textStartMin;
+  var line = d3__WEBPACK_IMPORTED_MODULE_0__["line"]().x(function (d) {
+    return d.x;
+  }).y(function (d) {
+    return d.y;
+  }); // let pie = d3.layout.pie()
+  //     .startAngle(0)
+  //     .endAngle()
+
+  svg.append('circle') //底色黑底
+  .attr('cx', cx).attr('cy', cy).attr('r', radius).style('fill', '#000');
+  svg.append('circle') //蓋底
+  .attr('cx', cx).attr('cy', cy).attr('r', 0.75 * radius).style('fill', '#fff');
+  svg.append('path') //不動針
+  .attr('d', line(pointerData)).attr('y', 0).style('stroke', '#fff').style('stroke-width', '1px').style('fill', "#ff0000");
+  svg.append('circle') //針圓心
+  .attr('cx', cx).attr('cy', cy).attr('r', 0.05 * radius).style('fill', '#fff'); //
+  // //{     刻度
+
+  for (var major = data; major <= data + 315; major += majorDelta) {
+    var minMajor = majorDelta / scaleSml;
+    var getStartPointLag = getPoint(major, 0.85, 80, cx, cy);
+
+    for (var minMajorDe = major; minMajorDe <= major + minMajor; minMajorDe += minMajor) {
+      var getStartPoint = getPoint(minMajorDe, 0.9, radius, cx, cy);
+      var getEndPoint = getPoint(minMajorDe, 0.8, radius, cx, cy);
+
+      if (minMajorDe % 45) {
+        svg.append('line').attr('x1', getStartPoint.Px).attr('y1', getStartPoint.Py).attr('x2', getEndPoint.Px).attr('y2', getEndPoint.Py).style('stroke', "#fff").style('stroke-width', "1px");
+      }
+    }
+
+    svg.append('path').attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["arc"]() //架設路徑
+    .startAngle((major - textStartMin) / 180 * Math.PI).endAngle((major + textStartMax) / 180 * Math.PI).innerRadius(0.80 * radius).outerRadius(0.75 * radius)).attr("transform", function () {
+      return "translate(" + cx + "," + cy + ")";
+    }).style("fill", 'none').attr('id', 'pathText_' + indexGo);
+    svg.append('text').append('textPath').attr('link:href', "#pathText_" + indexGo).attr('class', 'pointer_text').style('fill', '#fff').text(spinWay[indexGo]);
+    indexGo++;
+  } // //}
+  // console.log(data);
+
+}
+; //酸鹼值 pi
+
+function DoardChardot(drowInfo) {
+  var size = 160; //寬與長
+
+  var max = 90;
+  var min = -90;
+  var meg = min;
+  var range = 15;
+  var data = drowInfo.data;
+  var radius = size / 2;
+  var svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + drowInfo.d3Scale).attr('height', size + 'px').attr('width', size + 'px');
+  var color_bar = 0;
+  var color_style = ['#ff0000', '#BB493E', '#A16B36', '#B9BB3E', '#ffff00', '#8ABF40', '#00ff7d', '#47c250', '#76c44f', '#328E2F', '#308991', '#339699', '#3749a4', '#0000ff', '#69349d']; //角度表
+
+  var bar_dela = [6, 18, 30, 42, 54, 66, 78, 90, 102, 114, 126, 138, 150, 162, 174];
+  var pointerLine = d3__WEBPACK_IMPORTED_MODULE_0__["line"]() //曲線生長
+  .x(function (d) {
+    return d.x;
+  }).y(function (d) {
+    return d.y;
+  });
+
+  for (meg; meg !== max; meg += 12) {
+    svg.append('path').attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["arc"]().startAngle(meg / 180 * Math.PI).endAngle((meg + 12) / 180 * Math.PI).innerRadius(0.5 * radius).outerRadius(0.85 * radius)).attr("transform", function () {
+      return "translate(" + 80 + "," + 80 + ")";
+    }).style('stroke', "#fff").style('stroke-radius', '10px').style('stroke-width', "1px").style('z-index', 1).style('fill', color_style[color_bar]).attr('id', 'PHText_' + color_bar);
+    color_bar++;
+  }
+
+  svg.append('text').attr('x', 0).attr('y', 80).style('fill', '#000').style('font-size', "12px").text(0);
+  svg.append('text').attr('x', 25).attr('y', 37).attr('rotate', -45).style('fill', '#000').style('font-size', "12px").text(3);
+  svg.append('text').attr('x', 78).attr('y', 10).attr('rotate', 0).style('fill', '#000').style('font-size', "12px").text(7);
+  svg.append('text').attr('x', 120).attr('y', 25).attr('rotate', 45).style('fill', '#000').style('font-size', "12px").text(10);
+  svg.append('text').attr('x', 148).attr('y', 80).style('fill', '#000').style('font-size', "12px").text(14);
+  svg.append('text') //單位
+  .attr('x', 80).attr('y', 45).attr('dy', size * 2 / 3).attr('text-anchor', "middle").text(drowInfo.unit + " " + data).style('font-size', 18 + "px").style('fill', "#123123").style('strok-width', "1px");
+  svg.append('circle') //圓弧中心
+  .attr('cx', 80).attr('cy', 80).attr('r', 4).style('fill', '#fff').style("stroke", "#9DDF41") //邊界顏色
+  .style("stroke-width", "1px"); //邊界粗度
+
+  svg.append('g').attr('class', 'pointerCon'); //指針群組
+
+  var pointerStart = [{
+    x: 80,
+    y: 80
+  }, {
+    x: 80 - 70 * Math.cos(bar_dela[data] / 180 * Math.PI),
+    y: 80 - 70 * Math.sin(bar_dela[data] / 180 * Math.PI)
+  }];
+  var pointerConAni = svg.select(".pointerCon"); //指針畫布指向
+
+  pointerConAni.append('path') //指針設置
+  .attr('d', pointerLine(pointerStart)).style('fill', '#dc3').style("stroke", "#c63310") //轮廓的颜色
+  .style('stroke-width', '2px').style('z-index', 100).style("fill-opacity", 2); //填充的透明度
+
+  pointerConAni.append('circle') //指針中心
+  .attr('cx', 80).attr('cy', 80).attr('r', 3).style('fill', '#F2FF83').style("stroke", "#9DDF41") //邊界顏色
+  .style("stroke-width", "0.5px") //邊界粗度
+  .style('z-index', 200);
 }
 function Make_HistoryChart(info, day) {
   var width = length * 3;
@@ -83442,6 +83637,17 @@ function Make_HistoryChart(info, day) {
 function hex_point() {
   var coordinate = [[100, 0], [25, 50], [25, 170], [100, 200], [175, 50], [175, 170]];
   return coordinate;
+} //儀表板得到點
+
+
+function getPoint(delta, bap, rad, cx, cy) {
+  //角度
+  var x = cx - bap * rad * Math.cos(delta / 180 * Math.PI);
+  var y = cy - bap * rad * Math.sin(delta / 180 * Math.PI);
+  return {
+    Px: x,
+    Py: y
+  };
 }
 
 /***/ }),

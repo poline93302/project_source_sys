@@ -35,7 +35,7 @@
 </template>
 
 <script>
-    import {Draw_Info, Make_Circle} from "../Active/Sketchpad";
+    import {Draw_Info, Make_Circle,LightChange,WindpointerChar,DoardChardot,WaterLevelChar} from "../Active/Sketchpad";
     import _ from 'lodash';
     import axios from 'axios';
 
@@ -77,7 +77,29 @@
                 let self = this;
                 _.forEach(this.item_value, function (id, key) {
                     self.draw_Info[key] = new Draw_Info(key, id['value'], id['max'], id['min']);
-                    Make_Circle(self.draw_Info[key]);
+                    self.draw_Info[key]['draw_type'] = self.item_infos.items_draws[key];
+
+                    switch (self.draw_Info[key]['draw_type']) {
+                        case 'circle':{
+                            Make_Circle(self.draw_Info[key]);
+                            break;
+                        }
+                        case 'revers-circle':{
+                            break;
+                        }
+                        case 'light-img':{
+                            LightChange(self.draw_Info[key]);
+                            break;
+                        }
+                        case 'water-level-img':{
+                            WaterLevelChar(self.draw_Info[key]);
+                            break;
+                        }
+                        case 'pointer':{
+                            WindpointerChar(self.draw_Info[key]);
+                            break;
+                        }
+                    }
                 });
             }
         },
@@ -121,6 +143,20 @@
                             'weather_windWay': '風向',
                             'weather_windSpeed': '風速',
                             'weather_rainAccumulation': '累積雨量',
+                        },
+                    items_draws:
+                        {
+                            'water_level': 'water-level-img',
+                            'water_ph': 'ph',
+                            'water_soil': 'circle',
+                            'light_lux': 'light-img',
+                            'air_cp': 'revers-circle',
+                            'air_ph4': 'revers-circle',
+                            'air_hun': 'circle',
+                            'air_tem': 'circle',
+                            'weather_windWay': 'pointer',
+                            'weather_windSpeed': 'revers-circle',
+                            'weather_rainAccumulation': 'circle',
                         },
                 },
                 item_value: {},
