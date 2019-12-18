@@ -59,6 +59,7 @@
                                 </form>
                             </div>
                         </div>
+                        <a href="http://140.130.34.96:5601" class="m-2 btn btn-sm btn-success w-98">總歷史資料呈現</a>
                     </div>
                 </div>
             </div>

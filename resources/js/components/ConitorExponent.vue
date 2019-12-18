@@ -122,7 +122,7 @@
                     'air': ['air_cp', 'air_ph4'],
                     'light': ['light_lux'],
                     'water': ['water_level', 'water_ph'],
-                    'weather': ['weather_rainAccumulation', 'weather_windSpeed', 'weather_windWay'],
+                    'weather': ['weather_rainAccumulation', 'weather_windSpeed'],
                 },
                 sensor_ch: {
                     'water_level': '水位',
@@ -133,7 +133,6 @@
                     'air_ph4': '甲烷',
                     'air_hun': '濕度',
                     'air_tem': '溫度',
-                    'weather_windWay': '風向',
                     'weather_windSpeed': '風速',
                     'weather_rainAccumulation': '累積雨量',
                 },
