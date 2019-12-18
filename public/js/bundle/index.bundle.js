@@ -83408,16 +83408,16 @@ function Make_Circle(info) {
 } //水位圖（開關）改圖即可
 
 function WaterLevelChar(drowInfo) {
-  var imgUrl;
-  drowInfo.value != drowInfo.max ? imgUrl = './img/WaterLevOn.svg' : imgUrl = './img/WaterLevOff.svg';
-  return imgUrl;
+  var imgUrl = drowInfo.value > 0 ? '../../picture/WaterLevOn.svg' : './picture/WaterLevOff.svg';
+  var water = document.getElementById(drowInfo.id);
+  water.innerHTML = "<img src=\"".concat(imgUrl, "\" width=\"").concat(length, "\" height=\"").concat(length, "\">");
 }
 ; //燈泡更換 （開關）改圖即可
 
 function LightChange(drowInfo) {
-  var imgUrl;
-  drowInfo.data >= drowInfo.max ? imgUrl = './picture/LightOn.svg' : imgUrl = './picture/LightOff.svg';
-  return imgUrl;
+  var imgUrl = drowInfo.value >= 400 ? '../../picture/LightOff.svg' : './picture/LightOn.svg';
+  var light = document.getElementById(drowInfo.id);
+  light.innerHTML = "<img src=\"".concat(imgUrl, "\" width=\"").concat(length, "\" height=\"").concat(length, "\">");
 }
 ; //風向 指針 變換方向
 
@@ -83554,7 +83554,8 @@ function DoardChardot(drowInfo) {
   .attr('cx', helfLen).attr('cy', helfLen + 15).attr('r', 3).style('fill', '#F2FF83').style("stroke", "#9DDF41") //邊界顏色
   .style("stroke-width", "0.5px") //邊界粗度
   .style('z-index', 200);
-}
+} //歷史資料
+
 function Make_HistoryChart(info, day) {
   var width = length * 3;
   var height = length * 2;
@@ -83638,13 +83639,7 @@ function Make_HistoryChart(info, day) {
     var bbox = focus.select("text").node().getBBox();
     rect.attr("width", bbox.width + 4).attr("height", bbox.height + 4);
   }
-}
-
-function hex_point() {
-  var coordinate = [[100, 0], [25, 50], [25, 170], [100, 200], [175, 50], [175, 170]];
-  return coordinate;
 } //儀表板得到點
-
 
 function getPoint(delta, bap, rad, cx, cy) {
   //角度

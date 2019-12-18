@@ -148,21 +148,18 @@ export function Make_Circle(info) {
 
 //水位圖（開關）改圖即可
 export function WaterLevelChar(drowInfo){
-    let imgUrl;
+    let imgUrl = drowInfo.value > 0 ?   '../../picture/WaterLevOn.svg' : './picture/WaterLevOff.svg';
+    let water = document.getElementById(drowInfo.id) ;
+    water.innerHTML=`<img src="${imgUrl}" width="${length}" height="${length}">`;
 
-    drowInfo.value != drowInfo.max ? imgUrl =  './img/WaterLevOn.svg' : imgUrl = './img/WaterLevOff.svg';
-
-    return imgUrl;
 };
 
 
 //燈泡更換 （開關）改圖即可
 export function LightChange(drowInfo){
-    let imgUrl;
-
-    drowInfo.data >= drowInfo.max ? imgUrl =  './picture/LightOn.svg' : imgUrl = './picture/LightOff.svg';
-
-    return imgUrl;
+    let imgUrl = drowInfo.value >= 400 ?   '../../picture/LightOff.svg' : './picture/LightOn.svg';
+    let light = document.getElementById(drowInfo.id) ;
+    light.innerHTML=`<img src="${imgUrl}" width="${length}" height="${length}">`;
 };
 
 //風向 指針 變換方向
@@ -410,7 +407,7 @@ export function DoardChardot(drowInfo) {     //寬與長
         .style('z-index',200);
 }
 
-
+//歷史資料
 export function Make_HistoryChart(info, day) {
     let width = length * 3;
     let height = length * 2;
@@ -566,20 +563,6 @@ export function Make_HistoryChart(info, day) {
         rect.attr("width", bbox.width + 4).attr("height", bbox.height + 4)
     }
 }
-
-function hex_point() {
-    let coordinate = [
-        [100, 0],
-        [25, 50],
-        [25, 170],
-        [100, 200],
-        [175, 50],
-        [175, 170],
-    ];
-
-    return coordinate;
-}
-
 
 //儀表板得到點
 function getPoint(delta,bap,rad,cx,cy){             //角度
