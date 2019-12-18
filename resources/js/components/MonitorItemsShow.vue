@@ -84,6 +84,9 @@
                             Make_Circle(self.draw_Info[key]);
                             break;
                         }
+                        case 'ph':{
+                            DoardChardot(self.draw_Info[key]);
+                        }
                         case 'revers-circle':{
                             break;
                         }

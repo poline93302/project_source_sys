@@ -92,6 +92,7 @@ export function Make_Circle(info) {
         cx, cy, radius_outside, radius_inside;
     let data, range, data_point;
     let svg, circle_text;
+
     let colorify = [
         '#ED4013',
         '#E5DD35',
@@ -149,7 +150,7 @@ export function Make_Circle(info) {
 export function WaterLevelChar(drowInfo){
     let imgUrl;
 
-    drowInfo.data != drowInfo.max ? imgUrl =  './img/WaterLevOn.svg' : imgUrl = './img/WaterLevOff.svg';
+    drowInfo.value != drowInfo.max ? imgUrl =  './img/WaterLevOn.svg' : imgUrl = './img/WaterLevOff.svg';
 
     return imgUrl;
 };
@@ -259,7 +260,7 @@ export function WindpointerChar(drowInfo){
         svg.append('text')
             .append('textPath')
             .attr('link:href',"#pathText_"+indexGo)
-            .attr('class','pointer_text')
+            .attr('class','pointer-text')
             .style('fill','#fff')
             .text(spinWay[indexGo]);
         indexGo ++;
@@ -269,17 +270,21 @@ export function WindpointerChar(drowInfo){
 };
 
 //酸鹼值 pi
-export function DoardChardot(drowInfo) {
-    let size = 160 ;                                            //寬與長
+export function DoardChardot(drowInfo) {     //寬與長
 
     let max = 90;
     let min = -90 ;
     let meg = min ;
     let range = 15 ;
+    let helfLen = length/2;
 
-    let data = drowInfo.data;
-    let radius      = size / 2 ;
-    let svg = d3.select('#' + drowInfo.d3Scale).attr('height',size +'px').attr('width',size +'px');
+    let arrayKey = drowInfo.value + 1 ;
+    let data = drowInfo.value;
+    let radius  = length / 2 ;
+    let svg = d3.select('#' + drowInfo.id)
+                    .append('svg')
+                    .attr('height',length +'px')
+                    .attr('width',length +'px');
 
     let color_bar = 0 ;
     let color_style = [
@@ -316,11 +321,11 @@ export function DoardChardot(drowInfo) {
                 d3.arc()
                     .startAngle( (meg/180) * Math.PI)
                     .endAngle(  ((meg + 12 )/180) * Math.PI)
-                    .innerRadius(0.5 * radius)
-                    .outerRadius(0.85 * radius)
+                    .innerRadius(0.4 * radius)
+                    .outerRadius(0.7 * radius)
             )
             .attr("transform",function(){
-                return "translate(" + 80 + "," + 80 + ")"
+                return "translate(" + helfLen + "," + (helfLen+15) + ")"
             })
             .style('stroke',"#fff")
             .style('stroke-radius','10px')
@@ -331,59 +336,59 @@ export function DoardChardot(drowInfo) {
         color_bar ++;
     }
     svg.append('text')
-        .attr('x',0)
-        .attr('y',80)
+        .attr('x',15)
+        .attr('y',helfLen+15)
         .style('fill','#000')
-        .style('font-size',"12px")
+        .style('font-size',"pointer-text")
         .text(0);
     svg.append('text')
-        .attr('x',25)
-        .attr('y',37)
+        .attr('x',40)
+        .attr('y',helfLen-25)
         .attr('rotate',-45)
         .style('fill','#000')
-        .style('font-size',"12px")
+        .style('font-size',"pointer-text")
         .text(3);
     svg.append('text')
-        .attr('x',78)
-        .attr('y',10)
+        .attr('x',helfLen-7)
+        .attr('y',40)
         .attr('rotate',0)
         .style('fill','#000')
-        .style('font-size',"12px")
+        .style('font-size',"pointer-text")
         .text(7);
     svg.append('text')
-        .attr('x',120)
-        .attr('y',25)
+        .attr('x',125)
+        .attr('y',helfLen-50)
         .attr('rotate',45)
         .style('fill','#000')
-        .style('font-size',"12px")
+        .style('font-size',"pointer-text")
         .text(10);
     svg.append('text')
-        .attr('x',148)
-        .attr('y',80)
+        .attr('x',length-30)
+        .attr('y',helfLen+15)
         .style('fill','#000')
-        .style('font-size',"12px")
+        .style('font-size',"pointer-text")
         .text(14);
 
     svg.append('text')                                  //單位
-        .attr('x',80)
-        .attr('y',45)
+        .attr('x',helfLen)
+        .attr('y',helfLen+30)
         .attr('dy',size*2/3)
         .attr('text-anchor',"middle")
-        .text(drowInfo.unit + " " + data)
+        .text(data)
         .style('font-size',18 + "px")
         .style('fill',"#123123")
         .style('strok-width',"1px");
 
     svg.append('circle')                                //圓弧中心
-        .attr('cx',80)
-        .attr('cy',80)
+        .attr('cx',helfLen)
+        .attr('cy',helfLen+15)
         .attr('r',4)
         .style('fill','#fff')
         .style("stroke","#9DDF41")                              //邊界顏色
         .style("stroke-width","1px");                           //邊界粗度
 
     svg.append('g').attr('class','pointerCon')                       //指針群組
-    let pointerStart  = [{x : 80,y : 80},{x :80-(70 * Math.cos((bar_dela[data]) / 180 * Math.PI)),y:80-(70 * Math.sin((bar_dela[data]) / 180 * Math.PI))}];
+    let pointerStart  = [{x : helfLen,y : helfLen+15},{x :helfLen-(55 * Math.cos((bar_dela[arrayKey]) / 180 * Math.PI)),y:helfLen-(55 * Math.sin((bar_dela[arrayKey]) / 180 * Math.PI))}];
 
     let pointerConAni = svg.select(".pointerCon")               //指針畫布指向
 
@@ -396,8 +401,8 @@ export function DoardChardot(drowInfo) {
         .style("fill-opacity", 2);  //填充的透明度
 
     pointerConAni.append('circle')                                //指針中心
-        .attr('cx',80)
-        .attr('cy',80)
+        .attr('cx',helfLen)
+        .attr('cy',helfLen+15)
         .attr('r',3)
         .style('fill','#F2FF83')
         .style("stroke","#9DDF41")                              //邊界顏色

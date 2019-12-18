@@ -2660,6 +2660,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               break;
             }
 
+          case 'ph':
+            {
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["DoardChardot"])(self.draw_Info[key]);
+            }
+
           case 'revers-circle':
             {
               break;
@@ -83404,7 +83409,7 @@ function Make_Circle(info) {
 
 function WaterLevelChar(drowInfo) {
   var imgUrl;
-  drowInfo.data != drowInfo.max ? imgUrl = './img/WaterLevOn.svg' : imgUrl = './img/WaterLevOff.svg';
+  drowInfo.value != drowInfo.max ? imgUrl = './img/WaterLevOn.svg' : imgUrl = './img/WaterLevOff.svg';
   return imgUrl;
 }
 ; //燈泡更換 （開關）改圖即可
@@ -83482,7 +83487,7 @@ function WindpointerChar(drowInfo) {
     .startAngle((major - textStartMin) / 180 * Math.PI).endAngle((major + textStartMax) / 180 * Math.PI).innerRadius(0.80 * radius).outerRadius(0.75 * radius)).attr("transform", function () {
       return "translate(" + cx + "," + cy + ")";
     }).style("fill", 'none').attr('id', 'pathText_' + indexGo);
-    svg.append('text').append('textPath').attr('link:href', "#pathText_" + indexGo).attr('class', 'pointer_text').style('fill', '#fff').text(spinWay[indexGo]);
+    svg.append('text').append('textPath').attr('link:href', "#pathText_" + indexGo).attr('class', 'pointer-text').style('fill', '#fff').text(spinWay[indexGo]);
     indexGo++;
   } // //}
   // console.log(data);
@@ -83491,15 +83496,16 @@ function WindpointerChar(drowInfo) {
 ; //酸鹼值 pi
 
 function DoardChardot(drowInfo) {
-  var size = 160; //寬與長
-
+  //寬與長
   var max = 90;
   var min = -90;
   var meg = min;
   var range = 15;
-  var data = drowInfo.data;
-  var radius = size / 2;
-  var svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + drowInfo.d3Scale).attr('height', size + 'px').attr('width', size + 'px');
+  var helfLen = length / 2;
+  var arrayKey = drowInfo.value + 1;
+  var data = drowInfo.value;
+  var radius = length / 2;
+  var svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + drowInfo.id).append('svg').attr('height', length + 'px').attr('width', length + 'px');
   var color_bar = 0;
   var color_style = ['#ff0000', '#BB493E', '#A16B36', '#B9BB3E', '#ffff00', '#8ABF40', '#00ff7d', '#47c250', '#76c44f', '#328E2F', '#308991', '#339699', '#3749a4', '#0000ff', '#69349d']; //角度表
 
@@ -83512,31 +83518,31 @@ function DoardChardot(drowInfo) {
   });
 
   for (meg; meg !== max; meg += 12) {
-    svg.append('path').attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["arc"]().startAngle(meg / 180 * Math.PI).endAngle((meg + 12) / 180 * Math.PI).innerRadius(0.5 * radius).outerRadius(0.85 * radius)).attr("transform", function () {
-      return "translate(" + 80 + "," + 80 + ")";
+    svg.append('path').attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["arc"]().startAngle(meg / 180 * Math.PI).endAngle((meg + 12) / 180 * Math.PI).innerRadius(0.4 * radius).outerRadius(0.7 * radius)).attr("transform", function () {
+      return "translate(" + helfLen + "," + (helfLen + 15) + ")";
     }).style('stroke', "#fff").style('stroke-radius', '10px').style('stroke-width', "1px").style('z-index', 1).style('fill', color_style[color_bar]).attr('id', 'PHText_' + color_bar);
     color_bar++;
   }
 
-  svg.append('text').attr('x', 0).attr('y', 80).style('fill', '#000').style('font-size', "12px").text(0);
-  svg.append('text').attr('x', 25).attr('y', 37).attr('rotate', -45).style('fill', '#000').style('font-size', "12px").text(3);
-  svg.append('text').attr('x', 78).attr('y', 10).attr('rotate', 0).style('fill', '#000').style('font-size', "12px").text(7);
-  svg.append('text').attr('x', 120).attr('y', 25).attr('rotate', 45).style('fill', '#000').style('font-size', "12px").text(10);
-  svg.append('text').attr('x', 148).attr('y', 80).style('fill', '#000').style('font-size', "12px").text(14);
+  svg.append('text').attr('x', 15).attr('y', helfLen + 15).style('fill', '#000').style('font-size', "pointer-text").text(0);
+  svg.append('text').attr('x', 40).attr('y', helfLen - 25).attr('rotate', -45).style('fill', '#000').style('font-size', "pointer-text").text(3);
+  svg.append('text').attr('x', helfLen - 7).attr('y', 40).attr('rotate', 0).style('fill', '#000').style('font-size', "pointer-text").text(7);
+  svg.append('text').attr('x', 125).attr('y', helfLen - 50).attr('rotate', 45).style('fill', '#000').style('font-size', "pointer-text").text(10);
+  svg.append('text').attr('x', length - 30).attr('y', helfLen + 15).style('fill', '#000').style('font-size', "pointer-text").text(14);
   svg.append('text') //單位
-  .attr('x', 80).attr('y', 45).attr('dy', size * 2 / 3).attr('text-anchor', "middle").text(drowInfo.unit + " " + data).style('font-size', 18 + "px").style('fill', "#123123").style('strok-width', "1px");
+  .attr('x', helfLen).attr('y', helfLen + 30).attr('dy', size * 2 / 3).attr('text-anchor', "middle").text(data).style('font-size', 18 + "px").style('fill', "#123123").style('strok-width', "1px");
   svg.append('circle') //圓弧中心
-  .attr('cx', 80).attr('cy', 80).attr('r', 4).style('fill', '#fff').style("stroke", "#9DDF41") //邊界顏色
+  .attr('cx', helfLen).attr('cy', helfLen + 15).attr('r', 4).style('fill', '#fff').style("stroke", "#9DDF41") //邊界顏色
   .style("stroke-width", "1px"); //邊界粗度
 
   svg.append('g').attr('class', 'pointerCon'); //指針群組
 
   var pointerStart = [{
-    x: 80,
-    y: 80
+    x: helfLen,
+    y: helfLen + 15
   }, {
-    x: 80 - 70 * Math.cos(bar_dela[data] / 180 * Math.PI),
-    y: 80 - 70 * Math.sin(bar_dela[data] / 180 * Math.PI)
+    x: helfLen - 55 * Math.cos(bar_dela[arrayKey] / 180 * Math.PI),
+    y: helfLen - 55 * Math.sin(bar_dela[arrayKey] / 180 * Math.PI)
   }];
   var pointerConAni = svg.select(".pointerCon"); //指針畫布指向
 
@@ -83545,7 +83551,7 @@ function DoardChardot(drowInfo) {
   .style('stroke-width', '2px').style('z-index', 100).style("fill-opacity", 2); //填充的透明度
 
   pointerConAni.append('circle') //指針中心
-  .attr('cx', 80).attr('cy', 80).attr('r', 3).style('fill', '#F2FF83').style("stroke", "#9DDF41") //邊界顏色
+  .attr('cx', helfLen).attr('cy', helfLen + 15).attr('r', 3).style('fill', '#F2FF83').style("stroke", "#9DDF41") //邊界顏色
   .style("stroke-width", "0.5px") //邊界粗度
   .style('z-index', 200);
 }
