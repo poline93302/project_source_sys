@@ -2651,8 +2651,69 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       lodash__WEBPACK_IMPORTED_MODULE_2___default.a.forEach(this.item_value, function (id, key) {
         self.draw_Info[key] = new _Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["Draw_Info"](key, id['value'], id['max'], id['min']);
-        Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["Make_Circle"])(self.draw_Info[key]);
+        self.draw_Info[key]['draw_type'] = self.item_infos.items_draws[key];
+
+        switch (self.draw_Info[key]['draw_type']) {
+          case 'circle':
+            {
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["Make_Circle"])(self.draw_Info[key]);
+              break;
+            }
+
+          case 'ph':
+            {
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["DoardChardot"])(self.draw_Info[key]);
+              break;
+            }
+
+          case 'revers-circle':
+            {
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["Make_Circle"])(self.draw_Info[key]);
+              break;
+            }
+
+          case 'light-img':
+            {
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["LightChange"])(self.draw_Info[key]);
+              break;
+            }
+
+          case 'water-level-img':
+            {
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["WaterLevelChar"])(self.draw_Info[key]);
+              break;
+            }
+
+          case 'pointer':
+            {
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["WindpointerChar"])(self.draw_Info[key]);
+              break;
+            }
+        }
       });
+    },
+    statuesColor: function statuesColor(target, type) {
+      var colorGYR = ['danger', 'warning', 'success'];
+      var rightColor = this.target_reverse ? colorGYR : colorGYR.reverse();
+      var score = Math.floor(target / 30);
+      return type === 'border' ? 'border-' + rightColor[score] : 'bg-' + rightColor[score];
+    },
+    apartStatues: function apartStatues() {
+      switch (this.target_name) {
+        case 'air':
+        case 'weather':
+          this.target_reverse = false;
+          break;
+
+        case 'environment':
+        case 'water':
+        case 'light':
+          this.target_reverse = true;
+          break;
+        //        target_reverse
+      }
+
+      console.log(this.target_name);
     }
   },
   data: function data() {
@@ -2699,14 +2760,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           'weather_windWay': '風向',
           'weather_windSpeed': '風速',
           'weather_rainAccumulation': '累積雨量'
+        },
+        items_draws: {
+          'water_level': 'water-level-img',
+          'water_ph': 'ph',
+          'water_soil': 'circle',
+          'light_lux': 'light-img',
+          'air_cp': 'revers-circle',
+          'air_ph4': 'revers-circle',
+          'air_hun': 'circle',
+          'air_tem': 'circle',
+          'weather_windWay': 'pointer',
+          'weather_windSpeed': 'revers-circle',
+          'weather_rainAccumulation': 'revers-circle'
         }
       },
+      target_reverse: true,
       item_value: {},
       draw_Info: {}
     };
   },
   mounted: function mounted() {
-    this.get_value(); // setTimeout(, 3600);
+    this.get_value();
+    this.apartStatues(); // setInterval(this.get_value,36000);
   }
 });
 
@@ -70471,11 +70547,7 @@ var render = function() {
         {
           staticClass: "row border m-3 monitor-item rounded-top ",
           class: [
-            _vm.monitor_target <= 30
-              ? "border-danger"
-              : _vm.monitor_target > 60
-              ? "border-success"
-              : "border-warning",
+            _vm.statuesColor(_vm.monitor_target, "border"),
             _vm.item_infos.classes[_vm.target_name]
           ]
         },
@@ -70485,12 +70557,7 @@ var render = function() {
             {
               staticClass:
                 "item-info col-12 flex-total-center bg-success rounded-top mb-2",
-              class:
-                _vm.monitor_target <= 30
-                  ? "bg-danger"
-                  : _vm.monitor_target > 60
-                  ? "bg-success"
-                  : "bg-warning"
+              class: _vm.statuesColor(_vm.monitor_target, "bg")
             },
             [
               _c("div", { staticClass: "justify-content-between" }, [
@@ -83246,7 +83313,7 @@ window.onload = function () {
 /*!******************************************!*\
   !*** ./resources/js/Active/Sketchpad.js ***!
   \******************************************/
-/*! exports provided: Draw_Info, Draw_Info_History, Make_Hex, Make_Circle, Make_HistoryChart */
+/*! exports provided: Draw_Info, Draw_Info_History, Make_Hex, Make_Circle, WaterLevelChar, LightChange, WindpointerChar, DoardChardot, Make_HistoryChart */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -83255,6 +83322,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Draw_Info_History", function() { return Draw_Info_History; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Make_Hex", function() { return Make_Hex; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Make_Circle", function() { return Make_Circle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WaterLevelChar", function() { return WaterLevelChar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LightChange", function() { return LightChange; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WindpointerChar", function() { return WindpointerChar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DoardChardot", function() { return DoardChardot; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Make_HistoryChart", function() { return Make_HistoryChart; });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/index.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
@@ -83325,7 +83396,6 @@ function Make_Circle(info) {
   var data, range, data_point;
   var svg, circle_text;
   var colorify = ['#ED4013', '#E5DD35', '#24A047'];
-  length = 200;
   radius_outside = length * 0.9 / 2; //outside半徑
 
   radius_inside = length * 0.75 / 2; //inside半徑
@@ -83338,7 +83408,9 @@ function Make_Circle(info) {
   cy = length / 2;
   data = info.value;
   data_point = data / range * 100;
-  color = Math.ceil(data_point / 30) < 4 ? Math.ceil(data_point / 30) - 1 : Math.ceil(data_point / 30) - 2; //抓取圖畫得位置
+  color = Math.ceil(data_point / 30) < 4 ? Math.ceil(data_point / 30) - 1 : Math.ceil(data_point / 30) - 2; //進行反向
+
+  info.draw_type === 'revers-circle' ? color = 2 - color : color; //抓取圖畫得位置
 
   svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + info.id).append('svg').attr('width', width).attr('height', height).attr('class', 'paint-exponent'); //畫兩個六角形 一個 圓形
 
@@ -83353,7 +83425,158 @@ function Make_Circle(info) {
   //加字體
 
   circle_text.append('text').attr('dx', cx).attr('dy', cy + 10).attr('class', 'd3-font-size').style("text-anchor", "middle").text(data);
+} //水位圖（開關）改圖即可
+
+function WaterLevelChar(drowInfo) {
+  var imgUrl = drowInfo.value > 0 ? '../../picture/WaterLevOn.svg' : '../../picture/WaterLevOff.svg';
+  var water = document.getElementById(drowInfo.id);
+  water.innerHTML = "<img src=\"".concat(imgUrl, "\" width=\"").concat(length, "\" height=\"").concat(length, "\">");
 }
+; //燈泡更換 （開關）改圖即可
+
+function LightChange(drowInfo) {
+  var imgUrl = drowInfo.value >= 400 ? '../../picture/LightOff.svg' : '../../picture/LightOn.svg';
+  var light = document.getElementById(drowInfo.id);
+  light.innerHTML = "<img src=\"".concat(imgUrl, "\" width=\"").concat(length, "\" height=\"").concat(length, "\">");
+}
+; //風向 指針 變換方向
+
+function WindpointerChar(drowInfo) {
+  d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + drowInfo.id).select('svg').remove();
+  var data = drowInfo.value + 360;
+  var pointerData = [{
+    x: length / 2,
+    y: 30
+  }, {
+    x: 75,
+    y: length / 2 + 30
+  }, {
+    x: length / 2,
+    y: length / 2
+  }, {
+    x: 125,
+    y: length / 2 + 30
+  }];
+  var cx = length / 2;
+  var cy = length / 2;
+  var scaleLag = 8; // N NW W WS S SE E EN
+
+  var scaleSml = 2; //每大格分 兩小格
+
+  var radius = length * 0.9 / 2;
+  var indexGo = 0;
+  var spinWay = ['N', 'EN', 'E', 'ES', 'S', 'WS', 'W', 'WN']; //
+
+  var majorDelta = 360 / scaleLag; //大刻度之间的角度
+
+  var svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + drowInfo.id).append('svg').attr('height', length + 'px').attr('width', length + 'px').attr('class', 'point_wind');
+  var textStartMin = 4;
+  var textStartMax = 45 - textStartMin;
+  var line = d3__WEBPACK_IMPORTED_MODULE_0__["line"]().x(function (d) {
+    return d.x;
+  }).y(function (d) {
+    return d.y;
+  }); // let pie = d3.layout.pie()
+  //     .startAngle(0)
+  //     .endAngle()
+
+  svg.append('circle') //底色黑底
+  .attr('cx', cx).attr('cy', cy).attr('r', radius).style('fill', '#000');
+  svg.append('circle') //蓋底
+  .attr('cx', cx).attr('cy', cy).attr('r', 0.75 * radius).style('fill', '#fff');
+  svg.append('path') //不動針
+  .attr('d', line(pointerData)).attr('y', 0).style('stroke', '#fff').style('stroke-width', '1px').style('fill', "#ff0000");
+  svg.append('circle') //針圓心
+  .attr('cx', cx).attr('cy', cy).attr('r', 0.05 * radius).style('fill', '#fff'); //
+  // //{     刻度
+
+  for (var major = data; major <= data + 315; major += majorDelta) {
+    var minMajor = majorDelta / scaleSml;
+    var getStartPointLag = getPoint(major, 0.85, 80, cx, cy);
+
+    for (var minMajorDe = major; minMajorDe <= major + minMajor; minMajorDe += minMajor) {
+      var getStartPoint = getPoint(minMajorDe, 0.9, radius, cx, cy);
+      var getEndPoint = getPoint(minMajorDe, 0.8, radius, cx, cy);
+
+      if (minMajorDe % 45) {
+        svg.append('line').attr('x1', getStartPoint.Px).attr('y1', getStartPoint.Py).attr('x2', getEndPoint.Px).attr('y2', getEndPoint.Py).style('stroke', "#fff").style('stroke-width', "1px");
+      }
+    }
+
+    svg.append('path').attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["arc"]() //架設路徑
+    .startAngle((major - textStartMin) / 180 * Math.PI).endAngle((major + textStartMax) / 180 * Math.PI).innerRadius(0.80 * radius).outerRadius(0.75 * radius)).attr("transform", function () {
+      return "translate(" + cx + "," + cy + ")";
+    }).style("fill", 'none').attr('id', 'pathText_' + indexGo);
+    svg.append('text').append('textPath').attr('link:href', "#pathText_" + indexGo).attr('class', 'pointer-text').style('fill', '#fff').text(spinWay[indexGo]);
+    indexGo++;
+  } // //}
+  // console.log(data);
+
+}
+; //酸鹼值 pi
+
+function DoardChardot(drowInfo) {
+  //寬與長
+  d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + drowInfo.id).select('svg').remove();
+  var max = 90;
+  var min = -90;
+  var meg = min;
+  var range = 15;
+  var helfLen = length / 2;
+  var data = drowInfo.value;
+  var radius = length / 2;
+  var svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + drowInfo.id).append('svg').attr('height', length + 'px').attr('width', length + 'px');
+  var color_bar = 0;
+  var color_style = ['#ff0000', '#BB493E', '#A16B36', '#B9BB3E', '#ffff00', '#8ABF40', '#00ff7d', '#47c250', '#76c44f', '#328E2F', '#308991', '#339699', '#3749a4', '#0000ff', '#69349d']; //角度表
+
+  var bar_dela = [0, 12, 24, 36, 48, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180];
+  var pointerLine = d3__WEBPACK_IMPORTED_MODULE_0__["line"]() //曲線生長
+  .x(function (d) {
+    return d.x;
+  }).y(function (d) {
+    return d.y;
+  });
+
+  for (meg; meg !== max; meg += 12) {
+    svg.append('path').attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["arc"]().startAngle(meg / 180 * Math.PI).endAngle((meg + 12) / 180 * Math.PI).innerRadius(0.4 * radius).outerRadius(0.7 * radius)).attr("transform", function () {
+      return "translate(" + helfLen + "," + (helfLen + 15) + ")";
+    }).style('stroke', "#fff").style('stroke-radius', '10px').style('stroke-width', "1px").style('z-index', 1).style('fill', color_style[color_bar]).attr('id', 'PHText_' + color_bar);
+    color_bar++;
+  }
+
+  svg.append('text').attr('x', 15).attr('y', helfLen + 15).style('fill', '#000').style('font-size', "pointer-text").text(0);
+  svg.append('text').attr('x', 40).attr('y', helfLen - 25).attr('rotate', -45).style('fill', '#000').style('font-size', "pointer-text").text(3);
+  svg.append('text').attr('x', helfLen - 7).attr('y', 40).attr('rotate', 0).style('fill', '#000').style('font-size', "pointer-text").text(7);
+  svg.append('text').attr('x', 125).attr('y', helfLen - 50).attr('rotate', 45).style('fill', '#000').style('font-size', "pointer-text").text(10);
+  svg.append('text').attr('x', length - 30).attr('y', helfLen + 15).style('fill', '#000').style('font-size', "pointer-text").text(14);
+  svg.append('text') //單位
+  .attr('x', helfLen).attr('y', helfLen + 30).attr('dy', size * 2 / 3).attr('text-anchor', "middle").text(data).style('font-size', 18 + "px").style('fill', "#123123").style('strok-width', "1px");
+  svg.append('circle') //圓弧中心
+  .attr('cx', helfLen).attr('cy', helfLen + 15).attr('r', 4).style('fill', '#fff').style("stroke", "#9DDF41") //邊界顏色
+  .style("stroke-width", "1px"); //邊界粗度
+
+  svg.append('g').attr('class', 'pointerCon'); //指針群組
+  // let pointerStart  = [{x : helfLen,y : helfLen+15},{x :helfLen-(55 * Math.cos(6 / 180 * Math.PI)),y:helfLen-(55 * Math.sin(6 / 180 * Math.PI))}];
+
+  var pointerStart = [{
+    x: helfLen,
+    y: helfLen + 15
+  }, {
+    x: helfLen - 55 * Math.cos(bar_dela[data] / 180 * Math.PI),
+    y: helfLen - 55 * Math.sin(bar_dela[data] / 180 * Math.PI)
+  }];
+  var pointerConAni = svg.select(".pointerCon"); //指針畫布指向
+
+  pointerConAni.append('path') //指針設置
+  .attr('d', pointerLine(pointerStart)).style('fill', '#dc3').style("stroke", "#c63310") //轮廓的颜色
+  .style('stroke-width', '2px').style('z-index', 100).style("fill-opacity", 2); //填充的透明度
+
+  pointerConAni.append('circle') //指針中心
+  .attr('cx', helfLen).attr('cy', helfLen + 15).attr('r', 3).style('fill', '#F2FF83').style("stroke", "#9DDF41") //邊界顏色
+  .style("stroke-width", "0.5px") //邊界粗度
+  .style('z-index', 200);
+} //歷史資料
+
 function Make_HistoryChart(info, day) {
   var width = length * 3;
   var height = length * 2;
@@ -83437,11 +83660,16 @@ function Make_HistoryChart(info, day) {
     var bbox = focus.select("text").node().getBBox();
     rect.attr("width", bbox.width + 4).attr("height", bbox.height + 4);
   }
-}
+} //儀表板得到點
 
-function hex_point() {
-  var coordinate = [[100, 0], [25, 50], [25, 170], [100, 200], [175, 50], [175, 170]];
-  return coordinate;
+function getPoint(delta, bap, rad, cx, cy) {
+  //角度
+  var x = cx - bap * rad * Math.cos(delta / 180 * Math.PI);
+  var y = cy - bap * rad * Math.sin(delta / 180 * Math.PI);
+  return {
+    Px: x,
+    Py: y
+  };
 }
 
 /***/ }),

@@ -92,13 +92,13 @@ export function Make_Circle(info) {
         cx, cy, radius_outside, radius_inside;
     let data, range, data_point;
     let svg, circle_text;
+
     let colorify = [
         '#ED4013',
         '#E5DD35',
         '#24A047',
     ];
 
-    length = 200;
     radius_outside = length * 0.9 / 2;                          //outside半徑
     radius_inside = length * 0.75 / 2;                         //inside半徑
     range = (info.max - info.min);                         //單位％
@@ -111,6 +111,10 @@ export function Make_Circle(info) {
     data_point = (data / range) * 100;
 
     color = Math.ceil(data_point / 30) < 4 ? Math.ceil(data_point / 30) - 1 : Math.ceil(data_point / 30) - 2;
+
+    //進行反向
+    (info.draw_type === 'revers-circle') ? color = 2 - color : color;
+
     //抓取圖畫得位置
     svg = d3.select('#' + info.id)
         .append('svg')
@@ -146,6 +150,275 @@ export function Make_Circle(info) {
         .text(data);
 }
 
+//水位圖（開關）改圖即可
+export function WaterLevelChar(drowInfo) {
+    let imgUrl = drowInfo.value > 0 ? '../../picture/WaterLevOn.svg' : '../../picture/WaterLevOff.svg';
+    let water = document.getElementById(drowInfo.id);
+    water.innerHTML = `<img src="${imgUrl}" width="${length}" height="${length}">`;
+
+};
+
+//燈泡更換 （開關）改圖即可
+export function LightChange(drowInfo) {
+    let imgUrl = drowInfo.value >= 400 ? '../../picture/LightOff.svg' : '../../picture/LightOn.svg';
+    let light = document.getElementById(drowInfo.id);
+    light.innerHTML = `<img src="${imgUrl}" width="${length}" height="${length}">`;
+};
+
+//風向 指針 變換方向
+export function WindpointerChar(drowInfo) {
+    d3.select('#' + drowInfo.id).select('svg').remove();
+
+    let data = drowInfo.value + 360;
+    let pointerData = [{x: length / 2, y: 30}, {x: 75, y: length / 2 + 30}, {x: length / 2, y: length / 2}, {
+        x: 125,
+        y: length / 2 + 30
+    }];
+
+    let cx = length / 2;
+    let cy = length / 2;
+    let scaleLag = 8;           // N NW W WS S SE E EN
+    let scaleSml = 2;           //每大格分 兩小格
+    let radius = length * 0.9 / 2;
+    let indexGo = 0;
+    let spinWay = ['N', 'EN', 'E', 'ES', 'S', 'WS', 'W', 'WN']; //
+
+    let majorDelta = 360 / scaleLag;        //大刻度之间的角度
+
+    let svg = d3.select('#' + drowInfo.id)
+        .append('svg')
+        .attr('height', length + 'px')
+        .attr('width', length + 'px')
+        .attr('class', 'point_wind');
+
+    let textStartMin = 4;
+    let textStartMax = 45 - textStartMin;
+    let line = d3.line()
+        .x(function (d) {
+            return d.x;
+        })
+        .y(function (d) {
+            return d.y;
+        });
+    // let pie = d3.layout.pie()
+    //     .startAngle(0)
+    //     .endAngle()
+    svg.append('circle')            //底色黑底
+        .attr('cx', cx)
+        .attr('cy', cy)
+        .attr('r', radius)
+        .style('fill', '#000');
+    svg.append('circle')            //蓋底
+        .attr('cx', cx)
+        .attr('cy', cy)
+        .attr('r', 0.75 * radius)
+        .style('fill', '#fff');
+    svg.append('path')              //不動針
+        .attr('d', line(pointerData))
+        .attr('y', 0)
+        .style('stroke', '#fff')
+        .style('stroke-width', '1px')
+        .style('fill', "#ff0000");
+    svg.append('circle')              //針圓心
+        .attr('cx', cx)
+        .attr('cy', cy)
+        .attr('r', 0.05 * radius)
+        .style('fill', '#fff');
+
+    //
+    // //{     刻度
+    for (let major = data; major <= data + 315; major += majorDelta) {
+        let minMajor = majorDelta / scaleSml;
+        let getStartPointLag = getPoint(major, 0.85, 80, cx, cy);
+
+        for (let minMajorDe = major; minMajorDe <= major + minMajor; minMajorDe += minMajor) {
+            let getStartPoint = getPoint(minMajorDe, 0.9, radius, cx, cy);
+            let getEndPoint = getPoint(minMajorDe, 0.8, radius, cx, cy);
+
+            if (minMajorDe % 45) {
+                svg.append('line')
+                    .attr('x1', getStartPoint.Px)
+                    .attr('y1', getStartPoint.Py)
+                    .attr('x2', getEndPoint.Px)
+                    .attr('y2', getEndPoint.Py)
+                    .style('stroke', "#fff")
+                    .style('stroke-width', "1px");
+            }
+        }
+
+        svg.append('path')
+            .attr('d',
+                d3.arc()                     //架設路徑
+                    .startAngle((major - textStartMin) / 180 * Math.PI)
+                    .endAngle((major + textStartMax) / 180 * Math.PI)
+                    .innerRadius(0.80 * radius)
+                    .outerRadius(0.75 * radius)
+            )
+            .attr("transform", function () {
+                return "translate(" + cx + "," + cy + ")"
+            })
+            .style("fill", 'none')
+            .attr('id', 'pathText_' + indexGo);
+
+        svg.append('text')
+            .append('textPath')
+            .attr('link:href', "#pathText_" + indexGo)
+            .attr('class', 'pointer-text')
+            .style('fill', '#fff')
+            .text(spinWay[indexGo]);
+        indexGo++;
+    }
+    // //}
+    // console.log(data);
+};
+
+//酸鹼值 pi
+export function DoardChardot(drowInfo) {     //寬與長
+
+    d3.select('#' + drowInfo.id).select('svg').remove();
+
+    let max = 90;
+    let min = -90;
+    let meg = min;
+    let range = 15;
+    let helfLen = length / 2;
+
+    let data = drowInfo.value;
+    let radius = length / 2;
+    let svg = d3.select('#' + drowInfo.id)
+        .append('svg')
+        .attr('height', length + 'px')
+        .attr('width', length + 'px');
+
+    let color_bar = 0;
+    let color_style = [
+        '#ff0000',
+        '#BB493E',
+        '#A16B36',
+        '#B9BB3E',
+        '#ffff00',
+        '#8ABF40',
+        '#00ff7d',
+        '#47c250',
+        '#76c44f',
+        '#328E2F',
+        '#308991',
+        '#339699',
+        '#3749a4',
+        '#0000ff',
+        '#69349d',
+    ];
+    //角度表
+    let bar_dela = [0, 12, 24, 36, 48, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180];
+
+    let pointerLine = d3.line()                                                         //曲線生長
+        .x(function (d) {
+            return d.x;
+        })
+        .y(function (d) {
+            return d.y;
+        });
+
+    for (meg; meg !== max; meg += 12) {
+        svg.append('path')
+            .attr('d',
+                d3.arc()
+                    .startAngle((meg / 180) * Math.PI)
+                    .endAngle(((meg + 12) / 180) * Math.PI)
+                    .innerRadius(0.4 * radius)
+                    .outerRadius(0.7 * radius)
+            )
+            .attr("transform", function () {
+                return "translate(" + helfLen + "," + (helfLen + 15) + ")"
+            })
+            .style('stroke', "#fff")
+            .style('stroke-radius', '10px')
+            .style('stroke-width', "1px")
+            .style('z-index', 1)
+            .style('fill', color_style[color_bar])
+            .attr('id', 'PHText_' + color_bar);
+        color_bar++;
+    }
+    svg.append('text')
+        .attr('x', 15)
+        .attr('y', helfLen + 15)
+        .style('fill', '#000')
+        .style('font-size', "pointer-text")
+        .text(0);
+    svg.append('text')
+        .attr('x', 40)
+        .attr('y', helfLen - 25)
+        .attr('rotate', -45)
+        .style('fill', '#000')
+        .style('font-size', "pointer-text")
+        .text(3);
+    svg.append('text')
+        .attr('x', helfLen - 7)
+        .attr('y', 40)
+        .attr('rotate', 0)
+        .style('fill', '#000')
+        .style('font-size', "pointer-text")
+        .text(7);
+    svg.append('text')
+        .attr('x', 125)
+        .attr('y', helfLen - 50)
+        .attr('rotate', 45)
+        .style('fill', '#000')
+        .style('font-size', "pointer-text")
+        .text(10);
+    svg.append('text')
+        .attr('x', length - 30)
+        .attr('y', helfLen + 15)
+        .style('fill', '#000')
+        .style('font-size', "pointer-text")
+        .text(14);
+
+    svg.append('text')                                  //單位
+        .attr('x', helfLen)
+        .attr('y', helfLen + 30)
+        .attr('dy', size * 2 / 3)
+        .attr('text-anchor', "middle")
+        .text(data)
+        .style('font-size', 18 + "px")
+        .style('fill', "#123123")
+        .style('strok-width', "1px");
+
+    svg.append('circle')                                //圓弧中心
+        .attr('cx', helfLen)
+        .attr('cy', helfLen + 15)
+        .attr('r', 4)
+        .style('fill', '#fff')
+        .style("stroke", "#9DDF41")                              //邊界顏色
+        .style("stroke-width", "1px");                           //邊界粗度
+
+    svg.append('g').attr('class', 'pointerCon')                       //指針群組
+    // let pointerStart  = [{x : helfLen,y : helfLen+15},{x :helfLen-(55 * Math.cos(6 / 180 * Math.PI)),y:helfLen-(55 * Math.sin(6 / 180 * Math.PI))}];
+    let pointerStart = [{x: helfLen, y: helfLen + 15}, {
+        x: helfLen - (55 * Math.cos((bar_dela[data]) / 180 * Math.PI)),
+        y: helfLen - (55 * Math.sin((bar_dela[data]) / 180 * Math.PI))
+    }];
+
+    let pointerConAni = svg.select(".pointerCon")               //指針畫布指向
+
+    pointerConAni.append('path')                        //指針設置
+        .attr('d', pointerLine(pointerStart))
+        .style('fill', '#dc3')
+        .style("stroke", "#c63310") //轮廓的颜色
+        .style('stroke-width', '2px')
+        .style('z-index', 100)
+        .style("fill-opacity", 2);  //填充的透明度
+
+    pointerConAni.append('circle')                                //指針中心
+        .attr('cx', helfLen)
+        .attr('cy', helfLen + 15)
+        .attr('r', 3)
+        .style('fill', '#F2FF83')
+        .style("stroke", "#9DDF41")                              //邊界顏色
+        .style("stroke-width", "0.5px")                          //邊界粗度
+        .style('z-index', 200);
+}
+
+//歷史資料
 export function Make_HistoryChart(info, day) {
     let width = length * 3;
     let height = length * 2;
@@ -286,32 +559,27 @@ export function Make_HistoryChart(info, day) {
     function mousemove() {
         let contain = d3.mouse(this);
         let x = rectScale.invert(contain[0]);
-        let i = bisectDate.right(point, x,1);
+        let i = bisectDate.right(point, x, 1);
         let d0 = point[i - 1];
         let d1 = point[i];
         let d = (x - d0.time) > (d1.time - x) ? d1 : d0;
         //point time = x 的 數值 = y
         focus.attr("transform", "translate(" + rectScale(d.time) + "," + rectYScale(d.value) + ")");
-        focus.select("text").text('數值：'+d.value)
-            .attr('class','smValue')
+        focus.select("text").text('數值：' + d.value)
+            .attr('class', 'smValue')
             .append("tspan")
-            .attr("x", 5).attr("dy", "1.5rem").attr('class','rectPlace').attr('text-align','center')
+            .attr("x", 5).attr("dy", "1.5rem").attr('class', 'rectPlace').attr('text-align', 'center')
             .text(d3.timeFormat("%Y/%m/%d %H:%M")(d.time));
         let bbox = focus.select("text").node().getBBox();
         rect.attr("width", bbox.width + 4).attr("height", bbox.height + 4)
     }
 }
 
-function hex_point() {
-    let coordinate = [
-        [100, 0],
-        [25, 50],
-        [25, 170],
-        [100, 200],
-        [175, 50],
-        [175, 170],
-    ];
+//儀表板得到點
+function getPoint(delta, bap, rad, cx, cy) {             //角度
+    let x = cx - (bap * rad * Math.cos(delta / 180 * Math.PI));
+    let y = cy - (bap * rad * Math.sin(delta / 180 * Math.PI));
 
-    return coordinate;
+    return {Px: x, Py: y};
 }
 
