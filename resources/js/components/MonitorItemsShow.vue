@@ -1,10 +1,10 @@
 <!--個別監控的數值畫面的主畫面-->
 <template>
     <div class="border w-100 my-2 shadow bg-white rounded">
-        <div :class="[monitor_target<=30 ? 'border-danger' : monitor_target>60? 'border-success': 'border-warning', item_infos.classes[target_name]]"
+        <div :class="[statuesColor(monitor_target,'border'), item_infos.classes[target_name]]"
              class="row border m-3 monitor-item rounded-top ">
             <div class="item-info col-12 flex-total-center bg-success rounded-top mb-2"
-                 :class="monitor_target<=30 ? 'bg-danger' : monitor_target>60? 'bg-success': 'bg-warning'">
+                 :class="statuesColor(monitor_target,'bg')">
                 <div class="justify-content-between">
                     {{ item_infos.names[target_name]}}
                     <i class="fa fa-cog" aria-hidden="true" data-toggle="modal"
@@ -35,7 +35,14 @@
 </template>
 
 <script>
-    import {Draw_Info, Make_Circle,LightChange,WindpointerChar,DoardChardot,WaterLevelChar} from "../Active/Sketchpad";
+    import {
+        Draw_Info,
+        Make_Circle,
+        LightChange,
+        WindpointerChar,
+        DoardChardot,
+        WaterLevelChar
+    } from "../Active/Sketchpad";
     import _ from 'lodash';
     import axios from 'axios';
 
@@ -80,30 +87,58 @@
                     self.draw_Info[key]['draw_type'] = self.item_infos.items_draws[key];
 
                     switch (self.draw_Info[key]['draw_type']) {
-                        case 'circle':{
+                        case 'circle': {
                             Make_Circle(self.draw_Info[key]);
                             break;
                         }
-                        case 'ph':{
+                        case 'ph': {
                             DoardChardot(self.draw_Info[key]);
-                        }
-                        case 'revers-circle':{
                             break;
                         }
-                        case 'light-img':{
+                        case 'revers-circle': {
+                            Make_Circle(self.draw_Info[key]);
+                            break;
+                        }
+                        case 'light-img': {
                             LightChange(self.draw_Info[key]);
                             break;
                         }
-                        case 'water-level-img':{
+                        case 'water-level-img': {
                             WaterLevelChar(self.draw_Info[key]);
                             break;
                         }
-                        case 'pointer':{
+                        case 'pointer': {
                             WindpointerChar(self.draw_Info[key]);
                             break;
                         }
                     }
                 });
+            },
+            statuesColor(target, type) {
+                let colorGYR = ['danger','warning','success'];
+                let rightColor = this.target_reverse ? colorGYR :colorGYR.reverse();
+
+                let score = Math.floor(target / 30) ;
+
+                return type === 'border' ?
+                    'border-'+rightColor[score] :
+                    'bg-'+rightColor[score];
+            },
+            apartStatues() {
+                switch (this.target_name) {
+                    case 'air':
+                    case 'weather':
+                        this.target_reverse = false;
+                        break;
+                    case 'environment':
+                    case 'water':
+                    case 'light':
+                        this.target_reverse = true;
+                        break;
+
+                    //        target_reverse
+                }
+                console.log(this.target_name);
             }
         },
         data: function () {
@@ -159,16 +194,18 @@
                             'air_tem': 'circle',
                             'weather_windWay': 'pointer',
                             'weather_windSpeed': 'revers-circle',
-                            'weather_rainAccumulation': 'circle',
+                            'weather_rainAccumulation': 'revers-circle',
                         },
                 },
+                target_reverse: true,
                 item_value: {},
                 draw_Info: {},
             }
         },
         mounted() {
             this.get_value();
-            // setTimeout(, 3600);
+            this.apartStatues();
+            // setInterval(this.get_value,36000);
         }
     }
 </script>

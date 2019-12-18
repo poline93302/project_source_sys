@@ -2663,10 +2663,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           case 'ph':
             {
               Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["DoardChardot"])(self.draw_Info[key]);
+              break;
             }
 
           case 'revers-circle':
             {
+              Object(_Active_Sketchpad__WEBPACK_IMPORTED_MODULE_1__["Make_Circle"])(self.draw_Info[key]);
               break;
             }
 
@@ -2689,6 +2691,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             }
         }
       });
+    },
+    statuesColor: function statuesColor(target, type) {
+      var colorGYR = ['danger', 'warning', 'success'];
+      var rightColor = this.target_reverse ? colorGYR : colorGYR.reverse();
+      var score = Math.floor(target / 30);
+      return type === 'border' ? 'border-' + rightColor[score] : 'bg-' + rightColor[score];
+    },
+    apartStatues: function apartStatues() {
+      switch (this.target_name) {
+        case 'air':
+        case 'weather':
+          this.target_reverse = false;
+          break;
+
+        case 'environment':
+        case 'water':
+        case 'light':
+          this.target_reverse = true;
+          break;
+        //        target_reverse
+      }
+
+      console.log(this.target_name);
     }
   },
   data: function data() {
@@ -2747,15 +2772,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           'air_tem': 'circle',
           'weather_windWay': 'pointer',
           'weather_windSpeed': 'revers-circle',
-          'weather_rainAccumulation': 'circle'
+          'weather_rainAccumulation': 'revers-circle'
         }
       },
+      target_reverse: true,
       item_value: {},
       draw_Info: {}
     };
   },
   mounted: function mounted() {
-    this.get_value(); // setTimeout(, 3600);
+    this.get_value();
+    this.apartStatues(); // setInterval(this.get_value,36000);
   }
 });
 
@@ -70520,11 +70547,7 @@ var render = function() {
         {
           staticClass: "row border m-3 monitor-item rounded-top ",
           class: [
-            _vm.monitor_target <= 30
-              ? "border-danger"
-              : _vm.monitor_target > 60
-              ? "border-success"
-              : "border-warning",
+            _vm.statuesColor(_vm.monitor_target, "border"),
             _vm.item_infos.classes[_vm.target_name]
           ]
         },
@@ -70534,12 +70557,7 @@ var render = function() {
             {
               staticClass:
                 "item-info col-12 flex-total-center bg-success rounded-top mb-2",
-              class:
-                _vm.monitor_target <= 30
-                  ? "bg-danger"
-                  : _vm.monitor_target > 60
-                  ? "bg-success"
-                  : "bg-warning"
+              class: _vm.statuesColor(_vm.monitor_target, "bg")
             },
             [
               _c("div", { staticClass: "justify-content-between" }, [
@@ -83390,7 +83408,9 @@ function Make_Circle(info) {
   cy = length / 2;
   data = info.value;
   data_point = data / range * 100;
-  color = Math.ceil(data_point / 30) < 4 ? Math.ceil(data_point / 30) - 1 : Math.ceil(data_point / 30) - 2; //抓取圖畫得位置
+  color = Math.ceil(data_point / 30) < 4 ? Math.ceil(data_point / 30) - 1 : Math.ceil(data_point / 30) - 2; //進行反向
+
+  info.draw_type === 'revers-circle' ? color = 2 - color : color; //抓取圖畫得位置
 
   svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + info.id).append('svg').attr('width', width).attr('height', height).attr('class', 'paint-exponent'); //畫兩個六角形 一個 圓形
 
@@ -83408,14 +83428,14 @@ function Make_Circle(info) {
 } //水位圖（開關）改圖即可
 
 function WaterLevelChar(drowInfo) {
-  var imgUrl = drowInfo.value > 0 ? '../../picture/WaterLevOn.svg' : './picture/WaterLevOff.svg';
+  var imgUrl = drowInfo.value > 0 ? '../../picture/WaterLevOn.svg' : '../../picture/WaterLevOff.svg';
   var water = document.getElementById(drowInfo.id);
   water.innerHTML = "<img src=\"".concat(imgUrl, "\" width=\"").concat(length, "\" height=\"").concat(length, "\">");
 }
 ; //燈泡更換 （開關）改圖即可
 
 function LightChange(drowInfo) {
-  var imgUrl = drowInfo.value >= 400 ? '../../picture/LightOff.svg' : './picture/LightOn.svg';
+  var imgUrl = drowInfo.value >= 400 ? '../../picture/LightOff.svg' : '../../picture/LightOn.svg';
   var light = document.getElementById(drowInfo.id);
   light.innerHTML = "<img src=\"".concat(imgUrl, "\" width=\"").concat(length, "\" height=\"").concat(length, "\">");
 }
@@ -83497,19 +83517,19 @@ function WindpointerChar(drowInfo) {
 
 function DoardChardot(drowInfo) {
   //寬與長
+  d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + drowInfo.id).select('svg').remove();
   var max = 90;
   var min = -90;
   var meg = min;
   var range = 15;
   var helfLen = length / 2;
-  var arrayKey = drowInfo.value + 1;
   var data = drowInfo.value;
   var radius = length / 2;
   var svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#' + drowInfo.id).append('svg').attr('height', length + 'px').attr('width', length + 'px');
   var color_bar = 0;
   var color_style = ['#ff0000', '#BB493E', '#A16B36', '#B9BB3E', '#ffff00', '#8ABF40', '#00ff7d', '#47c250', '#76c44f', '#328E2F', '#308991', '#339699', '#3749a4', '#0000ff', '#69349d']; //角度表
 
-  var bar_dela = [6, 18, 30, 42, 54, 66, 78, 90, 102, 114, 126, 138, 150, 162, 174];
+  var bar_dela = [0, 12, 24, 36, 48, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180];
   var pointerLine = d3__WEBPACK_IMPORTED_MODULE_0__["line"]() //曲線生長
   .x(function (d) {
     return d.x;
@@ -83536,13 +83556,14 @@ function DoardChardot(drowInfo) {
   .style("stroke-width", "1px"); //邊界粗度
 
   svg.append('g').attr('class', 'pointerCon'); //指針群組
+  // let pointerStart  = [{x : helfLen,y : helfLen+15},{x :helfLen-(55 * Math.cos(6 / 180 * Math.PI)),y:helfLen-(55 * Math.sin(6 / 180 * Math.PI))}];
 
   var pointerStart = [{
     x: helfLen,
     y: helfLen + 15
   }, {
-    x: helfLen - 55 * Math.cos(bar_dela[arrayKey] / 180 * Math.PI),
-    y: helfLen - 55 * Math.sin(bar_dela[arrayKey] / 180 * Math.PI)
+    x: helfLen - 55 * Math.cos(bar_dela[data] / 180 * Math.PI),
+    y: helfLen - 55 * Math.sin(bar_dela[data] / 180 * Math.PI)
   }];
   var pointerConAni = svg.select(".pointerCon"); //指針畫布指向
 
