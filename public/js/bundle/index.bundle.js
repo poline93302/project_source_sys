@@ -2692,27 +2692,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     statuesColor: function statuesColor(target, type) {
-      var colorGYR = ['danger', 'warning', 'success'];
+      var colorGYR = ['danger', 'warning', 'success']; // console.log(this.target_reverse);
+
       var rightColor = this.target_reverse ? colorGYR : colorGYR.reverse();
       var score = Math.floor(target / 30);
       return type === 'border' ? 'border-' + rightColor[score] : 'bg-' + rightColor[score];
     },
     apartStatues: function apartStatues() {
-      switch (this.target_name) {
-        case 'air':
-        case 'weather':
-          this.target_reverse = false;
-          break;
-
-        case 'environment':
-        case 'water':
-        case 'light':
-          this.target_reverse = true;
-          break;
-        //        target_reverse
-      }
-
-      console.log(this.target_name);
+      // switch (this.target_name) {
+      //     case 'air':
+      //     case 'weather':
+      //         this.target_reverse = false;
+      //         break;
+      //     case 'environment':
+      //     case 'water':
+      //     case 'light':
+      //         this.target_reverse = true;
+      //         break;
+      //
+      //     //        target_reverse
+      // }
+      console.log(this.target_name, this.monitor_target);
     }
   },
   data: function data() {

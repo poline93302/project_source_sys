@@ -116,6 +116,7 @@
             },
             statuesColor(target, type) {
                 let colorGYR = ['danger','warning','success'];
+                // console.log(this.target_reverse);
                 let rightColor = this.target_reverse ? colorGYR :colorGYR.reverse();
 
                 let score = Math.floor(target / 30) ;
@@ -125,20 +126,20 @@
                     'bg-'+rightColor[score];
             },
             apartStatues() {
-                switch (this.target_name) {
-                    case 'air':
-                    case 'weather':
-                        this.target_reverse = false;
-                        break;
-                    case 'environment':
-                    case 'water':
-                    case 'light':
-                        this.target_reverse = true;
-                        break;
-
-                    //        target_reverse
-                }
-                console.log(this.target_name);
+                // switch (this.target_name) {
+                //     case 'air':
+                //     case 'weather':
+                //         this.target_reverse = false;
+                //         break;
+                //     case 'environment':
+                //     case 'water':
+                //     case 'light':
+                //         this.target_reverse = true;
+                //         break;
+                //
+                //     //        target_reverse
+                // }
+                console.log(this.target_name,this.monitor_target);
             }
         },
         data: function () {

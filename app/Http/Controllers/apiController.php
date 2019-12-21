@@ -32,17 +32,17 @@ class apiController extends Controller
         $WeatherData = $this->weatherData($req['name'], $farmID['id'], $req['farmland']);
 //
         $target = [
-            'air' => round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'CON', $weights['air_cp'], $AirData['CON'])
-                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'CHE', $weights['air_ph4'], $AirData['CHE'])),
+            'air' =>(100 -  round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'CON', $weights['air_cp'], $AirData['CON'])
+                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'CHE', $weights['air_ph4'], $AirData['CHE']))),
 
             'water' => round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'WLS', $weights['water_level'], $WaterData["WLS"])
                 + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'WPH', $weights['water_ph'], $WaterData['WPH'])),
 
             'light' => round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'LFS', $weights['light_lux'], $LightData["LFS"])),
 
-            'weather' => round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'ORA', $weights['weather_rainAccumulation'], $WeatherData['ORA'])
+            'weather' =>(100 -  round($this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'ORA', $weights['weather_rainAccumulation'], $WeatherData['ORA'])
                 + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'OWS', $weights['weather_windSpeed'], $WeatherData['OWS'])
-                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'OWN', $weights['weather_windWay'], $WeatherData['OWN']))
+                + $this->confirmationPercentage($req['name'], $farmID['id'], $req['farmland'], 'OWN', $weights['weather_windWay'], $WeatherData['OWN'])))
         ];
         if ($req['gateWay'])
             $target['environment'] =
